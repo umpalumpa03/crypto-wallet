@@ -1,11 +1,19 @@
+@if (store.isLoading()) {
+<div class="flex flex-col items-center justify-center h-[80vh] text-primary-fixed-dim font-mono animate-pulse gap-4">
+    <span class="material-symbols-outlined text-4xl animate-spin">sync</span>
+    <span>Decrypting Ledger Data...</span>
+</div>
+} @else if (store.profile(); as profile) {
 <div class="p-8 lg:p-12 w-full space-y-12 relative">
 
     <section class="space-y-4">
         <div class="flex items-end justify-between">
             <div>
-                <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest mb-2">Total Net Worth</p>
-                <h1 class="font-headline text-5xl md:text-7xl font-extrabold tracking-tight text-glow-primary">
-                    $1,248,394.<span class="text-primary-fixed-dim/80">52</span>
+                <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest mb-2">{{ profile.fullName
+                    }} | Net Worth</p>
+                <h1
+                    class="font-headline text-5xl md:text-7xl font-extrabold tracking-tight text-glow-primary transition-all duration-300">
+                    ${{ liveNetWorth() | number:'1.2-2' }}
                 </h1>
             </div>
             <div class="text-right pb-2">
@@ -31,36 +39,31 @@
                     </linearGradient>
                 </defs>
             </svg>
-            <div
-                class="absolute inset-0 bg-primary-container/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
-            </div>
         </div>
     </section>
 
     <div class="flex flex-wrap gap-4 py-2">
         <button
             class="flex-1 min-w-[140px] py-3 px-4 rounded-xl bg-primary-fixed-dim text-[#003828] font-bold text-xs uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(0,225,171,0.2)]">
-            <span class="material-symbols-outlined text-sm">arrow_downward</span>
-            Deposit
+            <span class="material-symbols-outlined text-sm">arrow_downward</span> Deposit
         </button>
         <button
             class="flex-1 min-w-[140px] py-3 px-4 rounded-xl bg-surface-container-high border border-outline-variant/20 hover:bg-surface-bright text-on-surface font-bold text-xs uppercase tracking-widest active:scale-95 transition-all flex items-center justify-center gap-2">
-            <span class="material-symbols-outlined text-sm">arrow_upward</span>
-            Withdraw
+            <span class="material-symbols-outlined text-sm">arrow_upward</span> Withdraw
         </button>
         <button
             class="flex-1 min-w-[140px] py-3 px-4 rounded-xl bg-surface-container-high border border-outline-variant/20 hover:bg-surface-bright text-on-surface font-bold text-xs uppercase tracking-widest active:scale-95 transition-all flex items-center justify-center gap-2">
-            <span class="material-symbols-outlined text-sm">swap_horiz</span>
-            Swap
+            <span class="material-symbols-outlined text-sm">swap_horiz</span> Swap
         </button>
         <button
             class="flex-1 min-w-[140px] py-3 px-4 rounded-xl bg-surface-container-high border border-outline-variant/20 hover:bg-surface-bright text-on-surface font-bold text-xs uppercase tracking-widest active:scale-95 transition-all flex items-center justify-center gap-2">
-            <span class="material-symbols-outlined text-sm">credit_card</span>
-            Buy Crypto
+            <span class="material-symbols-outlined text-sm">credit_card</span> Buy Crypto
         </button>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    @defer (on viewport) {
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-fade-in">
 
         <div
             class="lg:col-span-8 glass-card rounded-2xl p-8 flex flex-col justify-between min-h-[320px] transition-all hover:scale-[1.01] hover:bg-surface-bright/20">
@@ -74,50 +77,52 @@
                 </div>
 
                 <div class="space-y-12">
-                    <div class="space-y-4">
-                        <div class="flex w-full h-12 rounded-full overflow-hidden shadow-2xl shadow-black/40">
-                            <div
-                                class="h-full bg-gradient-to-r from-primary-fixed-dim to-primary-container w-[55%] relative group cursor-pointer">
-                                <div
-                                    class="absolute inset-0 opacity-0 group-hover:opacity-20 bg-white transition-opacity">
+                    <div class="flex flex-col items-center justify-center">
+                        <apx-chart [series]="allocationSeries()" [chart]="allocationChartOptions.chart"
+                            [labels]="allocationChartOptions.labels" [colors]="allocationChartOptions.colors"
+                            [stroke]="allocationChartOptions.stroke" [dataLabels]="allocationChartOptions.dataLabels"
+                            [plotOptions]="allocationChartOptions.plotOptions"
+                            [tooltip]="allocationChartOptions.tooltip" [legend]="allocationChartOptions.legend">
+                        </apx-chart>
+
+                        <div
+                            class="flex justify-between w-full text-xs font-label font-medium uppercase tracking-widest mt-4 px-4">
+                            <div class="flex flex-col items-center gap-1">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-primary-fixed-dim"></div><span>BTC</span>
                                 </div>
+                                <span class="font-mono text-on-surface-variant">{{ (allocationSeries()[0] /
+                                    (allocationSeries()[0] + allocationSeries()[1] + allocationSeries()[2]) * 100) |
+                                    number:'1.1-1' }}%</span>
                             </div>
-                            <div
-                                class="h-full bg-gradient-to-r from-secondary to-on-secondary-container w-[30%] relative group cursor-pointer">
-                                <div
-                                    class="absolute inset-0 opacity-0 group-hover:opacity-20 bg-white transition-opacity">
+                            <div class="flex flex-col items-center gap-1">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-secondary"></div><span>ETH</span>
                                 </div>
+                                <span class="font-mono text-on-surface-variant">{{ (allocationSeries()[1] /
+                                    (allocationSeries()[0] + allocationSeries()[1] + allocationSeries()[2]) * 100) |
+                                    number:'1.1-1' }}%</span>
                             </div>
-                            <div
-                                class="h-full bg-gradient-to-r from-tertiary-fixed-dim to-tertiary-container w-[15%] relative group cursor-pointer">
-                                <div
-                                    class="absolute inset-0 opacity-0 group-hover:opacity-20 bg-white transition-opacity">
+                            <div class="flex flex-col items-center gap-1">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></div><span>SOL</span>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="flex justify-between text-xs font-label font-medium uppercase tracking-widest mt-4">
-                            <div class="flex items-center gap-2">
-                                <div class="w-2 h-2 rounded-full bg-primary-fixed-dim"></div><span>Bitcoin (55%)</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <div class="w-2 h-2 rounded-full bg-secondary"></div><span>Ethereum (30%)</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <div class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></div><span>Solana (15%)</span>
+                                <span class="font-mono text-on-surface-variant">{{ (allocationSeries()[2] /
+                                    (allocationSeries()[0] + allocationSeries()[1] + allocationSeries()[2]) * 100) |
+                                    number:'1.1-1' }}%</span>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="flex gap-4 mt-8">
-                <div class="flex-1 p-4 rounded-xl bg-surface-container-low/50">
-                    <p class="text-[10px] text-on-surface-variant uppercase tracking-widest mb-1">Cold Storage</p>
-                    <p class="font-mono text-lg font-semibold">$892,102</p>
-                </div>
-                <div class="flex-1 p-4 rounded-xl bg-surface-container-low/50">
-                    <p class="text-[10px] text-on-surface-variant uppercase tracking-widest mb-1">Exchange Wallets</p>
-                    <p class="font-mono text-lg font-semibold">$356,292</p>
+                    <div class="grid grid-cols-3 gap-4 border-t border-outline-variant/10 pt-6">
+                        @for (asset of profile.assets; track asset.id) {
+                        <div class="p-4 rounded-xl bg-surface-container-low/50">
+                            <p class="text-[10px] text-on-surface-variant uppercase tracking-widest mb-1">{{
+                                asset.symbol }} Vault</p>
+                            <p class="font-mono text-lg font-semibold">{{ asset.amount }}</p>
+                        </div>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
@@ -125,6 +130,7 @@
         <div
             class="lg:col-span-4 glass-card rounded-2xl p-8 space-y-8 transition-all hover:scale-[1.01] hover:bg-surface-bright/20">
             <h2 class="font-headline text-xl font-bold tracking-tight">Market Health</h2>
+
             <div class="space-y-6">
                 <div class="flex justify-between items-center">
                     <span class="text-on-surface-variant text-sm">Fear & Greed Index</span>
@@ -149,54 +155,42 @@
                     </div>
                 </div>
             </div>
+
             <div class="pt-6 border-t border-outline-variant/10">
                 <div class="flex justify-between items-center mb-4">
-                    <span class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Recent
+                    <span class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Your
                         Activity</span>
-                    <a routerLink="/ledger"
-                        class="text-[10px] text-primary-fixed-dim hover:underline uppercase tracking-widest cursor-pointer">View
-                        All</a>
                 </div>
 
                 <div class="space-y-3">
+                    @for (tx of store.recentActivity(); track tx.id) {
                     <div class="flex justify-between items-center">
                         <div class="flex items-center gap-3">
                             <div
-                                class="w-8 h-8 rounded-lg bg-tertiary-fixed-dim/10 flex items-center justify-center text-tertiary-fixed-dim">
-                                <span class="material-symbols-outlined text-sm">south_west</span>
+                                class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-on-surface">
+                                <span class="material-symbols-outlined text-sm">
+                                    {{ tx.type === 'DEPOSIT' ? 'account_balance' : 'swap_horiz' }}
+                                </span>
                             </div>
                             <div>
-                                <p class="text-xs font-bold">Bought BTC</p>
-                                <p class="text-[10px] text-on-surface-variant">Today, 09:41 AM</p>
+                                <p class="text-xs font-bold">{{ tx.type }} {{ tx.assetSymbol }}</p>
+                                <p class="text-[10px] text-on-surface-variant">{{ tx.createdAt | date:'shortDate' }}</p>
                             </div>
                         </div>
                         <div class="text-right">
-                            <p class="text-xs font-mono font-bold text-tertiary-fixed-dim">+0.041 BTC</p>
-                            <p class="text-[10px] text-on-surface-variant font-mono">-$2,635.53</p>
+                            <p class="text-xs font-mono font-bold"
+                                [ngClass]="tx.type === 'BUY' || tx.type === 'DEPOSIT' ? 'text-tertiary-fixed-dim' : 'text-error'">
+                                {{ tx.type === 'SELL' || tx.type === 'WITHDRAW' ? '-' : '+' }}{{ tx.amount }}
+                            </p>
                         </div>
                     </div>
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center gap-3">
-                            <div
-                                class="w-8 h-8 rounded-lg bg-secondary-fixed-dim/10 flex items-center justify-center text-secondary-fixed-dim">
-                                <span class="material-symbols-outlined text-sm">account_balance</span>
-                            </div>
-                            <div>
-                                <p class="text-xs font-bold">USD Deposit</p>
-                                <p class="text-[10px] text-on-surface-variant">Yesterday</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs font-mono font-bold text-secondary-fixed-dim">+$5,000.00</p>
-                            <p class="text-[10px] text-on-surface-variant font-mono">Cleared</p>
-                        </div>
-                    </div>
+                    }
                 </div>
             </div>
         </div>
     </div>
 
-    <section class="space-y-8">
+    <section class="space-y-8 animate-fade-in mt-12">
         <div class="flex justify-between items-center">
             <h2 class="font-headline text-3xl font-bold tracking-tight">Market Pulse</h2>
             <div class="flex gap-2">
@@ -234,16 +228,20 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="py-6 text-right font-mono text-lg font-medium">$64,281.04</td>
+                        <td
+                            class="py-6 text-right font-mono text-lg font-medium text-on-surface transition-colors duration-300">
+                            {{ market.liveBtcPrice() | currency:'USD':'symbol':'1.2-2' }}
+                        </td>
                         <td class="py-6 text-right font-mono text-tertiary-fixed-dim">+3.24%</td>
                         <td class="py-6 text-right font-mono text-on-surface-variant hidden md:table-cell">$1.26T</td>
                         <td class="py-6 text-right w-40">
-                            <svg class="h-10 w-full ml-auto" viewBox="0 0 100 40">
-                                <path d="M0,30 Q10,10 20,25 T40,15 T60,30 T80,10 T100,20" fill="none" stroke="#8bdc00"
-                                    stroke-width="2"></path>
-                                <path d="M0,30 Q10,10 20,25 T40,15 T60,30 T80,10 T100,20 L100,40 L0,40 Z"
-                                    fill="url(#spark-green)" opacity="0.1"></path>
-                            </svg>
+                            <div class="ml-auto w-[140px]">
+                                <apx-chart #btcChart [series]="[{ name: 'BTC', data: market.btcPriceHistory() }]"
+                                    [chart]="sparklineOptions.chart"
+                                    [stroke]="{ curve: 'smooth', width: 2, colors: btcColors }" [fill]="areaFill"
+                                    [colors]="btcColors" [tooltip]="sparklineOptions.tooltip">
+                                </apx-chart>
+                            </div>
                         </td>
                     </tr>
 
@@ -259,16 +257,20 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="py-6 text-right font-mono text-lg font-medium">$3,412.55</td>
+                        <td
+                            class="py-6 text-right font-mono text-lg font-medium text-on-surface transition-colors duration-300">
+                            {{ market.liveEthPrice() | currency:'USD':'symbol':'1.2-2' }}
+                        </td>
                         <td class="py-6 text-right font-mono text-tertiary-fixed-dim">+1.82%</td>
                         <td class="py-6 text-right font-mono text-on-surface-variant hidden md:table-cell">$412.8B</td>
                         <td class="py-6 text-right w-40">
-                            <svg class="h-10 w-full ml-auto" viewBox="0 0 100 40">
-                                <path d="M0,25 Q15,35 30,15 T60,25 T90,10 T100,15" fill="none" stroke="#8bdc00"
-                                    stroke-width="2"></path>
-                                <path d="M0,25 Q15,35 30,15 T60,25 T90,10 T100,15 L100,40 L0,40 Z"
-                                    fill="url(#spark-green)" opacity="0.1"></path>
-                            </svg>
+                            <div class="ml-auto w-[140px]">
+                                <apx-chart #ethChart [series]="[{ name: 'ETH', data: market.ethPriceHistory() }]"
+                                    [chart]="sparklineOptions.chart"
+                                    [stroke]="{ curve: 'smooth', width: 2, colors: ethColors }" [fill]="areaFill"
+                                    [colors]="ethColors" [tooltip]="sparklineOptions.tooltip">
+                                </apx-chart>
+                            </div>
                         </td>
                     </tr>
 
@@ -284,16 +286,20 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="py-6 text-right font-mono text-lg font-medium">$145.22</td>
+                        <td
+                            class="py-6 text-right font-mono text-lg font-medium text-on-surface transition-colors duration-300">
+                            {{ market.liveSolPrice() | currency:'USD':'symbol':'1.2-2' }}
+                        </td>
                         <td class="py-6 text-right font-mono text-error">-2.11%</td>
                         <td class="py-6 text-right font-mono text-on-surface-variant hidden md:table-cell">$64.2B</td>
                         <td class="py-6 text-right w-40">
-                            <svg class="h-10 w-full ml-auto" viewBox="0 0 100 40">
-                                <path d="M0,10 Q20,15 40,35 T70,25 T100,38" fill="none" stroke="#ffb4ab"
-                                    stroke-width="2"></path>
-                                <path d="M0,10 Q20,15 40,35 T70,25 T100,38 L100,40 L0,40 Z" fill="url(#spark-red)"
-                                    opacity="0.1"></path>
-                            </svg>
+                            <div class="ml-auto w-[140px]">
+                                <apx-chart #solChart [series]="[{ name: 'SOL', data: market.solPriceHistory() }]"
+                                    [chart]="sparklineOptions.chart"
+                                    [stroke]="{ curve: 'smooth', width: 2, colors: solColors }" [fill]="areaFill"
+                                    [colors]="solColors" [tooltip]="sparklineOptions.tooltip">
+                                </apx-chart>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
@@ -313,9 +319,16 @@
             </defs>
         </svg>
     </section>
+    } @placeholder {
+    <div class="space-y-8 mt-12">
+        <div class="h-10 w-48 bg-surface-container-low rounded-lg animate-pulse"></div>
+        <div class="h-64 w-full bg-surface-container-low rounded-xl animate-pulse"></div>
+    </div>
+    }
 
     <footer class="mt-auto pt-16 pb-8 border-t border-outline-variant/5 text-center">
         <p class="text-[10px] text-on-surface-variant uppercase tracking-[0.3em]">Midnight Aurora • Powered by Ethereal
             Ledger • 2026</p>
     </footer>
 </div>
+}
