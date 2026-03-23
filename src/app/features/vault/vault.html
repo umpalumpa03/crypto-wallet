@@ -1,1 +1,224 @@
-<p>vault works!</p>
+<div class="p-8 lg:p-12 max-w-7xl mx-auto w-full">
+    <header class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+            <h1 class="text-4xl md:text-5xl font-headline font-extrabold tracking-tighter text-on-surface mb-2">Vault &
+                Transfers</h1>
+            <p class="text-on-surface-variant max-w-xl text-sm md:text-base">
+                Manage your multi-signature institution vaults. Execute ultra-low latency transfers across cross-chain
+                protocols with atomic finality.
+            </p>
+        </div>
+        <div class="flex gap-4">
+            <button
+                class="px-6 py-2.5 rounded-xl border border-outline-variant/20 font-semibold text-secondary hover:bg-surface-container-high transition-all cursor-pointer text-sm">
+                Export Report
+            </button>
+            <button
+                class="px-6 py-2.5 rounded-xl bg-primary-fixed-dim text-on-primary font-bold shadow-lg shadow-primary-fixed-dim/10 hover:brightness-110 transition-all cursor-pointer text-sm">
+                New Vault
+            </button>
+        </div>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+        <div class="lg:col-span-4 space-y-4">
+            <h3 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest px-2 mb-4">Active Balances
+            </h3>
+
+            <div
+                class="group cursor-pointer p-6 rounded-xl bg-surface-container-low border border-transparent hover:border-primary-fixed-dim/20 hover:bg-surface-container transition-all relative overflow-hidden">
+                <div class="flex justify-between items-start relative z-10">
+                    <div>
+                        <div class="text-on-surface-variant text-sm font-medium mb-1">Total USD</div>
+                        <div class="text-3xl font-headline font-bold text-on-surface">$1,420,552.00</div>
+                    </div>
+                    <div class="bg-surface-container-highest p-2 rounded-lg">
+                        <span class="material-symbols-outlined text-primary-fixed-dim">payments</span>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center gap-2 relative z-10">
+                    <span class="text-tertiary-fixed-dim text-xs font-bold">+2.4%</span>
+                    <div class="h-1 w-24 bg-surface-variant rounded-full overflow-hidden">
+                        <div class="h-full bg-tertiary-fixed-dim w-3/4"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="p-6 rounded-xl bg-surface-container border-2 border-primary-fixed-dim shadow-xl shadow-primary-fixed-dim/5 relative overflow-hidden cursor-pointer">
+                <div class="aurora-glow absolute inset-0"></div>
+                <div class="flex justify-between items-start relative z-10">
+                    <div>
+                        <div class="text-primary-fixed-dim text-sm font-bold mb-1">Bitcoin</div>
+                        <div class="text-3xl font-headline font-bold text-on-surface">12.4402 BTC</div>
+                        <div class="text-sm text-on-surface-variant mt-1">≈ $821,044.12</div>
+                    </div>
+                    <div class="bg-primary-fixed-dim text-on-primary p-2 rounded-lg">
+                        <span class="material-symbols-outlined">currency_bitcoin</span>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center gap-2 relative z-10">
+                    <span class="text-tertiary-fixed-dim text-xs font-bold">+0.8%</span>
+                    <div class="flex-1 h-6 flex items-center">
+                        <svg class="w-full h-full opacity-50" viewBox="0 0 100 20" preserveAspectRatio="none">
+                            <path d="M0,15 Q20,5 40,10 T80,5 T100,0" fill="none" stroke="#8bdc00" stroke-width="2">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="group cursor-pointer p-6 rounded-xl bg-surface-container-low border border-transparent hover:border-primary-fixed-dim/20 hover:bg-surface-container transition-all">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="text-on-surface-variant text-sm font-medium mb-1">Solana</div>
+                        <div class="text-3xl font-headline font-bold text-on-surface">1,240.50 SOL</div>
+                        <div class="text-sm text-on-surface-variant mt-1">≈ $186,075.00</div>
+                    </div>
+                    <div class="bg-surface-container-highest p-2 rounded-lg">
+                        <span
+                            class="material-symbols-outlined text-on-surface-variant group-hover:text-primary-fixed-dim transition-colors">token</span>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="group cursor-pointer p-6 rounded-xl bg-surface-container-low border border-transparent hover:border-primary-fixed-dim/20 hover:bg-surface-container transition-all">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="text-on-surface-variant text-sm font-medium mb-1">Ethereum</div>
+                        <div class="text-3xl font-headline font-bold text-on-surface">24.812 ETH</div>
+                        <div class="text-sm text-on-surface-variant mt-1">≈ $55,230.16</div>
+                    </div>
+                    <div class="bg-surface-container-highest p-2 rounded-lg">
+                        <span
+                            class="material-symbols-outlined text-on-surface-variant group-hover:text-primary-fixed-dim transition-colors">diamond</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-8">
+            <div
+                class="glass-card p-8 lg:p-10 rounded-2xl h-full flex flex-col items-center justify-center text-center">
+                <div class="mb-8">
+                    <div
+                        class="w-16 h-16 rounded-full bg-primary-fixed-dim/10 flex items-center justify-center mx-auto mb-4">
+                        <span class="material-symbols-outlined text-primary-fixed-dim text-3xl">download</span>
+                    </div>
+                    <h2 class="text-3xl font-headline font-bold text-on-surface tracking-tight">Receive Bitcoin</h2>
+                    <p class="text-on-surface-variant mt-2 text-sm max-w-md mx-auto">Only send Bitcoin (BTC) to this
+                        address. Sending any other asset may result in permanent loss.</p>
+                </div>
+
+                <div
+                    class="bg-white p-6 rounded-2xl mb-10 shadow-2xl shadow-black/50 ring-1 ring-white/10 flex items-center justify-center">
+                    <img src="assets/qr.png" alt="">
+                </div>
+
+                <div class="w-full max-w-lg mb-10">
+                    <div class="flex items-center gap-2 mb-2 px-1 justify-center lg:justify-start">
+                        <span class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">BTC Deposit
+                            Address</span>
+                        <span
+                            class="text-[10px] px-2 py-0.5 rounded bg-tertiary-fixed-dim/10 text-tertiary-fixed-dim font-bold uppercase">SegWit</span>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <div
+                            class="flex-1 bg-surface-container-lowest border border-outline-variant/30 rounded-xl px-4 py-4 flex items-center justify-between group focus-within:ring-1 focus-within:ring-primary-fixed-dim focus-within:border-primary-fixed-dim/50 transition-all overflow-hidden">
+                            <code
+                                class="font-mono text-primary-fixed-dim text-sm sm:text-lg select-all overflow-hidden text-ellipsis whitespace-nowrap">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</code>
+                            <span
+                                class="material-symbols-outlined text-on-surface-variant text-sm ml-2 shrink-0">lock</span>
+                        </div>
+                        <button
+                            class="bg-surface-container-highest hover:bg-surface-bright text-on-surface px-6 py-4 sm:py-0 rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer shrink-0">
+                            <span class="material-symbols-outlined text-xl">content_copy</span> Copy
+                        </button>
+                    </div>
+                </div>
+
+                <div class="w-full max-w-xl grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+                    <div class="p-4 rounded-xl bg-error-container/10 border border-error-container/20 flex gap-4">
+                        <span class="material-symbols-outlined text-error mt-0.5 shrink-0">warning</span>
+                        <div>
+                            <div class="text-sm font-bold text-error mb-0.5">Network Confirmation</div>
+                            <div class="text-xs text-on-surface-variant leading-relaxed">Transactions require 3 network
+                                confirmations to be credited to your vault.</div>
+                        </div>
+                    </div>
+                    <div
+                        class="p-4 rounded-xl bg-surface-container-highest/30 border border-outline-variant/20 flex gap-4">
+                        <span
+                            class="material-symbols-outlined text-primary-fixed-dim mt-0.5 shrink-0">verified_user</span>
+                        <div>
+                            <div class="text-sm font-bold text-on-surface mb-0.5">Secure Storage</div>
+                            <div class="text-xs text-on-surface-variant leading-relaxed">Funds are automatically routed
+                                to our cold-storage infrastructure.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-12 flex flex-wrap justify-center gap-8">
+                    <div class="text-center">
+                        <div class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest mb-1">Last
+                            deposit</div>
+                        <div class="text-sm font-medium text-on-surface">2.44 BTC <span
+                                class="text-on-surface-variant">(14h ago)</span></div>
+                    </div>
+                    <div class="w-px h-8 bg-outline-variant/20 hidden sm:block"></div>
+                    <div class="text-center">
+                        <div class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest mb-1">
+                            Network fee</div>
+                        <div class="text-sm font-medium text-tertiary-fixed-dim">0.00001 BTC</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="mt-12">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-headline font-bold text-on-surface">Pending Clearances</h3>
+            <a routerLink="/ledger"
+                class="text-sm text-primary-fixed-dim hover:underline font-semibold cursor-pointer">View Ledger
+                History</a>
+        </div>
+
+        <div class="space-y-2">
+            <div
+                class="flex flex-wrap md:grid md:grid-cols-12 items-center p-4 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors gap-4 md:gap-0">
+                <div class="md:col-span-1 flex shrink-0">
+                    <div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary-fixed-dim">arrow_downward</span>
+                    </div>
+                </div>
+                <div class="md:col-span-3 flex-1 min-w-[120px]">
+                    <div class="text-sm font-bold text-on-surface">Deposit BTC</div>
+                    <div class="text-xs text-on-surface-variant font-mono">bc1q...0wlh</div>
+                </div>
+                <div class="md:col-span-2 w-full md:w-auto mt-2 md:mt-0">
+                    <div class="text-sm text-on-surface font-mono">0.1442 BTC</div>
+                    <div class="text-[10px] text-on-surface-variant">≈ $9,512.40</div>
+                </div>
+                <div class="md:col-span-2 hidden md:block">
+                    <div class="text-xs font-mono text-on-surface-variant">Oct 24, 14:02</div>
+                </div>
+                <div class="md:col-span-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed-dim animate-pulse"></div>
+                        <span class="text-xs font-bold text-tertiary-fixed-dim uppercase tracking-wider">Confirming
+                            (2/3)</span>
+                    </div>
+                </div>
+                <div class="md:col-span-1 ml-auto">
+                    <button class="text-on-surface-variant hover:text-on-surface cursor-pointer p-1">
+                        <span class="material-symbols-outlined">more_horiz</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-vault',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './vault.html',
-  styleUrl: './vault.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Vault {}
