@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-ledger',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './ledger.html',
-  styleUrl: './ledger.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Ledger {}
