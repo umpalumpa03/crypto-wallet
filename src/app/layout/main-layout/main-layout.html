@@ -1,1 +1,86 @@
-<p>main-layout works!</p>
+<div class="bg-surface text-on-surface font-body selection:bg-primary-container/30 overflow-hidden h-screen flex">
+
+    <aside
+        class="h-screen w-64 fixed left-0 top-0 flex flex-col py-6 px-4 bg-[#111417] font-['Plus_Jakarta_Sans'] tracking-tight z-50 border-r border-outline-variant/10">
+        <div class="mb-10 px-4">
+            <span class="text-xl font-bold text-[#00e1ab]">AURORA</span>
+        </div>
+
+        <nav class="flex-1 space-y-1">
+            <a routerLink="/dashboard" routerLinkActive="text-[#00e1ab] border-r-2 border-[#00e1ab] bg-[#00e1ab]/5"
+                [routerLinkActiveOptions]="{exact: true}"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-[#1d2023] hover:text-[#00e1ab] transition-colors active:scale-95 duration-150">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span class="text-sm font-medium">Dashboard</span>
+            </a>
+            <a routerLink="/markets" routerLinkActive="text-[#00e1ab] border-r-2 border-[#00e1ab] bg-[#00e1ab]/5"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-[#1d2023] hover:text-[#00e1ab] transition-colors active:scale-95 duration-150">
+                <span class="material-symbols-outlined">swap_vert</span>
+                <span class="text-sm font-medium">Trade</span>
+            </a>
+            <a routerLink="/vault" routerLinkActive="text-[#00e1ab] border-r-2 border-[#00e1ab] bg-[#00e1ab]/5"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-[#1d2023] hover:text-[#00e1ab] transition-colors active:scale-95 duration-150">
+                <span class="material-symbols-outlined">account_balance_wallet</span>
+                <span class="text-sm font-medium">Assets</span>
+            </a>
+            <a routerLink="/ledger" routerLinkActive="text-[#00e1ab] border-r-2 border-[#00e1ab] bg-[#00e1ab]/5"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-[#1d2023] hover:text-[#00e1ab] transition-colors active:scale-95 duration-150">
+                <span class="material-symbols-outlined">receipt_long</span>
+                <span class="text-sm font-medium">Ledger</span>
+            </a>
+        </nav>
+
+        <div class="mt-auto px-4 pt-6 border-t border-outline-variant/10">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden">
+                    <img src="assets/avatar-placeholder.png" alt="Profile" class="w-full h-full object-cover" />
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-sm font-bold text-white tracking-tight">$2,482,901.40</span>
+                    <span class="text-[10px] text-slate-500 uppercase tracking-widest">Institutional Active</span>
+                </div>
+            </div>
+            <button
+                class="w-full py-2.5 rounded-lg bg-[#00e1ab] text-[#003828] font-bold text-xs uppercase tracking-wider mb-6 hover:brightness-110 transition-all">
+                Deposit Funds
+            </button>
+            <div class="space-y-1">
+                <a
+                    class="flex items-center gap-3 px-2 py-2 text-slate-400 hover:text-error transition-colors cursor-pointer">
+                    <span class="material-symbols-outlined text-sm">logout</span>
+                    <span class="text-xs">Sign Out</span>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 ml-64 flex flex-col h-screen overflow-hidden">
+
+        <header
+            class="h-16 flex justify-between items-center px-8 z-40 bg-[#111417]/80 backdrop-blur-xl border-b border-outline-variant/5 font-['Plus_Jakarta_Sans'] shrink-0">
+            <div class="flex items-center gap-8">
+                <h1 class="text-lg font-black tracking-tighter text-slate-100">AURORA TERMINAL</h1>
+                <div class="relative group">
+                    <span
+                        class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-500 text-sm">search</span>
+                    <input type="text" placeholder="Search Markets..."
+                        class="bg-surface-container-lowest border-none rounded-lg pl-10 pr-4 py-1.5 text-xs w-64 focus:ring-1 focus:ring-[#00e1ab] transition-all outline-none text-white" />
+                </div>
+            </div>
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-4 text-slate-400">
+                    <button class="hover:text-[#00e1ab] transition-opacity"><span
+                            class="material-symbols-outlined">notifications</span></button>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden border border-outline-variant/20">
+                    <img src="assets/avatar-placeholder.png" alt="User Avatar" class="w-full h-full object-cover" />
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto relative">
+            <router-outlet></router-outlet>
+        </div>
+
+    </main>
+</div>
