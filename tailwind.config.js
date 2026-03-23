@@ -60,6 +60,15 @@ module.exports = {
         mono: ['JetBrains Mono'],
       },
       borderRadius: { DEFAULT: '0.125rem', lg: '0.25rem', xl: '0.5rem', full: '0.75rem' },
+      animation: {
+        'fade-in': 'fadeIn 0.3s ease-out forwards',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+      },
     },
   },
   plugins: [require('@tailwindcss/forms'), require('@tailwindcss/container-queries')],
