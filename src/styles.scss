@@ -43,3 +43,41 @@ body {
 .text-glow-primary {
     text-shadow: 0 0 20px rgba(0, 225, 171, 0.3);
 }
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #323539 transparent;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(12, 14, 18, 0.5);
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #323539;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #00e1ab;
+    box-shadow: 0 0 10px rgba(0, 225, 171, 0.5);
+}
+
+::-webkit-scrollbar-button {
+    display: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}

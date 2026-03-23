@@ -1,9 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-markets',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './markets.html',
-  styleUrl: './markets.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Markets {}
+export class Markets {
+  // We will inject your NestJS WebSockets here later for live price updates!
+}
