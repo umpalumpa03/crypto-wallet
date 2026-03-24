@@ -39,6 +39,35 @@ export class Dashboard implements OnInit {
     return cryptoValue + cashReserve;
   });
 
+  public totalPNL = computed(() => {
+    const profile = this.store.profile();
+    if (!profile) return 0;
+
+    const btcAsset = profile.assets.find((a) => a.symbol === 'BTC');
+    const ethAsset = profile.assets.find((a) => a.symbol === 'ETH');
+    const solAsset = profile.assets.find((a) => a.symbol === 'SOL');
+
+    const btcValue = (btcAsset?.amount || 0) * this.market.liveBtcPrice();
+    const ethValue = (ethAsset?.amount || 0) * this.market.liveEthPrice();
+    const solValue = (solAsset?.amount || 0) * this.market.liveSolPrice();
+
+    const currentTotalValue = btcValue + ethValue + solValue;
+    const totalCostBasis =
+      (btcAsset?.totalCost || 0) + (ethAsset?.totalCost || 0) + (solAsset?.totalCost || 0);
+
+    return currentTotalValue - totalCostBasis;
+  });
+
+  public pnlPercentage = computed(() => {
+    const profile = this.store.profile();
+    if (!profile) return 0;
+
+    const totalCostBasis = profile.assets.reduce((sum, a) => sum + a.totalCost, 0);
+    if (totalCostBasis === 0) return 0;
+
+    return (this.totalPNL() / totalCostBasis) * 100;
+  });
+
   // 2. LIVE DONUT CHART DATA [BTC Value, ETH Value, SOL Value]
   public allocationSeries = computed(() => {
     const profile = this.store.profile();

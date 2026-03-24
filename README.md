@@ -1,59 +1,65 @@
-# CryptoWallet
+# 🌌 Aurora Terminal | Institutional Crypto Interface
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.3.
+Aurora Terminal is a high-performance, real-time cryptocurrency trading interface built with **Angular 21**. It features sub-second market data synchronization, reactive state management, and a high-end "Ethereal" aesthetic designed for institutional-grade asset management.
 
-## Development server
+![Angular](https://img.shields.io/badge/Angular%2021-DD0031?style=for-the-badge&logo=angular&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Signals](https://img.shields.io/badge/NG%20Signals-Store-85ea2d?style=for-the-badge&logo=angular&logoColor=black)
+![Tailwind](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
-To start a local development server, run:
+---
 
-```bash
-ng serve
-```
+## ✨ Key Frontend Highlights
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### ⚡ Real-Time "Ethereal" Engine
+*   **Binance WebSocket Integration:** Sub-second price synchronization and live Order Book streaming without UI lag.
+*   **Reactive Market Pulse:** Dynamic chart updates using ApexCharts, reflecting live market volatility.
+*   **Micro-Interactions:** Custom-built UI components with Tailwind CSS, featuring subtle "aurora" glows and high-fidelity animations.
 
-## Code scaffolding
+### 🧠 Advanced State Architecture
+*   **SignalStore (NgRx):** Fully reactive architecture utilizing the latest Angular Signals for efficient, fine-grained change detection.
+*   **Smart Caching Layer:** Implemented intelligent lazy-loading/caching that preserves market data during navigation while ensuring mutative actions (trades) trigger instant state updates.
+*   **Real-Time PNL Tracking:** Dynamic calculation of Portfolio Net Worth, Profit/Loss (USD), and ROI (%) based on live cost-basis data.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### 🛡️ Modern DX & Standards
+*   **Angular 21 Control Flow:** Optimized templates using the modern `@if`, `@for`, and `@defer` syntax for superior performance and readability.
+*   **Secure Session Management:** Custom-built "Institutional Logout" modal and JWT-based authentication guards.
 
-```bash
-ng generate component component-name
-```
+---
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 🛠️ The Tech Stack
 
-```bash
-ng generate --help
-```
+*   **Frontend:** Angular 21 (Signals, SignalStore, RxJS, Deferrable Views).
+*   **Styling:** Tailwind CSS (Custom Design System, Material Symbols).
+*   **Data Viz:** ApexCharts (Real-time Sparklines & Donut Allocations).
+*   **Core Logic:** NestJS & PostgreSQL (Supabase) for secure transaction processing and ledger history.
 
-## Building
+---
 
-To build the project run:
+## 🚀 Getting Started
 
-```bash
-ng build
-```
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/umpalumpa03/crypto-wallet.git
+    ```
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+3.  **Launch the Terminal:**
+    ```bash
+    npm start
+    ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+---
 
-## Running unit tests
+## 📸 Portfolio Preview
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+*   **Dashboard:** Live Net Worth, real-time ROI/PNL tracking, and allocation donut.
+*   **Trade Terminal:** High-frequency Order Book and execution engine.
+*   **Vault:** Multi-asset deposit management with secure cross-chain protocols.
+*   **Ledger:** Institutional auditing stream for every recorded transaction.
 
-```bash
-ng test
-```
+---
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+**Developed with precision by Ucha Sephiskveradze • 2026**

@@ -33,6 +33,7 @@ model Asset {
   userId    String
   symbol    String   // e.g., 'BTC', 'ETH', 'SOL'
   amount    Float    @default(0.0)
+  totalCost Float    @default(0.0) // 🏦 The total USD spent to acquire this amount (for PNL)
   
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 

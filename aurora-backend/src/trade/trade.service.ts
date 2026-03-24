@@ -56,15 +56,22 @@ export class TradeService {
 
         await tx.asset.upsert({
           where: { userId_symbol: { userId, symbol } },
-          update: { amount: { increment: amount } },
-          create: { userId, symbol, amount },
+          update: { 
+            amount: { increment: amount },
+            totalCost: { increment: totalValue } // 🏦 Update cost basis
+          },
+          create: { userId, symbol, amount, totalCost: totalValue },
         });
       } else if (side === TxType.SELL) {
         const currentAmount = assetWallet?.amount || 0;
+        const currentTotalCost = assetWallet?.totalCost || 0;
 
         if (currentAmount < amount) {
           throw new BadRequestException(`Insufficient ${symbol} balance`);
         }
+
+        // Calculate proportional cost basis removal
+        const proportionalCost = (amount / currentAmount) * currentTotalCost;
 
         await tx.user.update({
           where: { id: userId },
@@ -73,7 +80,10 @@ export class TradeService {
 
         await tx.asset.update({
           where: { userId_symbol: { userId, symbol } },
-          data: { amount: { decrement: amount } },
+          data: { 
+            amount: { decrement: amount },
+            totalCost: { decrement: proportionalCost } // 📉 Reduce basis proportionally
+          },
         });
       }
 

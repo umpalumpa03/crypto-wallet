@@ -21,6 +21,7 @@ export interface Asset {
   id: string;
   symbol: string;
   amount: number;
+  totalCost: number; // 🏦 Average cost basis
 }
 
 export interface Transaction {

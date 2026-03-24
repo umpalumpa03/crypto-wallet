@@ -17,11 +17,15 @@
                 </h1>
             </div>
             <div class="text-right pb-2">
-                <div class="flex items-center gap-2 text-tertiary-fixed-dim font-mono text-xl">
-                    <span class="material-symbols-outlined">trending_up</span>
-                    <span>+12.4%</span>
+                <div class="flex items-center gap-2 font-mono text-xl transition-colors duration-500"
+                    [ngClass]="totalPNL() >= 0 ? 'text-tertiary-fixed-dim' : 'text-error'">
+                    <span class="material-symbols-outlined">{{ totalPNL() >= 0 ? 'trending_up' : 'trending_down'
+                        }}</span>
+                    <span>{{ totalPNL() >= 0 ? '+' : '' }}{{ totalPNL() | currency:'USD' }}</span>
                 </div>
-                <p class="text-on-surface-variant text-xs uppercase tracking-wider">vs last month</p>
+                <p class="text-on-surface-variant text-xs uppercase tracking-wider">
+                    ROI: {{ pnlPercentage() | number:'1.2-2' }}%
+                </p>
             </div>
         </div>
 

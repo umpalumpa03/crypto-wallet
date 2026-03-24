@@ -34,9 +34,9 @@ async function main() {
       // 1. Injecting Crypto Wallets (Assets)
       assets: {
         create: [
-          { symbol: 'BTC', amount: 12.4402 },
-          { symbol: 'ETH', amount: 24.812 },
-          { symbol: 'SOL', amount: 1240.5 },
+          { symbol: 'BTC', amount: 12.4402, totalCost: 650000.0 }, // Cost basis around $52k
+          { symbol: 'ETH', amount: 24.812, totalCost: 60000.0 },   // Cost basis around $2.4k
+          { symbol: 'SOL', amount: 1240.5, totalCost: 150000.0 },  // Cost basis around $120
         ],
       },
 
