@@ -1,26 +1,37 @@
 <div class="p-8 flex-1 flex flex-col h-full overflow-hidden">
 
     <div class="h-14 bg-surface-container-low flex items-center px-8 gap-10 border-b border-outline-variant/5 shrink-0">
-        <div class="flex items-center gap-3">
-            <span class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">BTC/USD</span>
-            <span class="text-sm font-bold text-tertiary-fixed-dim">$64,281.45</span>
+        <div class="flex items-center gap-4">
+            <div class="flex bg-surface-container-highest rounded p-1 gap-1">
+                <button (click)="setAsset('BTC')"
+                    [ngClass]="selectedAsset() === 'BTC' ? 'bg-primary-fixed-dim text-[#003828]' : 'text-on-surface-variant hover:text-white'"
+                    class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded transition-colors cursor-pointer">BTC</button>
+                <button (click)="setAsset('ETH')"
+                    [ngClass]="selectedAsset() === 'ETH' ? 'bg-primary-fixed-dim text-[#003828]' : 'text-on-surface-variant hover:text-white'"
+                    class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded transition-colors cursor-pointer">ETH</button>
+                <button (click)="setAsset('SOL')"
+                    [ngClass]="selectedAsset() === 'SOL' ? 'bg-primary-fixed-dim text-[#003828]' : 'text-on-surface-variant hover:text-white'"
+                    class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded transition-colors cursor-pointer">SOL</button>
+            </div>
+
+            <span class="text-sm font-bold text-tertiary-fixed-dim transition-colors duration-300">
+                {{ currentPrice() | currency:'USD':'symbol':'1.2-2' }}
+            </span>
             <span
                 class="text-[10px] px-1.5 py-0.5 rounded bg-tertiary-fixed-dim/10 text-tertiary-fixed-dim font-bold">+2.45%</span>
         </div>
+
         <div class="hidden md:flex items-center gap-8 border-l border-outline-variant/20 pl-8">
             <div class="flex flex-col">
                 <span class="text-[10px] text-on-surface-variant uppercase tracking-tighter">24h High</span>
-                <span class="text-xs font-medium">$65,102.00</span>
+                <span class="text-xs font-medium">{{ currentPrice() * 1.05 | currency:'USD' }}</span>
             </div>
             <div class="flex flex-col">
                 <span class="text-[10px] text-on-surface-variant uppercase tracking-tighter">24h Low</span>
-                <span class="text-xs font-medium">$62,890.30</span>
-            </div>
-            <div class="flex flex-col">
-                <span class="text-[10px] text-on-surface-variant uppercase tracking-tighter">24h Volume</span>
-                <span class="text-xs font-medium">1.2B BTC</span>
+                <span class="text-xs font-medium">{{ currentPrice() * 0.95 | currency:'USD' }}</span>
             </div>
         </div>
+
         <div class="ml-auto flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim animate-pulse"></span>
             <span class="text-[10px] font-bold text-on-surface-variant tracking-widest uppercase">Network Live</span>
@@ -30,155 +41,119 @@
     <div class="flex-1 grid grid-cols-12 gap-0.5 bg-outline-variant/10 overflow-hidden h-[calc(100vh-8rem)]">
 
         <div class="col-span-12 lg:col-span-9 bg-surface-container-lowest flex flex-col aurora-glow h-full">
+
             <div class="h-12 flex items-center px-6 justify-between border-b border-outline-variant/5 shrink-0">
                 <div class="flex items-center gap-1">
                     <button
-                        class="px-3 py-1 rounded text-[10px] font-bold bg-surface-container-highest text-primary-fixed-dim uppercase tracking-widest cursor-pointer">1H</button>
-                    <button
-                        class="px-3 py-1 rounded text-[10px] font-bold hover:bg-surface-container-high transition-colors text-on-surface-variant uppercase tracking-widest cursor-pointer">4H</button>
-                    <button
-                        class="px-3 py-1 rounded text-[10px] font-bold hover:bg-surface-container-high transition-colors text-on-surface-variant uppercase tracking-widest cursor-pointer">1D</button>
-                    <button
-                        class="px-3 py-1 rounded text-[10px] font-bold hover:bg-surface-container-high transition-colors text-on-surface-variant uppercase tracking-widest cursor-pointer">1W</button>
-                    <div class="w-px h-4 bg-outline-variant/20 mx-2"></div>
-                    <button
-                        class="flex items-center gap-1.5 px-3 py-1 rounded text-[10px] font-bold hover:bg-surface-container-high transition-colors text-on-surface-variant uppercase tracking-widest cursor-pointer">
-                        <span class="material-symbols-outlined text-sm">show_chart</span>
-                        Indicators
-                    </button>
+                        class="px-3 py-1 rounded text-[10px] font-bold bg-surface-container-highest text-primary-fixed-dim uppercase tracking-widest cursor-pointer">LIVE</button>
                 </div>
                 <div class="flex items-center gap-4">
                     <span
                         class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary-fixed-dim">fullscreen</span>
-                    <span
-                        class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary-fixed-dim">camera_alt</span>
                 </div>
             </div>
 
             <div class="flex-1 relative p-6 overflow-hidden">
                 <div class="absolute inset-0 grid grid-cols-8 grid-rows-6 opacity-5 pointer-events-none">
+                    @for (i of [].constructor(48); track $index) {
                     <div class="border-r border-b border-on-surface"></div>
-                    <div class="border-r border-b border-on-surface"></div>
-                    <div class="border-r border-b border-on-surface"></div>
-                    <div class="border-r border-b border-on-surface"></div>
-                    <div class="border-r border-b border-on-surface"></div>
-                    <div class="border-r border-b border-on-surface"></div>
-                    <div class="border-r border-b border-on-surface"></div>
-                    <div class="border-b border-on-surface"></div>
-                    <div class="border-r border-b border-on-surface"></div>
-                    <div class="border-r border-b border-on-surface"></div>
-                    <div class="border-r border-b border-on-surface"></div>
-                    <div class="border-r border-b border-on-surface"></div>
-                    <div class="border-r border-b border-on-surface"></div>
-                    <div class="border-r border-b border-on-surface"></div>
-                    <div class="border-r border-b border-on-surface"></div>
-                    <div class="border-b border-on-surface"></div>
+                    }
                 </div>
 
-                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <svg class="w-full h-full p-10 opacity-60" preserveAspectRatio="none" viewBox="0 0 1000 400">
-                        <defs>
-                            <linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
-                                <stop offset="0%" stop-color="#00e1ab" stop-opacity="0.2"></stop>
-                                <stop offset="100%" stop-color="#00e1ab" stop-opacity="0"></stop>
-                            </linearGradient>
-                        </defs>
-                        <path d="M0,350 Q100,320 200,340 T400,280 T600,220 T800,150 T1000,120 L1000,400 L0,400 Z"
-                            fill="url(#chartGradient)"></path>
-                        <path d="M0,350 Q100,320 200,340 T400,280 T600,220 T800,150 T1000,120" fill="none"
-                            stroke="#00e1ab" stroke-width="2"></path>
-                    </svg>
+                <div class="absolute inset-0 pt-8 pb-4 z-10 w-full h-full">
+                    <div class="absolute inset-0 pt-8 pb-4 z-10 w-full h-full">
+                        <apx-chart #mainChart class="block w-full h-full" width="100%" height="100%"
+                            [series]="initialSeries" [chart]="chartOptions.chart" [dataLabels]="chartOptions.dataLabels"
+                            [stroke]="chartOptions.stroke" [markers]="chartOptions.markers" [grid]="chartOptions.grid"
+                            [xaxis]="chartOptions.xaxis" [yaxis]="chartOptions.yaxis" [tooltip]="chartOptions.tooltip">
+                        </apx-chart>
+                    </div>
                 </div>
 
                 <div
-                    class="absolute top-1/2 left-1/3 border-l border-dashed border-primary-fixed-dim/40 h-full -translate-y-1/2 pointer-events-none">
+                    class="absolute top-1/2 left-1/3 border-l border-dashed border-primary-fixed-dim/40 h-full -translate-y-1/2 pointer-events-none z-20">
                     <div
-                        class="absolute top-0 -translate-x-1/2 bg-primary-fixed-dim text-[#003828] text-[10px] font-bold px-2 py-0.5 rounded shadow-lg">
-                        $64,281.45
+                        class="absolute top-0 -translate-x-1/2 bg-primary-fixed-dim text-[#003828] text-[10px] font-bold px-2 py-0.5 rounded shadow-lg transition-all duration-300">
+                        {{ currentPrice() | currency:'USD':'symbol':'1.2-2' }}
                     </div>
                 </div>
             </div>
 
             <div class="h-64 border-t border-outline-variant/10 grid grid-cols-2 shrink-0">
+
                 <div class="border-r border-outline-variant/10 p-4 overflow-hidden flex flex-col">
                     <div class="flex justify-between items-center mb-4 shrink-0">
                         <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Order
                             Book</span>
-                        <div class="flex gap-2">
-                            <span
-                                class="material-symbols-outlined text-sm text-primary-fixed-dim">format_align_justify</span>
-                            <span class="material-symbols-outlined text-sm text-slate-500">list</span>
-                        </div>
                     </div>
                     <div class="flex-1 overflow-y-auto no-scrollbar">
                         <div
                             class="grid grid-cols-3 text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-2 border-b border-outline-variant/5 pb-2">
-                            <span>Price</span>
-                            <span class="text-right">Size</span>
-                            <span class="text-right">Sum</span>
+                            <span>Price</span><span class="text-right">Size</span><span class="text-right">Sum</span>
                         </div>
                         <div class="space-y-1 text-[10px] font-mono">
+
+                            @for (ask of asks(); track ask.p) {
                             <div class="grid grid-cols-3 text-error relative">
-                                <div class="absolute inset-0 bg-error/5 w-[40%] right-0"></div>
-                                <span>64,289.00</span><span class="text-right text-on-surface">0.451</span><span
-                                    class="text-right text-on-surface">12.88</span>
+                                <div class="absolute inset-0 bg-error/5 right-0 transition-all duration-300"
+                                    [style.width]="ask.width"></div>
+                                <span>{{ ask.p | number:'1.2-2' }}</span>
+                                <span class="text-right text-on-surface">{{ ask.size | number:'1.3-3' }}</span>
+                                <span class="text-right text-on-surface">{{ ask.sum | number:'1.2-2' }}</span>
                             </div>
-                            <div class="grid grid-cols-3 text-error relative">
-                                <div class="absolute inset-0 bg-error/5 w-[65%] right-0"></div>
-                                <span>64,288.50</span><span class="text-right text-on-surface">1.200</span><span
-                                    class="text-right text-on-surface">12.43</span>
-                            </div>
-                            <div class="grid grid-cols-3 text-error relative">
-                                <div class="absolute inset-0 bg-error/5 w-[20%] right-0"></div>
-                                <span>64,287.10</span><span class="text-right text-on-surface">0.050</span><span
-                                    class="text-right text-on-surface">11.23</span>
-                            </div>
+                            }
+
                             <div
                                 class="py-2 text-center text-lg font-bold text-on-surface flex items-center justify-center gap-2">
-                                64,281.45 <span
+                                {{ currentPrice() | number:'1.2-2' }}
+                                <span
                                     class="material-symbols-outlined text-sm text-tertiary-fixed-dim">trending_up</span>
                             </div>
+
+                            @for (bid of bids(); track bid.p) {
                             <div class="grid grid-cols-3 text-primary-fixed-dim relative">
-                                <div class="absolute inset-0 bg-primary-fixed-dim/5 w-[30%] right-0"></div>
-                                <span>64,280.00</span><span class="text-right text-on-surface">0.312</span><span
-                                    class="text-right text-on-surface">0.31</span>
+                                <div class="absolute inset-0 bg-primary-fixed-dim/5 right-0 transition-all duration-300"
+                                    [style.width]="bid.width"></div>
+                                <span>{{ bid.p | number:'1.2-2' }}</span>
+                                <span class="text-right text-on-surface">{{ bid.size | number:'1.3-3' }}</span>
+                                <span class="text-right text-on-surface">{{ bid.sum | number:'1.2-2' }}</span>
                             </div>
-                            <div class="grid grid-cols-3 text-primary-fixed-dim relative">
-                                <div class="absolute inset-0 bg-primary-fixed-dim/5 w-[85%] right-0"></div>
-                                <span>64,279.20</span><span class="text-right text-on-surface">2.441</span><span
-                                    class="text-right text-on-surface">2.75</span>
-                            </div>
+                            }
                         </div>
                     </div>
                 </div>
 
                 <div class="p-4 flex flex-col">
                     <span
-                        class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-4 shrink-0">Recent
-                        Trades</span>
-                    <div class="flex-1 overflow-y-auto no-scrollbar">
-                        <div
-                            class="grid grid-cols-3 text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-2 border-b border-outline-variant/5 pb-2">
-                            <span>Price</span>
-                            <span class="text-right">Amount</span>
-                            <span class="text-right">Time</span>
+                        class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-4 shrink-0">Market
+                        Movers</span>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-bold">BTC/USD</span>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-[10px] font-bold font-mono">{{ market.liveBtcPrice() | currency:'USD'
+                                    }}</div>
+                            </div>
                         </div>
-                        <div class="space-y-1.5 text-[10px] font-mono">
-                            <div class="grid grid-cols-3"><span class="text-primary-fixed-dim">64,281.45</span><span
-                                    class="text-right">0.024</span><span
-                                    class="text-right text-on-surface-variant">14:22:01</span></div>
-                            <div class="grid grid-cols-3"><span class="text-error">64,280.90</span><span
-                                    class="text-right">0.150</span><span
-                                    class="text-right text-on-surface-variant">14:22:00</span></div>
-                            <div class="grid grid-cols-3"><span class="text-primary-fixed-dim">64,281.00</span><span
-                                    class="text-right">0.008</span><span
-                                    class="text-right text-on-surface-variant">14:21:58</span></div>
-                            <div class="grid grid-cols-3"><span class="text-primary-fixed-dim">64,281.10</span><span
-                                    class="text-right">1.200</span><span
-                                    class="text-right text-on-surface-variant">14:21:55</span></div>
-                            <div class="grid grid-cols-3"><span class="text-error">64,280.50</span><span
-                                    class="text-right">0.045</span><span
-                                    class="text-right text-on-surface-variant">14:21:54</span></div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-bold">ETH/USD</span>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-[10px] font-bold font-mono">{{ market.liveEthPrice() | currency:'USD'
+                                    }}</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-bold">SOL/USD</span>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-[10px] font-bold font-mono">{{ market.liveSolPrice() | currency:'USD'
+                                    }}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -186,15 +161,12 @@
         </div>
 
         <div class="col-span-12 lg:col-span-3 bg-surface-container flex flex-col h-full overflow-y-auto">
-
             <div class="p-6 border-b border-outline-variant/5">
                 <div class="flex bg-surface-container-lowest rounded-lg p-1 mb-6">
                     <button
                         class="flex-1 py-1.5 text-[10px] font-bold uppercase tracking-wider bg-surface-container-highest text-primary-fixed-dim rounded cursor-pointer">Market</button>
                     <button
                         class="flex-1 py-1.5 text-[10px] font-bold uppercase tracking-wider text-on-surface-variant hover:text-white cursor-pointer">Limit</button>
-                    <button
-                        class="flex-1 py-1.5 text-[10px] font-bold uppercase tracking-wider text-on-surface-variant hover:text-white cursor-pointer">Stop</button>
                 </div>
 
                 <div class="space-y-4">
@@ -202,8 +174,8 @@
                         <label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Current
                             Price</label>
                         <div
-                            class="bg-surface-container-lowest rounded-lg px-4 py-3 border border-outline-variant/10 flex justify-between items-center group focus-within:ring-1 focus-within:ring-primary-fixed-dim">
-                            <span class="text-sm font-mono font-bold">64,281.45</span>
+                            class="bg-surface-container-lowest rounded-lg px-4 py-3 border border-outline-variant/10 flex justify-between items-center group">
+                            <span class="text-sm font-mono font-bold">{{ currentPrice() | number:'1.2-2' }}</span>
                             <span class="text-[10px] font-bold text-on-surface-variant">USD</span>
                         </div>
                     </div>
@@ -215,81 +187,17 @@
                             class="bg-surface-container-lowest rounded-lg px-4 py-3 border border-outline-variant/10 flex justify-between items-center focus-within:ring-1 focus-within:ring-primary-fixed-dim">
                             <input type="text" placeholder="0.00"
                                 class="bg-transparent border-none outline-none text-sm font-mono font-bold w-full text-white" />
-                            <span class="text-[10px] font-bold text-on-surface-variant ml-2">BTC</span>
+                            <span class="text-[10px] font-bold text-on-surface-variant ml-2">{{ selectedAsset()
+                                }}</span>
                         </div>
-                    </div>
-
-                    <div class="flex justify-between gap-2">
-                        <button
-                            class="flex-1 py-1 rounded bg-surface-container-low text-[10px] font-bold hover:bg-surface-container-highest transition-colors cursor-pointer">25%</button>
-                        <button
-                            class="flex-1 py-1 rounded bg-surface-container-low text-[10px] font-bold hover:bg-surface-container-highest transition-colors cursor-pointer">50%</button>
-                        <button
-                            class="flex-1 py-1 rounded bg-surface-container-low text-[10px] font-bold hover:bg-surface-container-highest transition-colors cursor-pointer">75%</button>
-                        <button
-                            class="flex-1 py-1 rounded bg-surface-container-low text-[10px] font-bold hover:bg-surface-container-highest transition-colors cursor-pointer">MAX</button>
                     </div>
 
                     <div class="pt-4 space-y-3">
-                        <div class="flex justify-between items-center text-[10px]">
-                            <span class="text-on-surface-variant font-medium">Estimated Fee</span>
-                            <span class="text-on-surface font-mono">$12.45</span>
-                        </div>
-                        <div class="flex justify-between items-center text-[10px]">
-                            <span class="text-on-surface-variant font-medium">Total Cost</span>
-                            <span class="text-on-surface font-mono">$0.00</span>
-                        </div>
                         <button
                             class="w-full py-4 rounded-xl bg-primary-fixed-dim text-[#003828] font-black text-xs uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(0,225,171,0.2)] hover:shadow-[0_0_30px_rgba(0,225,171,0.4)] hover:brightness-110 active:scale-[0.98] transition-all cursor-pointer">
-                            Buy BTC
-                        </button>
-                        <button
-                            class="w-full py-3 rounded-xl border border-error/20 text-error font-bold text-xs uppercase tracking-widest hover:bg-error/5 transition-colors cursor-pointer">
-                            Sell BTC
+                            Buy {{ selectedAsset() }}
                         </button>
                     </div>
-                </div>
-            </div>
-
-            <div class="flex-1 p-6 space-y-6">
-                <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Market
-                    Movers</span>
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <div class="w-6 h-6 rounded bg-orange-500/10 flex items-center justify-center">
-                                <span class="material-symbols-outlined text-xs text-orange-500">currency_bitcoin</span>
-                            </div>
-                            <span class="text-xs font-bold">ETH/USD</span>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-[10px] font-bold">$3,451.20</div>
-                            <div class="text-[9px] font-bold text-tertiary-fixed-dim">+1.2%</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <div class="w-6 h-6 rounded bg-blue-500/10 flex items-center justify-center">
-                                <span class="material-symbols-outlined text-xs text-blue-500">token</span>
-                            </div>
-                            <span class="text-xs font-bold">SOL/USD</span>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-[10px] font-bold">$142.88</div>
-                            <div class="text-[9px] font-bold text-error">-0.4%</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-8 p-4 rounded-lg bg-surface-container-lowest border border-outline-variant/5">
-                    <div class="flex items-center gap-2 text-primary-fixed-dim mb-2">
-                        <span class="material-symbols-outlined text-sm">bolt</span>
-                        <span class="text-[10px] font-black uppercase tracking-widest">Aurora Signal</span>
-                    </div>
-                    <p class="text-[10px] text-on-surface-variant leading-relaxed">
-                        Volatility levels are currently <span class="text-primary-fixed-dim">Low</span>. Stochastic RSI
-                        suggests a potential bullish divergence in 4H timeframe.
-                    </p>
                 </div>
             </div>
         </div>

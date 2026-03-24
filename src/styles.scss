@@ -81,3 +81,9 @@ body {
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
+
+.apexcharts-tooltip.apexcharts-active ~ .apexcharts-tooltip.apexcharts-active {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
