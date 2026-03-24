@@ -2,7 +2,7 @@ import { Component, OnInit, inject, ViewChild, effect, computed } from '@angular
 import { CommonModule } from '@angular/common';
 import { PortfolioStore } from '../../core/store/portfolio.store';
 import { NgApexchartsModule, ChartComponent } from 'ng-apexcharts';
-import { MarketFeedService } from '../../core/api/market-feed.service';
+import { MarketStore } from '../../core/store/market.store';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,7 +12,7 @@ import { MarketFeedService } from '../../core/api/market-feed.service';
 })
 export class Dashboard implements OnInit {
   readonly store = inject(PortfolioStore);
-  public market = inject(MarketFeedService);
+  public market = inject(MarketStore);
 
   @ViewChild('btcChart') btcChart!: ChartComponent;
   @ViewChild('ethChart') ethChart!: ChartComponent;
@@ -34,7 +34,7 @@ export class Dashboard implements OnInit {
       solAmount * this.market.liveSolPrice();
 
     // Add their raw USD cash balance (from the DB deposit)
-    const cashReserve = 250000;
+    const cashReserve = profile.usdBalance || 0;
 
     return cryptoValue + cashReserve;
   });

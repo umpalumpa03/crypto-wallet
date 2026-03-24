@@ -5,13 +5,15 @@ import { Ledger } from './features/ledger/ledger';
 import { Markets } from './features/markets/markets';
 import { Vault } from './features/vault/vault';
 import { MainLayout } from './layout/main-layout/main-layout';
+import { authGuard, loginGuard } from './core/api/auth.guard';
 
 export const routes: Routes = [
-  { path: 'login', component: Auth },
+  { path: 'auth', component: Auth, canActivate: [loginGuard] },
 
   {
     path: '',
     component: MainLayout,
+    canActivate: [authGuard],
     children: [
       { path: 'dashboard', component: Dashboard },
       { path: 'markets', component: Markets },
@@ -21,5 +23,5 @@ export const routes: Routes = [
     ],
   },
 
-  { path: '**', redirectTo: 'login' },
+  { path: '**', redirectTo: 'auth' },
 ];

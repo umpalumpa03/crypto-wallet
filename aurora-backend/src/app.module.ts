@@ -1,15 +1,16 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PrismaService } from './prisma/prisma.service';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { MarketGateway } from './market/market.gateway';
 import { PrismaModule } from './prisma/prisma.module';
 import { TradeModule } from './trade/trade.module';
+import { AuthModule } from './auth/auth.module';
+import { OrderBookGateway } from './trade/order-book.gateway';
 
 @Module({
-  imports: [PortfolioModule, PrismaModule, TradeModule],
+  imports: [PortfolioModule, PrismaModule, TradeModule, AuthModule],
   controllers: [AppController],
-  providers: [AppService, PrismaService, MarketGateway],
+  providers: [AppService, MarketGateway],
 })
 export class AppModule {}

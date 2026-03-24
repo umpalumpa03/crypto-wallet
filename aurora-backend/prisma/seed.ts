@@ -5,7 +5,13 @@ import { Pool } from 'pg';
 
 // Prisma 7 explicitly requires a driver adapter
 const connectionString = process.env.DATABASE_URL;
-const pool = new Pool({ connectionString });
+const pool = new Pool({ 
+  connectionString,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
+console.log('Pool created with SSL rejectUnauthorized: false');
 const adapter = new PrismaPg(pool as any);
 const prisma = new PrismaClient({ adapter });
 

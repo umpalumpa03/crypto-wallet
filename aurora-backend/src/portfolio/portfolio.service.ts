@@ -5,16 +5,14 @@ import { PrismaService } from '../prisma/prisma.service';
 export class PortfolioService {
   constructor(private prisma: PrismaService) {}
 
-  async getDashboardData() {
-    const userEmail = 'trader@aurora.io';
-
+  async getDashboardData(userId: string) {
     const user = await this.prisma.user.findUnique({
-      where: { email: userEmail },
+      where: { id: userId },
       include: {
         assets: true,
         transactions: {
           orderBy: { createdAt: 'desc' },
-          take: 5,
+          take: 10,
         },
       },
     });
@@ -23,6 +21,7 @@ export class PortfolioService {
       throw new NotFoundException('Institutional profile not found');
     }
 
+    // Return sensitive info separately if needed, but here we return the full user object (minus hash handled by guard/logic)
     return user;
   }
 }

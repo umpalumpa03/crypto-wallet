@@ -31,24 +31,26 @@
         </nav>
 
         <div class="mt-auto px-4 pt-6 border-t border-outline-variant/10">
-            <div class="flex items-center gap-3 mb-6">
-                <div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden">
-                    <img src="svgs/avatar.svg" alt="Profile" class="w-full h-full object-cover" />
+            @if (portfolioStore.profile(); as profile) {
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden">
+                        <img src="svgs/avatar.svg" alt="Profile" class="w-full h-full object-cover" />
+                    </div>
+                    <div class="flex flex-col overflow-hidden">
+                        <span class="text-sm font-bold text-white tracking-tight truncate">{{ profile.usdBalance | currency }}</span>
+                        <span class="text-[10px] text-slate-500 uppercase tracking-widest">{{ profile.fullName }}</span>
+                    </div>
                 </div>
-                <div class="flex flex-col">
-                    <span class="text-sm font-bold text-white tracking-tight">$2,482,901.40</span>
-                    <span class="text-[10px] text-slate-500 uppercase tracking-widest">Institutional Active</span>
-                </div>
-            </div>
+            }
             <button
                 class="w-full py-2.5 rounded-lg bg-[#00e1ab] text-[#003828] font-bold text-xs uppercase tracking-wider mb-6 hover:brightness-110 transition-all">
                 Deposit Funds
             </button>
             <div class="space-y-1">
-                <a
-                    class="flex items-center gap-3 px-2 py-2 text-slate-400 hover:text-error transition-colors cursor-pointer">
-                    <span class="material-symbols-outlined text-sm">logout</span>
-                    <span class="text-xs">Sign Out</span>
+                <a (click)="onLogout()"
+                    class="flex items-center gap-3 px-2 py-2 text-slate-400 hover:text-red-500 transition-colors cursor-pointer group">
+                    <span class="material-symbols-outlined text-sm group-hover:text-red-500">logout</span>
+                    <span class="text-xs group-hover:text-red-500">Sign Out</span>
                 </a>
             </div>
         </div>
@@ -77,5 +79,13 @@
             <router-outlet></router-outlet>
         </div>
 
-    </main>
-</div>
+        </main>
+
+        <!-- Logout Confirmation Modal -->
+        @if (showLogoutConfirm()) {
+            <app-logout-modal 
+                (confirm)="confirmLogout()"
+                (cancel)="cancelLogout()">
+            </app-logout-modal>
+        }
+        </div>

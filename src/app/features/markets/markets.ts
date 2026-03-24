@@ -12,8 +12,8 @@ import { ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AssetSymbol } from './models/asset.model';
 import { ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
-import { TradeService } from '../../core/services/trade.service';
-import { MarketFeedService } from '../../core/api/market-feed.service';
+import { TradeStore } from '../../core/store/trade.store';
+import { MarketStore } from '../../core/store/market.store';
 import { NumberInput } from '../../shared/components/number-input/number-input';
 
 @Component({
@@ -26,8 +26,8 @@ export class Markets {
   // ==========================================
   // 🔥 INJECTIONS & STATE
   // ==========================================
-  public market = inject(MarketFeedService);
-  public tradeAPI = inject(TradeService);
+  public market = inject(MarketStore);
+  public tradeAPI = inject(TradeStore);
 
   public selectedAsset = signal<AssetSymbol>('BTC');
   public tradeSide = signal<'BUY' | 'SELL'>('BUY');

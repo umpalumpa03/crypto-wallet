@@ -1,8 +1,8 @@
 import { Component, ChangeDetectionStrategy, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { TradeService } from '../../core/services/trade.service';
-import { MarketFeedService } from '../../core/api/market-feed.service';
+import { TradeStore } from '../../core/store/trade.store';
+import { MarketStore } from '../../core/store/market.store';
 import { VaultAsset } from './models/vault.model';
 
 @Component({
@@ -12,8 +12,8 @@ import { VaultAsset } from './models/vault.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Vault {
-  public tradeAPI = inject(TradeService);
-  public market = inject(MarketFeedService);
+  public tradeAPI = inject(TradeStore);
+  public market = inject(MarketStore);
 
   constructor() {
     this.tradeAPI.loadPortfolio();

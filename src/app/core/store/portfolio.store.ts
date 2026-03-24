@@ -1,9 +1,10 @@
 import { inject } from '@angular/core';
 import { signalStore, withState, withMethods, patchState, withComputed } from '@ngrx/signals';
 import { computed } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { lastValueFrom } from 'rxjs';
 import { InstitutionalProfile } from '../models/portfolio.model';
-import { PortfolioService } from '../services/portfolio.service';
+import { API_URL } from '../../environments/environment';
 
 type PortfolioState = {
   profile: InstitutionalProfile | null;
@@ -26,12 +27,16 @@ export const PortfolioStore = signalStore(
     recentActivity: computed(() => profile()?.transactions.slice(0, 3) || []),
   })),
 
-  withMethods((store, portfolioService = inject(PortfolioService)) => ({
-    async loadPortfolio() {
+  withMethods((store, http = inject(HttpClient)) => ({
+    async loadPortfolio(force = false) {
+      // Cache check: If we already have data and aren't forcing a refresh, skip the API call
+      if (store.profile() && !force) return;
+
       patchState(store, { isLoading: true, error: null });
 
       try {
-        const profile = await firstValueFrom(portfolioService.getDashboardData());
+        const apiUrl = `${API_URL}/portfolio/dashboard`;
+        const profile = await lastValueFrom(http.get<InstitutionalProfile>(apiUrl));
         patchState(store, { profile, isLoading: false });
       } catch (err) {
         console.error('Failed to load portfolio', err);
