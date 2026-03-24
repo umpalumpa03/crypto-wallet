@@ -11,3 +11,13 @@ export interface PortfolioResponse {
   usdBalance: number;
   cryptoPortfolio: Record<string, number>;
 }
+
+export interface DepositConfig {
+  name: string;
+  symbol: string;
+  network: string;
+  icon: string;
+  iconClass: string;
+  address: string;
+  warning: string;
+}

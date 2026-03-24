@@ -100,4 +100,49 @@ export class TradeService {
       take: 50,
     });
   }
+
+  async getDepositConfigs() {
+    return {
+      BTC: {
+        name: 'Bitcoin',
+        symbol: 'BTC',
+        network: 'SegWit',
+        icon: 'currency_bitcoin',
+        iconClass: 'text-primary-fixed-dim',
+        address: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh',
+        warning:
+          'Only send Bitcoin (BTC) to this address. Sending any other asset may result in permanent loss.',
+      },
+      ETH: {
+        name: 'Ethereum',
+        symbol: 'ETH',
+        network: 'ERC-20',
+        icon: 'diamond',
+        iconClass: 'text-secondary',
+        address: '0x71C7656EC7ab88b098defB751B7401B5f6d8976F',
+        warning:
+          'Only send Ethereum (ETH) or ERC-20 tokens via the Ethereum network to this address.',
+      },
+      SOL: {
+        name: 'Solana',
+        symbol: 'SOL',
+        network: 'Solana',
+        icon: 'token',
+        iconClass: 'text-tertiary-fixed-dim',
+        address: 'HN7cABqLq46Es1jh92dQQisAq662SmxELLLsHHe4YWrH',
+        warning:
+          'Only send Solana (SOL) or SPL tokens to this address. Do not send NFTs to this vault.',
+      },
+      USD: {
+        name: 'US Dollar',
+        symbol: 'USD',
+        network: 'Wire Transfer',
+        icon: 'account_balance',
+        iconClass: 'text-white',
+        address: 'Acct: 38291048 | Routing: 122105155',
+        warning:
+          'Ensure the sender name perfectly matches your verified KYC identity. Institutional wires only.',
+      },
+    };
+  }
 }

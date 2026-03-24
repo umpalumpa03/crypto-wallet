@@ -2,7 +2,7 @@ import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { API_URL } from '../../environments/environment';
-import { TradeHistoryItem, PortfolioResponse } from '../models/trade.model';
+import { TradeHistoryItem, PortfolioResponse, DepositConfig } from '../models/trade.model';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +19,7 @@ export class TradeService {
   public usdBalance = signal<number>(0);
   public cryptoPortfolio = signal<Record<string, number>>({});
   public tradeHistory = signal<TradeHistoryItem[]>([]);
+  public depositConfigs = signal<Record<string, DepositConfig>>({});
 
   public isTrading = signal<boolean>(false);
   public tradeMessage = signal<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -100,6 +101,17 @@ export class TradeService {
     } finally {
       this.isTrading.set(false);
       setTimeout(() => this.tradeMessage.set(null), 4000);
+    }
+  }
+
+  public async loadDepositConfigs() {
+    try {
+      const data = await lastValueFrom(
+        this.http.get<Record<string, DepositConfig>>(`${this.apiUrl}/deposit-info`),
+      );
+      this.depositConfigs.set(data);
+    } catch (error) {
+      console.error('Failed to load vault configurations from backend', error);
     }
   }
 }

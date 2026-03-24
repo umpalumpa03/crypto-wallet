@@ -26,75 +26,81 @@
             <h3 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest px-2 mb-4">Active Balances
             </h3>
 
-            <div
-                class="group cursor-pointer p-6 rounded-xl bg-surface-container-low border border-transparent hover:border-primary-fixed-dim/20 hover:bg-surface-container transition-all relative overflow-hidden">
+            <div (click)="selectedDeposit.set('USD')"
+                [ngClass]="selectedDeposit() === 'USD' ? 'border-primary-fixed-dim/50 bg-surface-container' : 'border-transparent bg-surface-container-low hover:border-primary-fixed-dim/20'"
+                class="group cursor-pointer p-6 rounded-xl border-2 transition-all relative overflow-hidden">
                 <div class="flex flex-wrap justify-between items-start relative z-10">
                     <div>
-                        <div class="text-on-surface-variant text-sm font-medium mb-1">Total USD</div>
-                        <div class="text-3xl font-headline font-bold text-on-surface">$1,420,552.00</div>
+                        <div class="text-on-surface-variant text-sm font-medium mb-1">Available USD Fiat</div>
+                        <div class="text-3xl font-headline font-bold text-on-surface">{{ tradeAPI.usdBalance() |
+                            currency:'USD' }}</div>
                     </div>
                     <div class="bg-surface-container-highest p-2 rounded-lg">
-                        <span class="material-symbols-outlined text-primary-fixed-dim">payments</span>
-                    </div>
-                </div>
-                <div class="mt-4 flex items-center gap-2 relative z-10">
-                    <span class="text-tertiary-fixed-dim text-xs font-bold">+2.4%</span>
-                    <div class="h-1 w-24 bg-surface-variant rounded-full overflow-hidden">
-                        <div class="h-full bg-tertiary-fixed-dim w-3/4"></div>
+                        <span class="material-symbols-outlined"
+                            [ngClass]="selectedDeposit() === 'USD' ? 'text-primary-fixed-dim' : 'text-on-surface-variant'">payments</span>
                     </div>
                 </div>
             </div>
 
-            <div
-                class="p-6 rounded-xl bg-surface-container border-2 border-primary-fixed-dim shadow-xl shadow-primary-fixed-dim/5 relative overflow-hidden cursor-pointer">
-                <div class="aurora-glow absolute inset-0"></div>
+            <div (click)="selectedDeposit.set('BTC')"
+                [ngClass]="selectedDeposit() === 'BTC' ? 'border-primary-fixed-dim bg-surface-container shadow-xl shadow-primary-fixed-dim/5' : 'border-transparent bg-surface-container-low hover:border-primary-fixed-dim/20'"
+                class="p-6 rounded-xl border-2 transition-all relative overflow-hidden cursor-pointer">
+                @if (selectedDeposit() === 'BTC') { <div class="aurora-glow absolute inset-0"></div> }
                 <div class="flex justify-between items-start relative z-10">
                     <div>
-                        <div class="text-primary-fixed-dim text-sm font-bold mb-1">Bitcoin</div>
-                        <div class="text-3xl font-headline font-bold text-on-surface">12.4402 BTC</div>
-                        <div class="text-sm text-on-surface-variant mt-1">≈ $821,044.12</div>
+                        <div class="text-sm font-bold mb-1"
+                            [ngClass]="selectedDeposit() === 'BTC' ? 'text-primary-fixed-dim' : 'text-on-surface-variant'">
+                            Bitcoin</div>
+                        <div class="text-3xl font-headline font-bold text-on-surface">{{ btcBalance() | number:'1.2-4'
+                            }} BTC</div>
+                        <div class="text-sm text-on-surface-variant mt-1">≈ {{ btcValue() | currency:'USD' }}</div>
                     </div>
-                    <div class="bg-primary-fixed-dim text-on-primary p-2 rounded-lg">
+                    <div class="p-2 rounded-lg transition-colors"
+                        [ngClass]="selectedDeposit() === 'BTC' ? 'bg-primary-fixed-dim text-on-primary' : 'bg-surface-container-highest text-on-surface-variant'">
                         <span class="material-symbols-outlined">currency_bitcoin</span>
                     </div>
                 </div>
-                <div class="mt-4 flex items-center gap-2 relative z-10">
-                    <span class="text-tertiary-fixed-dim text-xs font-bold">+0.8%</span>
-                    <div class="flex-1 h-6 flex items-center">
-                        <svg class="w-full h-full opacity-50" viewBox="0 0 100 20" preserveAspectRatio="none">
-                            <path d="M0,15 Q20,5 40,10 T80,5 T100,0" fill="none" stroke="#8bdc00" stroke-width="2">
-                            </path>
-                        </svg>
+                <div
+                    class="mt-4 flex items-center gap-2 relative z-10 text-[10px] font-bold text-tertiary-fixed-dim uppercase tracking-widest">
+                    <span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed-dim animate-pulse"></span>
+                    Live Rate: {{ market.liveBtcPrice() | currency:'USD' }}
+                </div>
+            </div>
+
+            <div (click)="selectedDeposit.set('SOL')"
+                [ngClass]="selectedDeposit() === 'SOL' ? 'border-[#9945FF]/50 bg-surface-container' : 'border-transparent bg-surface-container-low hover:border-[#9945FF]/20'"
+                class="group cursor-pointer p-6 rounded-xl border-2 transition-all">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="text-on-surface-variant text-sm font-medium mb-1"
+                            [ngClass]="selectedDeposit() === 'SOL' ? 'text-[#9945FF]' : 'text-on-surface-variant'">
+                            Solana</div>
+                        <div class="text-3xl font-headline font-bold text-on-surface">{{ solBalance() | number:'1.2-2'
+                            }} SOL</div>
+                        <div class="text-sm text-on-surface-variant mt-1">≈ {{ solValue() | currency:'USD' }}</div>
+                    </div>
+                    <div class="p-2 rounded-lg transition-colors"
+                        [ngClass]="selectedDeposit() === 'SOL' ? 'bg-[#9945FF]/20 text-[#9945FF]' : 'bg-surface-container-highest text-on-surface-variant'">
+                        <span class="material-symbols-outlined">token</span>
                     </div>
                 </div>
             </div>
 
-            <div
-                class="group cursor-pointer p-6 rounded-xl bg-surface-container-low border border-transparent hover:border-primary-fixed-dim/20 hover:bg-surface-container transition-all">
+            <div (click)="selectedDeposit.set('ETH')"
+                [ngClass]="selectedDeposit() === 'ETH' ? 'border-[#627eea]/50 bg-surface-container' : 'border-transparent bg-surface-container-low hover:border-[#627eea]/20'"
+                class="group cursor-pointer p-6 rounded-xl border-2 transition-all">
                 <div class="flex justify-between items-start">
                     <div>
-                        <div class="text-on-surface-variant text-sm font-medium mb-1">Solana</div>
-                        <div class="text-3xl font-headline font-bold text-on-surface">1,240.50 SOL</div>
-                        <div class="text-sm text-on-surface-variant mt-1">≈ $186,075.00</div>
+                        <div class="text-on-surface-variant text-sm font-medium mb-1"
+                            [ngClass]="selectedDeposit() === 'ETH' ? 'text-[#627eea]' : 'text-on-surface-variant'">
+                            Ethereum</div>
+                        <div class="text-3xl font-headline font-bold text-on-surface">{{ ethBalance() | number:'1.2-4'
+                            }} ETH</div>
+                        <div class="text-sm text-on-surface-variant mt-1">≈ {{ ethValue() | currency:'USD' }}</div>
                     </div>
-                    <div class="bg-surface-container-highest p-2 rounded-lg">
-                        <span
-                            class="material-symbols-outlined text-on-surface-variant group-hover:text-primary-fixed-dim transition-colors">token</span>
-                    </div>
-                </div>
-            </div>
-
-            <div
-                class="group cursor-pointer p-6 rounded-xl bg-surface-container-low border border-transparent hover:border-primary-fixed-dim/20 hover:bg-surface-container transition-all">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <div class="text-on-surface-variant text-sm font-medium mb-1">Ethereum</div>
-                        <div class="text-3xl font-headline font-bold text-on-surface">24.812 ETH</div>
-                        <div class="text-sm text-on-surface-variant mt-1">≈ $55,230.16</div>
-                    </div>
-                    <div class="bg-surface-container-highest p-2 rounded-lg">
-                        <span
-                            class="material-symbols-outlined text-on-surface-variant group-hover:text-primary-fixed-dim transition-colors">diamond</span>
+                    <div class="p-2 rounded-lg transition-colors"
+                        [ngClass]="selectedDeposit() === 'ETH' ? 'bg-[#627eea]/20 text-[#627eea]' : 'bg-surface-container-highest text-on-surface-variant'">
+                        <span class="material-symbols-outlined">diamond</span>
                     </div>
                 </div>
             </div>
@@ -102,51 +108,60 @@
 
         <div class="lg:col-span-8">
             <div
-                class="glass-card p-8 lg:p-10 rounded-2xl h-full flex flex-col items-center justify-center text-center">
-                <div class="mb-8">
+                class="glass-card p-8 lg:p-10 rounded-2xl h-full flex flex-col items-center justify-center text-center relative overflow-hidden">
+
+                <div class="mb-8 relative z-10">
                     <div
-                        class="w-16 h-16 rounded-full bg-primary-fixed-dim/10 flex items-center justify-center mx-auto mb-4">
-                        <span class="material-symbols-outlined text-primary-fixed-dim text-3xl">download</span>
+                        class="w-16 h-16 rounded-full bg-surface-container-highest flex items-center justify-center mx-auto mb-4">
+                        <span class="material-symbols-outlined text-3xl" [ngClass]="currentDepositInfo().iconClass">{{
+                            currentDepositInfo().icon }}</span>
                     </div>
-                    <h2 class="text-3xl font-headline font-bold text-on-surface tracking-tight">Receive Bitcoin</h2>
-                    <p class="text-on-surface-variant mt-2 text-sm max-w-md mx-auto">Only send Bitcoin (BTC) to this
-                        address. Sending any other asset may result in permanent loss.</p>
+                    <h2 class="text-3xl font-headline font-bold text-on-surface tracking-tight">Receive {{
+                        currentDepositInfo().name }}</h2>
+                    <p class="text-on-surface-variant mt-2 text-sm max-w-md mx-auto">{{ currentDepositInfo().warning }}
+                    </p>
                 </div>
 
                 <div
-                    class="bg-white p-6 rounded-2xl mb-10 shadow-2xl shadow-black/50 ring-1 ring-white/10 flex items-center justify-center">
-                    <img src="assets/qr.png" alt="">
+                    class="bg-white p-6 rounded-2xl mb-10 shadow-2xl shadow-black/50 ring-1 ring-white/10 flex items-center justify-center relative z-10">
+                    <img src="assets/qr.png" alt="QR Code" class="transition-all duration-300"
+                        [class.opacity-50]="copySuccess()">
                 </div>
 
-                <div class="w-full max-w-lg mb-10">
+                <div class="w-full max-w-lg mb-10 relative z-10">
                     <div class="flex items-center gap-2 mb-2 px-1 justify-center lg:justify-start">
-                        <span class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">BTC Deposit
-                            Address</span>
+                        <span class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">{{
+                            currentDepositInfo().symbol }} Deposit Info</span>
                         <span
-                            class="text-[10px] px-2 py-0.5 rounded bg-tertiary-fixed-dim/10 text-tertiary-fixed-dim font-bold uppercase">SegWit</span>
+                            class="text-[10px] px-2 py-0.5 rounded bg-surface-container-highest text-on-surface font-bold uppercase">{{
+                            currentDepositInfo().network }}</span>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-2">
                         <div
-                            class="flex-1 bg-surface-container-lowest border border-outline-variant/30 rounded-xl px-4 py-4 flex items-center justify-between group focus-within:ring-1 focus-within:ring-primary-fixed-dim focus-within:border-primary-fixed-dim/50 transition-all overflow-hidden">
+                            class="flex-1 bg-surface-container-lowest border border-outline-variant/30 rounded-xl px-4 py-4 flex items-center justify-between group overflow-hidden">
                             <code
-                                class="font-mono text-primary-fixed-dim text-sm sm:text-lg select-all overflow-hidden text-ellipsis whitespace-nowrap">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</code>
-                            <span
-                                class="material-symbols-outlined text-on-surface-variant text-sm ml-2 shrink-0">lock</span>
+                                class="font-mono text-white text-sm sm:text-lg select-all overflow-hidden text-ellipsis whitespace-nowrap">{{ currentDepositInfo().address }}</code>
                         </div>
-                        <button
-                            class="bg-surface-container-highest hover:bg-surface-bright text-on-surface px-6 py-4 sm:py-0 rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer shrink-0">
+
+                        <button (click)="copyAddress()"
+                            [ngClass]="copySuccess() ? 'bg-primary-fixed-dim text-[#003828]' : 'bg-surface-container-highest hover:bg-surface-bright text-on-surface'"
+                            class="px-6 py-4 sm:py-0 rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer shrink-0">
+                            @if (copySuccess()) {
+                            <span class="material-symbols-outlined text-xl">check</span> Copied!
+                            } @else {
                             <span class="material-symbols-outlined text-xl">content_copy</span> Copy
+                            }
                         </button>
                     </div>
                 </div>
 
-                <div class="w-full max-w-xl grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+                <div class="w-full max-w-xl grid grid-cols-1 sm:grid-cols-2 gap-4 text-left relative z-10">
                     <div class="p-4 rounded-xl bg-error-container/10 border border-error-container/20 flex gap-4">
                         <span class="material-symbols-outlined text-error mt-0.5 shrink-0">warning</span>
                         <div>
-                            <div class="text-sm font-bold text-error mb-0.5">Network Confirmation</div>
-                            <div class="text-xs text-on-surface-variant leading-relaxed">Transactions require 3 network
-                                confirmations to be credited to your vault.</div>
+                            <div class="text-sm font-bold text-error mb-0.5">Network Finality</div>
+                            <div class="text-xs text-on-surface-variant leading-relaxed">Cross-chain deposits require
+                                active network confirmations to be credited.</div>
                         </div>
                     </div>
                     <div
@@ -160,65 +175,60 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="mt-12 flex flex-wrap justify-center gap-8">
-                    <div class="text-center">
-                        <div class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest mb-1">Last
-                            deposit</div>
-                        <div class="text-sm font-medium text-on-surface">2.44 BTC <span
-                                class="text-on-surface-variant">(14h ago)</span></div>
-                    </div>
-                    <div class="w-px h-8 bg-outline-variant/20 hidden sm:block"></div>
-                    <div class="text-center">
-                        <div class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest mb-1">
-                            Network fee</div>
-                        <div class="text-sm font-medium text-tertiary-fixed-dim">0.00001 BTC</div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 
     <section class="mt-12">
         <div class="flex justify-between items-center mb-6">
-            <h3 class="text-xl font-headline font-bold text-on-surface">Pending Clearances</h3>
+            <h3 class="text-xl font-headline font-bold text-on-surface">Recent Ledger Activity</h3>
             <a routerLink="/ledger"
-                class="text-sm text-primary-fixed-dim hover:underline font-semibold cursor-pointer">View Ledger
-                History</a>
+                class="text-sm text-primary-fixed-dim hover:underline font-semibold cursor-pointer">View Full Ledger</a>
         </div>
 
         <div class="space-y-2">
+            @for (tx of recentActivity(); track tx.id) {
             <div
-                class="flex flex-wrap md:grid md:grid-cols-12 items-center p-4 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors gap-4 md:gap-0">
+                class="flex flex-wrap md:grid md:grid-cols-12 items-center p-4 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors gap-4 md:gap-0 border border-outline-variant/5">
+
                 <div class="md:col-span-1 flex shrink-0">
-                    <div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center">
-                        <span class="material-symbols-outlined text-primary-fixed-dim">arrow_downward</span>
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center"
+                        [ngClass]="tx.type === 'BUY' || tx.type === 'DEPOSIT' ? 'bg-primary-fixed-dim/10 text-primary-fixed-dim' : 'bg-error/10 text-error'">
+                        <span class="material-symbols-outlined">
+                            {{ tx.type === 'BUY' || tx.type === 'DEPOSIT' ? 'arrow_downward' : 'arrow_upward' }}
+                        </span>
                     </div>
                 </div>
+
                 <div class="md:col-span-3 flex-1 min-w-[120px]">
-                    <div class="text-sm font-bold text-on-surface">Deposit BTC</div>
-                    <div class="text-xs text-on-surface-variant font-mono">bc1q...0wlh</div>
+                    <div class="text-sm font-bold text-on-surface">{{ tx.type | titlecase }} {{ tx.assetSymbol }}</div>
+                    <div class="text-xs text-on-surface-variant font-mono">Ref: {{ tx.id.split('-')[0] }}</div>
                 </div>
-                <div class="md:col-span-2 w-full md:w-auto mt-2 md:mt-0">
-                    <div class="text-sm text-on-surface font-mono">0.1442 BTC</div>
-                    <div class="text-[10px] text-on-surface-variant">≈ $9,512.40</div>
+
+                <div class="md:col-span-3 w-full md:w-auto mt-2 md:mt-0">
+                    <div class="text-sm font-bold text-on-surface font-mono">{{ tx.amount | number:'1.2-5' }} {{
+                        tx.assetSymbol }}</div>
+                    <div class="text-[10px] text-on-surface-variant">Exec: {{ tx.priceAtTime | currency:'USD' }}</div>
                 </div>
-                <div class="md:col-span-2 hidden md:block">
-                    <div class="text-xs font-mono text-on-surface-variant">Oct 24, 14:02</div>
-                </div>
-                <div class="md:col-span-3">
-                    <div class="flex items-center gap-2">
-                        <div class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed-dim animate-pulse"></div>
-                        <span class="text-xs font-bold text-tertiary-fixed-dim uppercase tracking-wider">Confirming
-                            (2/3)</span>
+
+                <div class="md:col-span-3 hidden md:block">
+                    <div class="text-xs font-mono text-on-surface-variant">{{ tx.createdAt | date:'MMM dd, HH:mm' }}
                     </div>
                 </div>
-                <div class="md:col-span-1 ml-auto">
-                    <button class="text-on-surface-variant hover:text-on-surface cursor-pointer p-1">
-                        <span class="material-symbols-outlined">more_horiz</span>
-                    </button>
+
+                <div class="md:col-span-2 flex justify-end">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm text-tertiary-fixed-dim">check_circle</span>
+                        <span class="text-xs font-bold text-tertiary-fixed-dim uppercase tracking-wider">Settled</span>
+                    </div>
                 </div>
             </div>
+            } @empty {
+            <div
+                class="text-center py-8 text-on-surface-variant text-sm font-mono border border-dashed border-outline-variant/20 rounded-xl">
+                No recent activity found in vault.
+            </div>
+            }
         </div>
     </section>
 </div>

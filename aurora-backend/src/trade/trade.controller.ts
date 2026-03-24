@@ -26,4 +26,9 @@ export class TradeController {
   async getHistory(@Param('userId') userId: string) {
     return this.tradeService.getTransactionHistory(userId);
   }
+
+  @Get('deposit-info')
+  async getDepositConfigs() {
+    return this.tradeService.getDepositConfigs();
+  }
 }
