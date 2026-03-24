@@ -2,7 +2,7 @@ import { Component, OnInit, inject, ViewChild, effect, computed } from '@angular
 import { CommonModule } from '@angular/common';
 import { PortfolioStore } from '../../core/store/portfolio.store';
 import { NgApexchartsModule, ChartComponent } from 'ng-apexcharts';
-import { MarketFeedService } from '../../core/api/market-feed';
+import { MarketFeedService } from '../../core/api/market-feed.service';
 
 @Component({
   selector: 'app-dashboard',

@@ -34,6 +34,18 @@ export interface Transaction {
   createdAt: string;
 }
 
+export interface OrderBookLevel {
+  p: number;
+  size: number;
+  sum: number;
+  width: string;
+}
+export interface OrderBookData {
+  asks: OrderBookLevel[];
+  bids: OrderBookLevel[];
+  price: number;
+}
+
 export interface InstitutionalProfile {
   id: string;
   email: string;

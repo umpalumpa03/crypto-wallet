@@ -123,55 +123,85 @@
                     </div>
                 </div>
 
-                <div class="p-4 flex flex-col">
-                    <span
-                        class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-4 shrink-0">Market
-                        Movers</span>
-                    <div class="space-y-4">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs font-bold">BTC/USD</span>
-                            </div>
-                            <div class="text-right">
-                                <div class="text-[10px] font-bold font-mono">{{ market.liveBtcPrice() | currency:'USD'
-                                    }}</div>
-                            </div>
+                <div class="border-l border-outline-variant/10 p-4 flex flex-col overflow-hidden h-full">
+                    <div class="flex justify-between items-center mb-4 shrink-0">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Recent
+                            Transactions</span>
+                    </div>
+
+                    <div class="flex-1 overflow-y-auto  pr-2">
+                        <div
+                            class="grid grid-cols-4 text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-3 border-b border-outline-variant/5 pb-2">
+                            <span>Type</span>
+                            <span class="text-right">Asset</span>
+                            <span class="text-right">Price</span>
+                            <span class="text-right">Total Size</span>
                         </div>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs font-bold">ETH/USD</span>
+
+                        <div class="space-y-1 text-[10px] font-mono">
+                            @for (tx of tradeAPI.tradeHistory(); track tx.id) {
+                            <div
+                                class="grid grid-cols-4 items-center hover:bg-surface-container-highest/50 py-1.5 px-1 rounded transition-colors group cursor-default">
+                                <div>
+                                    <span class="px-1.5 py-0.5 rounded font-bold text-[9px]"
+                                        [ngClass]="tx.type === 'BUY' || tx.type === 'DEPOSIT' ? 'bg-primary-fixed-dim/10 text-primary-fixed-dim' : 'bg-error/10 text-error'">
+                                        {{ tx.type }}
+                                    </span>
+                                </div>
+
+                                <div class="text-right flex flex-col">
+                                    <span class="text-white font-bold">{{ tx.amount | number:'1.2-5' }}</span>
+                                    <span class="text-[9px] text-on-surface-variant">{{ tx.assetSymbol }}</span>
+                                </div>
+
+                                <div class="text-right text-on-surface-variant">
+                                    {{ tx.priceAtTime | currency:'USD' }}
+                                </div>
+
+                                <div class="text-right font-bold text-white">
+                                    {{ (tx.amount * tx.priceAtTime) | currency:'USD' }}
+                                </div>
                             </div>
-                            <div class="text-right">
-                                <div class="text-[10px] font-bold font-mono">{{ market.liveEthPrice() | currency:'USD'
-                                    }}</div>
+                            } @empty {
+                            <div
+                                class="text-center text-on-surface-variant pt-8 font-mono text-xs opacity-50 flex flex-col items-center gap-2">
+                                <span class="material-symbols-outlined text-2xl">receipt_long</span>
+                                No recent transactions
                             </div>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs font-bold">SOL/USD</span>
-                            </div>
-                            <div class="text-right">
-                                <div class="text-[10px] font-bold font-mono">{{ market.liveSolPrice() | currency:'USD'
-                                    }}</div>
-                            </div>
+                            }
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-span-12 lg:col-span-3 bg-surface-container flex flex-col h-full overflow-y-auto">
+        <div class="col-span-12 lg:col-span-3 bg-surface-container flex flex-col h-full overflow-y-auto relative">
+
+
             <div class="p-6 border-b border-outline-variant/5">
+
                 <div class="flex bg-surface-container-lowest rounded-lg p-1 mb-6">
-                    <button
-                        class="flex-1 py-1.5 text-[10px] font-bold uppercase tracking-wider bg-surface-container-highest text-primary-fixed-dim rounded cursor-pointer">Market</button>
-                    <button
-                        class="flex-1 py-1.5 text-[10px] font-bold uppercase tracking-wider text-on-surface-variant hover:text-white cursor-pointer">Limit</button>
+                    <button (click)="setTradeSide('BUY')"
+                        [ngClass]="tradeSide() === 'BUY' ? 'bg-primary-fixed-dim text-[#003828]' : 'text-on-surface-variant hover:text-white'"
+                        class="flex-1 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded cursor-pointer transition-colors">Buy</button>
+                    <button (click)="setTradeSide('SELL')"
+                        [ngClass]="tradeSide() === 'SELL' ? 'bg-error text-error-container' : 'text-on-surface-variant hover:text-white'"
+                        class="flex-1 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded cursor-pointer transition-colors">Sell</button>
                 </div>
 
                 <div class="space-y-4">
+                    <div class="flex justify-between items-center pb-2 border-b border-outline-variant/5">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
+                            Avail. {{ tradeSide() === 'BUY' ? 'USD' : selectedAsset() }}
+                        </span>
+                        <span class="text-sm font-bold text-primary-fixed-dim">
+                            {{ tradeSide() === 'BUY' ? (tradeAPI.usdBalance() | currency:'USD') :
+                            (tradeAPI.cryptoPortfolio()[selectedAsset()] | number:'1.2-5') }}
+                        </span>
+                    </div>
+
                     <div class="space-y-1.5">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Current
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Execution
                             Price</label>
                         <div
                             class="bg-surface-container-lowest rounded-lg px-4 py-3 border border-outline-variant/10 flex justify-between items-center group">
@@ -182,21 +212,79 @@
 
                     <div class="space-y-1.5">
                         <label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Amount to
-                            Buy</label>
+                            {{ tradeSide() }}</label>
                         <div
                             class="bg-surface-container-lowest rounded-lg px-4 py-3 border border-outline-variant/10 flex justify-between items-center focus-within:ring-1 focus-within:ring-primary-fixed-dim">
-                            <input type="text" placeholder="0.00"
-                                class="bg-transparent border-none outline-none text-sm font-mono font-bold w-full text-white" />
-                            <span class="text-[10px] font-bold text-on-surface-variant ml-2">{{ selectedAsset()
-                                }}</span>
+                            <app-number-input [formControl]="amountControl" placeholder="0.00"
+                                customClass="bg-transparent border-none outline-none text-sm font-mono font-bold w-full text-white appearance-none"></app-number-input>
+                            <div class="flex items-center gap-2">
+                                <button type="button" (click)="setMaxAmount()"
+                                    class="text-[9px] font-black bg-surface-container-highest px-1.5 py-0.5 rounded text-primary-fixed-dim hover:bg-primary-fixed-dim hover:text-[#003828] cursor-pointer transition-colors">MAX</button>
+                                <span class="text-[10px] font-bold text-on-surface-variant">{{ selectedAsset() }}</span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="pt-4 space-y-3">
-                        <button
-                            class="w-full py-4 rounded-xl bg-primary-fixed-dim text-[#003828] font-black text-xs uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(0,225,171,0.2)] hover:shadow-[0_0_30px_rgba(0,225,171,0.4)] hover:brightness-110 active:scale-[0.98] transition-all cursor-pointer">
-                            Buy {{ selectedAsset() }}
+                    <div class="flex justify-between items-center px-1 pt-2">
+                        <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                            {{ tradeSide() === 'BUY' ? 'Total Cost' : 'Est. Return' }}
+                        </span>
+                        <span class="text-xs font-mono font-bold transition-colors"
+                            [ngClass]="(tradeSide() === 'BUY' && estimatedValue() > tradeAPI.usdBalance()) || (tradeSide() === 'SELL' && amountControl.value! > (tradeAPI.cryptoPortfolio()[selectedAsset()] || 0)) ? 'text-error' : 'text-on-surface'">
+                            ~{{ estimatedValue() | currency:'USD' }}
+                        </span>
+                    </div>
+
+                    <div class="pt-4 space-y-3 relative">
+                        <button (click)="executeTrade()" [disabled]="!isValidTrade()"
+                            [ngClass]="tradeSide() === 'BUY' ? 'bg-primary-fixed-dim text-[#003828] hover:shadow-[0_0_30px_rgba(0,225,171,0.4)]' : 'bg-error text-error-container hover:shadow-[0_0_30px_rgba(255,84,73,0.4)]'"
+                            class="w-full py-4 rounded-xl font-black text-xs uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 disabled:opacity-20 disabled:cursor-not-allowed disabled:bg-surface-container-highest disabled:text-on-surface-variant disabled:shadow-none cursor-pointer">
+
+                            @if (tradeAPI.isTrading()) {
+                            <span class="material-symbols-outlined animate-spin text-sm">progress_activity</span>
+                            Processing...
+                            } @else {
+                            {{ tradeSide() }} {{ selectedAsset() }}
+                            }
                         </button>
+
+                        @if (tradeAPI.tradeMessage()) {
+                        <div class="absolute -bottom-14 left-0 w-full p-3 rounded-lg border text-xs font-bold text-center animate-fade-in z-50"
+                            [ngClass]="tradeAPI.tradeMessage()?.type === 'success' ? 'bg-primary-fixed-dim/10 border-primary-fixed-dim/20 text-primary-fixed-dim' : 'bg-error/10 border-error/20 text-error'">
+                            {{ tradeAPI.tradeMessage()?.text }}
+                        </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="bg-surface-container border border-outline-variant/10 rounded-xl p-4 mb-4 flex flex-col gap-3">
+                <div class="flex justify-between items-start">
+                    <div class="flex flex-col">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1">Total
+                            Net Worth</span>
+                        <span class="text-xl font-black text-white font-mono tracking-tight">
+                            {{ accountNetWorth() | currency:'USD':'symbol':'1.2-2' }}
+                        </span>
+                    </div>
+                    <div class="bg-primary-fixed-dim/10 text-primary-fixed-dim px-2 py-1 rounded text-[10px] font-bold">
+                        LIVE
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 border-t border-outline-variant/5 pt-3 mt-1">
+                    <div class="flex flex-col">
+                        <span class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant">Available
+                            USD</span>
+                        <span class="text-xs font-bold text-white font-mono">{{ tradeAPI.usdBalance() | currency:'USD'
+                            }}</span>
+                    </div>
+                    <div class="flex flex-col text-right">
+                        <span class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant">Crypto
+                            Value</span>
+                        <span class="text-xs font-bold text-white font-mono">{{ totalCryptoValue() | currency:'USD'
+                            }}</span>
                     </div>
                 </div>
             </div>

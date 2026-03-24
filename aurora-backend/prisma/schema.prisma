@@ -1,0 +1,73 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ------------------------------------------------------
+// 1. THE USER (Institutional Profile)
+// ------------------------------------------------------
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  passwordHash String
+  fullName     String
+  usdBalance   Float         @default(0.0) // Their available buying power
+  
+  assets       Asset[]       // The crypto wallets they own
+  transactions Transaction[] // Their ledger history
+  
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+// ------------------------------------------------------
+// 2. THE VAULT (Asset Balances)
+// ------------------------------------------------------
+model Asset {
+  id        String   @id @default(uuid())
+  userId    String
+  symbol    String   // e.g., 'BTC', 'ETH', 'SOL'
+  amount    Float    @default(0.0)
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, symbol]) // A user can only have one wallet per coin type
+}
+
+// ------------------------------------------------------
+// 3. THE LEDGER (Transaction History)
+// ------------------------------------------------------
+model Transaction {
+  id          String   @id @default(uuid())
+  userId      String
+  
+  type        TxType   // BUY, SELL, DEPOSIT, WITHDRAW
+  assetSymbol String   // e.g., 'BTC' or 'USD'
+  amount      Float    // How much crypto/fiat was moved?
+  priceAtTime Float?   // What was the USD price of the asset when they bought/sold?
+  fee         Float    @default(0.0)
+  status      TxStatus @default(COMPLETED)
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+}
+
+// Enums to lock down the data types strictly
+enum TxType {
+  BUY
+  SELL
+  DEPOSIT
+  WITHDRAW
+}
+
+enum TxStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}

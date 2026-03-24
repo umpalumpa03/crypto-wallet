@@ -3,7 +3,7 @@ import { signalStore, withState, withMethods, patchState, withComputed } from '@
 import { computed } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { InstitutionalProfile } from '../models/portfolio.model';
-import { PortfolioService } from '../services/portfolio';
+import { PortfolioService } from '../services/portfolio.service';
 
 type PortfolioState = {
   profile: InstitutionalProfile | null;
