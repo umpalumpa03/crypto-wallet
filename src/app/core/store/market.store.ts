@@ -39,6 +39,8 @@ export const MarketStore = signalStore(
       { name: 'Ethereum', symbol: 'ETH', price: store.liveEthPrice(), history: store.ethPriceHistory() },
       { name: 'Solana', symbol: 'SOL', price: store.liveSolPrice(), history: store.solPriceHistory() },
     ]),
+  })),
+  withComputed((store) => ({
     filteredAssets: computed(() => {
       const query = store.searchQuery().toLowerCase().trim();
       const assets = store.allAssets();
@@ -49,6 +51,10 @@ export const MarketStore = signalStore(
         a.name.toLowerCase().includes(query) || 
         a.symbol.toLowerCase().includes(query)
       );
+    })
+  })),
+    })
+  })),
     })
   })),
   withMethods((store) => {
