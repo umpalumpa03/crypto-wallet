@@ -22,6 +22,7 @@ async function bootstrap() {
     origin: [
       'http://localhost:4200',
       'http://localhost:3000',
+      'https://aurora-wallet.netlify.app',
       ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',

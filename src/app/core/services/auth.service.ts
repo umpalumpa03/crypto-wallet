@@ -53,6 +53,7 @@ export class AuthService {
       'crypto_token',
       'aurora_trade_state',
       'aurora_market_state',
+      'aurora_portfolio_state',
     ];
 
     keysToRemove.forEach((key) => localStorage.removeItem(key));

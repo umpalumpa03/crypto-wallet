@@ -174,21 +174,25 @@ export const MarketStore = signalStore(
   }),
   withHooks({
     onInit(store) {
-      
       const saved = localStorage.getItem('aurora_market_state');
       if (saved) {
         const parsed = JSON.parse(saved);
         patchState(store, { 
           searchQuery: parsed.searchQuery || '',
-          selectedAsset: parsed.selectedAsset || 'BTC'
+          selectedAsset: parsed.selectedAsset || 'BTC',
+          btcPriceHistory: parsed.btcPriceHistory || [],
+          ethPriceHistory: parsed.ethPriceHistory || [],
+          solPriceHistory: parsed.solPriceHistory || []
         });
       }
 
-      
       effect(() => {
         const stateToSave = {
           searchQuery: store.searchQuery(),
-          selectedAsset: store.selectedAsset()
+          selectedAsset: store.selectedAsset(),
+          btcPriceHistory: store.btcPriceHistory(),
+          ethPriceHistory: store.ethPriceHistory(),
+          solPriceHistory: store.solPriceHistory()
         };
         localStorage.setItem('aurora_market_state', JSON.stringify(stateToSave));
       });

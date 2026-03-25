@@ -194,22 +194,34 @@ export const TradeStore = signalStore(
   ),
   withHooks({
     onInit(store) {
+      const authService = inject(AuthService);
       const saved = localStorage.getItem('aurora_trade_state');
       if (saved) {
         const parsed = JSON.parse(saved);
         patchState(store, { 
           searchQuery: parsed.searchQuery || '',
-          assetFilter: parsed.assetFilter || 'All Assets'
+          assetFilter: parsed.assetFilter || 'All Assets',
+          usdBalance: parsed.usdBalance || 0,
+          cryptoPortfolio: parsed.cryptoPortfolio || {},
+          tradeHistory: parsed.tradeHistory || []
         });
       }
 
       effect(() => {
         const stateToSave = {
           searchQuery: store.searchQuery(),
-          assetFilter: store.assetFilter()
+          assetFilter: store.assetFilter(),
+          usdBalance: store.usdBalance(),
+          cryptoPortfolio: store.cryptoPortfolio(),
+          tradeHistory: store.tradeHistory()
         };
         localStorage.setItem('aurora_trade_state', JSON.stringify(stateToSave));
       });
+
+      if (authService.isAuthenticated()) {
+        store.loadPortfolio(true);
+        store.loadHistory(true);
+      }
     }
   })
 );

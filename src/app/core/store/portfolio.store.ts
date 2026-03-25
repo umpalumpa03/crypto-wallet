@@ -1,10 +1,11 @@
-import { inject } from '@angular/core';
-import { signalStore, withState, withMethods, patchState, withComputed } from '@ngrx/signals';
+import { inject, effect } from '@angular/core';
+import { signalStore, withState, withMethods, patchState, withComputed, withHooks } from '@ngrx/signals';
 import { computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { InstitutionalProfile, PortfolioState, Transaction } from '../models/portfolio.model';
 import { API_URL } from '../../environments/environment';
+import { AuthService } from '../services/auth.service';
 
 const initialState: PortfolioState = {
   profile: null,
@@ -45,4 +46,24 @@ export const PortfolioStore = signalStore(
       patchState(store, initialState);
     },
   })),
+
+  withHooks({
+    onInit(store) {
+      const authService = inject(AuthService);
+      const saved = localStorage.getItem('aurora_portfolio_state');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        patchState(store, { profile: parsed.profile || null });
+      }
+
+      effect(() => {
+        const stateToSave = { profile: store.profile() };
+        localStorage.setItem('aurora_portfolio_state', JSON.stringify(stateToSave));
+      });
+
+      if (authService.isAuthenticated()) {
+        store.loadPortfolio(true);
+      }
+    }
+  })
 );
