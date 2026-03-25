@@ -2,10 +2,10 @@
 
 Aurora Terminal is a high-performance, real-time cryptocurrency trading interface built with **Angular 21**. It features sub-second market data synchronization, reactive state management, and a high-end "Ethereal" aesthetic designed for institutional-grade asset management.
 
-![Angular](https://img.shields.io/badge/Angular%2021-DD0031?style=for-the-badge&logo=angular&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
-![Signals](https://img.shields.io/badge/NG%20Signals-Store-85ea2d?style=for-the-badge&logo=angular&logoColor=black)
-![Tailwind](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Angular](https:
+![TypeScript](https:
+![Signals](https:
+![Tailwind](https:
 
 ---
 
