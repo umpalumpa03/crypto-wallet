@@ -1,4 +1,4 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
 export type NotificationType = 'success' | 'error' | 'info' | 'warning';
 
@@ -17,7 +17,7 @@ export class NotificationService {
   public readonly notifications = this.notificationsSignal.asReadonly();
 
   public show(message: string, type: NotificationType = 'info', duration: number = 5000): void {
-    const id = Math.random().toString(36).substring(2, 9);
+    const id = crypto.randomUUID();
     const newNotification: AppNotification = { id, type, message, duration };
 
     this.notificationsSignal.update((prev) => [...prev, newNotification]);
@@ -45,5 +45,9 @@ export class NotificationService {
 
   public remove(id: string): void {
     this.notificationsSignal.update((prev) => prev.filter((n) => n.id !== id));
+  }
+
+  public clearAll(): void {
+    this.notificationsSignal.set([]);
   }
 }
