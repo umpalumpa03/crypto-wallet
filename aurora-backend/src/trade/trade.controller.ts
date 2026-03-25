@@ -1,20 +1,25 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Req, UseGuards } from '@nestjs/common';
 import { TradeService } from './trade.service';
 import { ExecuteTradeDto } from './dto/execute-trade.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import type { Request } from 'express';
 
+@UseGuards(JwtAuthGuard)
 @Controller('api/trade')
 export class TradeController {
   constructor(private readonly tradeService: TradeService) {}
 
-  @Get('portfolio/:userId')
-  public async getPortfolio(@Param('userId') userId: string) {
-    return this.tradeService.getPortfolio(userId);
+  @Get('portfolio')
+  public async getPortfolio(@Req() req: Request) {
+    const user = req.user as any;
+    return this.tradeService.getPortfolio(user.id);
   }
 
   @Post('execute')
-  public async executeTrade(@Body() dto: ExecuteTradeDto) {
+  public async executeTrade(@Req() req: Request, @Body() dto: ExecuteTradeDto) {
+    const user = req.user as any;
     return this.tradeService.executeTrade(
-      dto.userId,
+      user.id,
       dto.side,
       dto.asset,
       dto.amount,
@@ -22,9 +27,10 @@ export class TradeController {
     );
   }
 
-  @Get('history/:userId')
-  public async getHistory(@Param('userId') userId: string) {
-    return this.tradeService.getTransactionHistory(userId);
+  @Get('history')
+  public async getHistory(@Req() req: Request) {
+    const user = req.user as any;
+    return this.tradeService.getTransactionHistory(user.id);
   }
 
   @Get('deposit-info')

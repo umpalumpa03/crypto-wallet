@@ -1,17 +1,13 @@
 import {
-  IsString,
   IsNumber,
   IsPositive,
   IsEnum,
   IsNotEmpty,
+  IsString,
 } from 'class-validator';
 import { TxType } from '@prisma/client';
 
 export class ExecuteTradeDto {
-  @IsString()
-  @IsNotEmpty()
-  public userId: string;
-
   @IsEnum(TxType)
   public side: TxType;
 

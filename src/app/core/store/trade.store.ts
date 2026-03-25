@@ -77,14 +77,13 @@ export const TradeStore = signalStore(
           if (store.isPortfolioLoading()) return;
 
           const authService = injector.get(AuthService);
-          const userId: string | undefined = authService.currentUser()?.id;
-          if (!userId) return;
+          if (!authService.isAuthenticated()) return;
 
           patchState(store, { isPortfolioLoading: true });
 
           try {
             const data: PortfolioResponse = await lastValueFrom(
-              http.get<PortfolioResponse>(`${apiUrl}/portfolio/${userId}`),
+              http.get<PortfolioResponse>(`${apiUrl}/portfolio`),
             );
             patchState(store, {
               usdBalance: data.usdBalance,
@@ -101,12 +100,11 @@ export const TradeStore = signalStore(
           if (!force && store.tradeHistory().length > 0) return;
 
           const authService = injector.get(AuthService);
-          const userId: string | undefined = authService.currentUser()?.id;
-          if (!userId) return;
+          if (!authService.isAuthenticated()) return;
 
           try {
             const history: TradeHistoryItem[] = await lastValueFrom(
-              http.get<TradeHistoryItem[]>(`${apiUrl}/history/${userId}`),
+              http.get<TradeHistoryItem[]>(`${apiUrl}/history`),
             );
             patchState(store, { tradeHistory: history });
           } catch (error: unknown) {}
@@ -119,8 +117,7 @@ export const TradeStore = signalStore(
           price: number,
         ): Promise<boolean> {
           const authService = injector.get(AuthService);
-          const userId: string | undefined = authService.currentUser()?.id;
-          if (!userId) return false;
+          if (!authService.isAuthenticated()) return false;
 
           const totalValue: number = amount * price;
 
@@ -142,7 +139,7 @@ export const TradeStore = signalStore(
           patchState(store, { isTrading: true });
 
           try {
-            const payload: object = { userId, side, asset, amount, executionPrice: price };
+            const payload: object = { side, asset, amount, executionPrice: price };
             const updatedPortfolio: PortfolioResponse = await lastValueFrom(
               http.post<PortfolioResponse>(`${apiUrl}/execute`, payload),
             );
