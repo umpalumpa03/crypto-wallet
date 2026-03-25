@@ -28,18 +28,24 @@ export const TradeStore = signalStore(
   withComputed((store) => ({
     filteredHistory: computed(() => {
       const history = store.tradeHistory();
-      const query = store.searchQuery().toLowerCase();
-      const asset = store.assetFilter();
+      const query = store.searchQuery().toLowerCase().trim();
+      const selectedAsset = store.assetFilter();
+
+      if (!query && selectedAsset === 'All Assets') {
+        return history;
+      }
 
       return history.filter((tx) => {
-        const matchesQuery = 
-          tx.id.toLowerCase().includes(query) || 
-          tx.type.toLowerCase().includes(query) || 
-          tx.assetSymbol.toLowerCase().includes(query);
-        
-        const matchesAsset = asset === 'All Assets' || tx.assetSymbol === asset;
+        const matchesAsset = selectedAsset === 'All Assets' || tx.assetSymbol === selectedAsset;
+        if (!matchesAsset) return false;
 
-        return matchesQuery && matchesAsset;
+        if (!query) return true;
+
+        return (
+          tx.id.toLowerCase().includes(query) ||
+          tx.type.toLowerCase().includes(query) ||
+          tx.assetSymbol.toLowerCase().includes(query)
+        );
       });
     }),
   })),
