@@ -87,3 +87,26 @@ body {
     visibility: hidden !important;
     opacity: 0 !important;
 }
+
+/* Skeleton Loader Base Styles */
+.skeleton {
+  background: #1d2023;
+  background: linear-gradient(
+    90deg,
+    #1d2023 25%,
+    #25292d 37%,
+    #1d2023 63%
+  );
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s ease infinite;
+  border-radius: 4px;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

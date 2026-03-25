@@ -12,7 +12,7 @@ import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angula
 import { AuthService } from '../../core/services/auth.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map, startWith } from 'rxjs/operators';
-import { AuthResponse } from '../../core/models/auth.model';
+import { NotificationService } from '../../core/services/notification.service';
 
 @Component({
   selector: 'app-auth',
@@ -23,10 +23,10 @@ import { AuthResponse } from '../../core/models/auth.model';
 export class Auth {
   private fb: FormBuilder = inject(FormBuilder);
   private authService: AuthService = inject(AuthService);
+  private notificationService: NotificationService = inject(NotificationService);
 
   protected isLoginMode: WritableSignal<boolean> = signal<boolean>(true);
   protected isLoading: WritableSignal<boolean> = signal<boolean>(false);
-  protected errorMessage: WritableSignal<string | null> = signal<string | null>(null);
   protected showPassword: WritableSignal<boolean> = signal<boolean>(false);
 
   protected loginForm: FormGroup = this.fb.group({
@@ -77,7 +77,6 @@ export class Auth {
 
   public toggleMode(): void {
     this.isLoginMode.update((mode: boolean) => !mode);
-    this.errorMessage.set(null);
     this.showPassword.set(false);
   }
 
@@ -89,13 +88,17 @@ export class Auth {
     if (this.loginForm.invalid) return;
 
     this.isLoading.set(true);
-    this.errorMessage.set(null);
 
     this.authService.login(this.loginForm.value).subscribe({
-      next: (): void => this.isLoading.set(false),
+      next: (): void => {
+        this.isLoading.set(false);
+        this.notificationService.success('Welcome back to Aurora Terminal!');
+      },
       error: (err: any): void => {
         this.isLoading.set(false);
-        this.errorMessage.set(err.error?.message || 'Login failed. Check your credentials.');
+        this.notificationService.error(
+          err.error?.message || 'Login failed. Check your credentials.',
+        );
       },
     });
   }
@@ -104,18 +107,20 @@ export class Auth {
     if (this.registerForm.invalid) return;
 
     this.isLoading.set(true);
-    this.errorMessage.set(null);
 
     const { terms, ...registerData }: any = this.registerForm.value;
 
     this.authService.register(registerData).subscribe({
-      next: (): void => this.isLoading.set(false),
+      next: (): void => {
+        this.isLoading.set(false);
+        this.notificationService.success('Your institutional account has been provisioned.');
+      },
       error: (err: any): void => {
         this.isLoading.set(false);
         const msg: string = Array.isArray(err.error?.message)
           ? err.error.message[0]
           : err.error?.message;
-        this.errorMessage.set(msg || 'Registration failed.');
+        this.notificationService.error(msg || 'Registration failed.');
       },
     });
   }

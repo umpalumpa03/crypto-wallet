@@ -82,11 +82,6 @@
             <div class="mb-12 animate-fade-in">
                 <h2 class="font-headline text-3xl font-bold text-on-surface mb-2">Access Terminal</h2>
                 <p class="text-on-surface-variant">Enter your credentials to continue to the ledger.</p>
-                @if (errorMessage()) {
-                <div class="mt-4 p-3 rounded-lg bg-error-container text-on-error-container text-sm border border-error/20 animate-shake">
-                    {{ errorMessage() }}
-                </div>
-                }
             </div>
 
             <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="space-y-6 animate-fade-in">
@@ -170,11 +165,6 @@
             <div class="mb-10 animate-fade-in">
                 <h2 class="font-headline text-3xl font-bold text-on-surface mb-2">Initialize Account</h2>
                 <p class="text-on-surface-variant">Set up your institutional profile.</p>
-                @if (errorMessage()) {
-                <div class="mt-4 p-3 rounded-lg bg-error-container text-on-error-container text-sm border border-error/20 animate-shake">
-                    {{ errorMessage() }}
-                </div>
-                }
             </div>
 
             <form [formGroup]="registerForm" (ngSubmit)="onRegister()" class="space-y-6 animate-fade-in">

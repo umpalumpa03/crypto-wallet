@@ -4,14 +4,16 @@ import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { PortfolioStore } from '../../core/store/portfolio.store';
 import { LogoutModal } from '../../shared/components/logout-modal/logout-modal';
+import { NotificationComponent } from '../../shared/components/notification/notification';
 
 @Component({
   selector: 'app-main-layout',
-  imports: [RouterModule, CommonModule, LogoutModal],
+  standalone: true,
+  imports: [RouterModule, CommonModule, LogoutModal, NotificationComponent],
   templateUrl: './main-layout.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MainLayout implements OnInit {
+export class MainLayout {
   protected authService = inject(AuthService);
   protected portfolioStore = inject(PortfolioStore);
 
