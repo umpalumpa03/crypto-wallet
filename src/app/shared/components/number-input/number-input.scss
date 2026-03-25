@@ -1,7 +1,7 @@
 input:focus,
 textarea:focus,
 select:focus {
-    outline: none; /* Removes the default blue/orange glow in most browsers */
-    border: none; /* Ensures no regular border appears on focus if one was set */
-    box-shadow: none; /* Removes any added shadows, useful for frameworks like Bootstrap */
+    outline: none; 
+    border: none; 
+    box-shadow: none; 
 }

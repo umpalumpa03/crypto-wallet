@@ -38,16 +38,16 @@ export class NumberInput implements ControlValueAccessor {
       cleanValue = parts[0] + '.' + parts.slice(1).join('');
     }
 
-    // Force clean value back to the screen
+    
     el.value = cleanValue;
 
     const numericValue = parseFloat(cleanValue);
     this.onChange(isNaN(numericValue) ? null : numericValue);
   }
 
-  // =========================================
-  // 🔥 3. THE FIX: Write directly to the DOM!
-  // =========================================
+  
+  
+  
   public writeValue(value: number | null): void {
     const el = this.inputElement();
     if (el) {
