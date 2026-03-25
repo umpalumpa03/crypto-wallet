@@ -23,7 +23,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    // 🕵️ LOG THE REAL ERROR FOR DEBUGGING!
+    
     this.logger.error(`[CRITICAL ERROR] Details: ${JSON.stringify(exception)}`);
     if (exception instanceof Error) {
       this.logger.error(`Message: ${exception.message}`);
