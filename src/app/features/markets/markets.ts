@@ -188,6 +188,7 @@ export class Markets {
       theme: 'dark',
       shared: false,
       x: { show: false },
+      xaxis: { show: false },
       y: {
         formatter: (val: number) =>
           `$${val.toLocaleString(undefined, { minimumFractionDigits: 2 })}`,
