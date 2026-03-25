@@ -47,11 +47,15 @@ export class AuthService {
   }
 
   public logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    localStorage.removeItem('crypto_token');
-    localStorage.removeItem('aurora_trade_state');
-    localStorage.removeItem('aurora_market_state');
+    const keysToRemove = [
+      'token',
+      'user',
+      'crypto_token',
+      'aurora_trade_state',
+      'aurora_market_state',
+    ];
+
+    keysToRemove.forEach((key) => localStorage.removeItem(key));
 
     runInInjectionContext(this.injector, () => {
       const portfolioStore = inject(PortfolioStore);
