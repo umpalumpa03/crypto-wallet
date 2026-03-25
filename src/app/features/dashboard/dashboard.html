@@ -1,6 +1,6 @@
 @if (store.isLoading()) {
 <div class="p-8 lg:p-12 w-full space-y-12 relative animate-pulse">
-    <!-- Header Skeleton -->
+    
     <section class="space-y-4">
         <div class="flex items-end justify-between">
             <div class="space-y-2">
@@ -15,20 +15,20 @@
         <div class="h-48 w-full skeleton rounded-2xl"></div>
     </section>
 
-    <!-- Buttons Skeleton -->
+    
     <div class="flex flex-wrap gap-4 py-2">
         @for (i of [1,2,3,4]; track i) {
             <div class="flex-1 min-w-[140px] h-12 skeleton rounded-xl"></div>
         }
     </div>
 
-    <!-- Grid Skeleton -->
+    
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div class="lg:col-span-8 h-[400px] skeleton rounded-2xl"></div>
         <div class="lg:col-span-4 h-[400px] skeleton rounded-2xl"></div>
     </div>
 
-    <!-- Table Skeleton -->
+    
     <section class="space-y-8 mt-12">
         <div class="h-10 w-64 skeleton"></div>
         <div class="space-y-4">

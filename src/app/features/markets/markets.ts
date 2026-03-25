@@ -31,9 +31,9 @@ export class Markets {
   public selectedAsset = this.market.selectedAsset;
   public tradeSide = signal<'BUY' | 'SELL'>('BUY');
 
-  // ==========================================
-  // 🔥 COMPUTED DATA STREAMS
-  // ==========================================
+  
+  
+  
   public currentPrice = computed(() => {
     const asset = this.selectedAsset();
     if (asset === 'BTC') return this.market.liveBtcPrice();
@@ -48,9 +48,9 @@ export class Markets {
     return this.market.solPriceHistory();
   });
 
-  // ==========================================
-  // 🔥 REACTIVE FORM & TRADE LOGIC
-  // ==========================================
+  
+  
+  
   public amountControl = new FormControl<number | null>(null, [
     Validators.required,
     Validators.min(0.00001),

@@ -19,9 +19,9 @@ export class Ledger {
     this.tradeAPI.loadHistory();
   }
 
-  // ==========================================
-  // 🔥 DYNAMIC MATH
-  // ==========================================
+  
+  
+  
 
   public onSearch(event: Event): void {
     const query = (event.target as HTMLInputElement).value;
@@ -32,7 +32,7 @@ export class Ledger {
     this.tradeAPI.setAssetFilter(asset);
   }
 
-  // Calculate Live Account Equity (Same as Vault Net Worth)
+  
   public accountEquity = computed(() => {
     const portfolio = this.tradeAPI.cryptoPortfolio();
     const btcValue = (portfolio['BTC'] || 0) * this.market.liveBtcPrice();
@@ -41,7 +41,7 @@ export class Ledger {
     return this.tradeAPI.usdBalance() + btcValue + ethValue + solValue;
   });
 
-  // Calculate Total Volume by summing the USD value of all trades in the history
+  
   public totalVolume = computed(() => {
     const history = this.tradeAPI.tradeHistory();
     return history.reduce((sum, tx) => sum + tx.amount * tx.priceAtTime, 0);
