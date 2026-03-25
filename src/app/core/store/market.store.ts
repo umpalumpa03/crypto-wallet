@@ -9,9 +9,9 @@ type MarketState = {
   btcOrderBook: OrderBookData;
   ethOrderBook: OrderBookData;
   solOrderBook: OrderBookData;
-  btcPriceHistory: number[];
-  ethPriceHistory: number[];
-  solPriceHistory: number[];
+  btcPriceHistory: [number, number][];
+  ethPriceHistory: [number, number][];
+  solPriceHistory: [number, number][];
   searchQuery: string;
   selectedAsset: 'BTC' | 'ETH' | 'SOL';
 };
@@ -57,8 +57,8 @@ export const MarketStore = signalStore(
     let ws: WebSocket;
     let throttleInterval: any;
 
-    const updateHistory = (history: number[], newPrice: number) => {
-      const newHistory = [...history, newPrice];
+    const updateHistory = (history: [number, number][], newPrice: number) => {
+      const newHistory: [number, number][] = [...history, [Date.now(), newPrice]];
       if (newHistory.length > 60) newHistory.shift();
       return newHistory;
     };
@@ -95,9 +95,9 @@ export const MarketStore = signalStore(
             fetch('https://api.binance.com/api/v3/klines?symbol=SOLUSDT&interval=1s&limit=60'),
           ]);
 
-          const parsePrices = async (res: Response) => {
+          const parsePrices = async (res: Response): Promise<[number, number][]> => {
             const data = await res.json();
-            return data.map((candle: any[]) => parseFloat(candle[4]));
+            return data.map((candle: any[]) => [candle[0], parseFloat(candle[4])]);
           };
 
           const btcPrices = await parsePrices(btcRes);
@@ -108,9 +108,9 @@ export const MarketStore = signalStore(
             btcPriceHistory: btcPrices,
             ethPriceHistory: ethPrices,
             solPriceHistory: solPrices,
-            liveBtcPrice: btcPrices[btcPrices.length - 1],
-            liveEthPrice: ethPrices[ethPrices.length - 1],
-            liveSolPrice: solPrices[solPrices.length - 1],
+            liveBtcPrice: btcPrices[btcPrices.length - 1][1],
+            liveEthPrice: ethPrices[ethPrices.length - 1][1],
+            liveSolPrice: solPrices[solPrices.length - 1][1],
           });
         } catch (error) {
           console.error('Failed to load Binance history.', error);

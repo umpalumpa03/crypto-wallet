@@ -164,13 +164,16 @@ export class Markets {
       yaxis: { lines: { show: true } },
     },
     xaxis: {
-      type: 'numeric',
-      range: 60,
-      min: 1,
-      max: 60,
-      labels: { show: false },
+      type: 'datetime',
+      labels: {
+        show: true,
+        style: { colors: '#8b9592', fontFamily: 'Plus Jakarta Sans', fontSize: '10px' },
+        datetimeUTC: false,
+        format: 'HH:mm:ss',
+      },
       axisBorder: { show: false },
       axisTicks: { show: false },
+      tooltip: { enabled: false },
     },
     yaxis: {
       show: true,
@@ -189,10 +192,7 @@ export class Markets {
     tooltip: {
       theme: 'dark',
       shared: false,
-      x: { 
-        show: true,
-        formatter: (val: number) => val.toFixed(1)
-      },
+      x: { show: false },
       y: {
         formatter: (val: number) =>
           `$${val.toLocaleString(undefined, { minimumFractionDigits: 2 })}`,
