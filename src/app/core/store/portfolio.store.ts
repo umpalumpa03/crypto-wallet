@@ -23,17 +23,19 @@ export const PortfolioStore = signalStore(
 
   withMethods((store, http: HttpClient = inject(HttpClient)) => ({
     async loadPortfolio(force: boolean = false): Promise<void> {
-      if (store.profile() && !force) return;
+      const isProfileLoaded = !!store.profile();
+      if (isProfileLoaded && !force) return;
 
       patchState(store, { isLoading: true, error: null });
 
       try {
-        const apiUrl: string = `${API_URL}/portfolio/dashboard`;
-        const profile: InstitutionalProfile = await lastValueFrom(http.get<InstitutionalProfile>(apiUrl));
+        const endpoint = `${API_URL}/portfolio/dashboard`;
+        const profile = await lastValueFrom(http.get<InstitutionalProfile>(endpoint));
         patchState(store, { profile, isLoading: false });
       } catch (err: unknown) {
+        const errorMessage = 'System failure: connection to the decentralized ledger could not be established.';
         patchState(store, {
-          error: 'Failed to establish secure connection to the ledger.',
+          error: errorMessage,
           isLoading: false,
         });
       }
