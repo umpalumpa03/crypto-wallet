@@ -40,12 +40,11 @@ export const MarketStore = signalStore(
       { name: 'Solana', symbol: 'SOL', price: store.liveSolPrice(), history: store.solPriceHistory() },
     ]),
     filteredAssets: computed(() => {
-      const query = store.searchQuery().toLowerCase();
-      const assets = [
-        { name: 'Bitcoin', symbol: 'BTC', price: store.liveBtcPrice(), history: store.btcPriceHistory() },
-        { name: 'Ethereum', symbol: 'ETH', price: store.liveEthPrice(), history: store.ethPriceHistory() },
-        { name: 'Solana', symbol: 'SOL', price: store.liveSolPrice(), history: store.solPriceHistory() },
-      ];
+      const query = store.searchQuery().toLowerCase().trim();
+      const assets = store.allAssets();
+
+      if (!query) return assets;
+
       return assets.filter(a => 
         a.name.toLowerCase().includes(query) || 
         a.symbol.toLowerCase().includes(query)
