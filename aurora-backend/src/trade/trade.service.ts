@@ -58,7 +58,7 @@ export class TradeService {
           where: { userId_symbol: { userId, symbol } },
           update: { 
             amount: { increment: amount },
-            totalCost: { increment: totalValue } // 🏦 Update cost basis
+            totalCost: { increment: totalValue } 
           },
           create: { userId, symbol, amount, totalCost: totalValue },
         });
@@ -70,7 +70,7 @@ export class TradeService {
           throw new BadRequestException(`Insufficient ${symbol} balance`);
         }
 
-        // Calculate proportional cost basis removal
+        
         const proportionalCost = (amount / currentAmount) * currentTotalCost;
 
         await tx.user.update({
@@ -82,7 +82,7 @@ export class TradeService {
           where: { userId_symbol: { userId, symbol } },
           data: { 
             amount: { decrement: amount },
-            totalCost: { decrement: proportionalCost } // 📉 Reduce basis proportionally
+            totalCost: { decrement: proportionalCost } 
           },
         });
       }
