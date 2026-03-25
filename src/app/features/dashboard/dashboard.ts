@@ -21,7 +21,7 @@ import { InstitutionalProfile, Asset } from '../../core/models/portfolio.model';
   templateUrl: './dashboard.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Dashboard implements OnInit {
+export class Dashboard {
   protected readonly store: any = inject(PortfolioStore);
   public market: any = inject(MarketStore);
 
@@ -114,7 +114,7 @@ export class Dashboard implements OnInit {
     colors: ['#00e1ab', '#627eea', '#9945FF'],
     stroke: {
       show: true,
-      colors: ['#1d2023'], // Matching surface-container color for a clean gap look
+      colors: ['#1d2023'], 
       width: 4,
     },
     dataLabels: { enabled: false },
@@ -247,9 +247,5 @@ export class Dashboard implements OnInit {
       if (eth) eth.updateSeries([{ data: this.market.ethPriceHistory() }]);
       if (sol) sol.updateSeries([{ data: this.market.solPriceHistory() }]);
     });
-  }
-
-  public ngOnInit(): void {
-    this.store.loadPortfolio();
   }
 }
