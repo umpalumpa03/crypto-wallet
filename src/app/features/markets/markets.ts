@@ -166,6 +166,8 @@ export class Markets {
     xaxis: {
       type: 'numeric',
       range: 60,
+      min: 1,
+      max: 60,
       labels: { show: false },
       axisBorder: { show: false },
       axisTicks: { show: false },
@@ -187,8 +189,10 @@ export class Markets {
     tooltip: {
       theme: 'dark',
       shared: false,
-      x: { show: false },
-      xaxis: { show: false },
+      x: { 
+        show: true,
+        formatter: (val: number) => val.toFixed(1)
+      },
       y: {
         formatter: (val: number) =>
           `$${val.toLocaleString(undefined, { minimumFractionDigits: 2 })}`,
