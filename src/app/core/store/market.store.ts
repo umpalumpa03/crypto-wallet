@@ -173,7 +173,7 @@ export const MarketStore = signalStore(
   }),
   withHooks({
     onInit(store) {
-      // 1. Load from localStorage
+      
       const saved = localStorage.getItem('aurora_market_state');
       if (saved) {
         const parsed = JSON.parse(saved);
@@ -183,7 +183,7 @@ export const MarketStore = signalStore(
         });
       }
 
-      // 2. Persist to localStorage on change
+      
       effect(() => {
         const stateToSave = {
           searchQuery: store.searchQuery(),
