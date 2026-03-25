@@ -38,8 +38,19 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         } else if (error.status === 0) {
           notificationService.error('Could not connect to the server. Please check your connection.');
         } else {
+          const skipNotifications = [
+            '/auth/login',
+            '/auth/register',
+            '/trade/execute',
+            '/trade/portfolio',
+            '/portfolio/dashboard'
+          ];
           
-          notificationService.error(errorMessage);
+          const shouldSkip = skipNotifications.some(url => req.url.includes(url));
+          
+          if (!shouldSkip) {
+            notificationService.error(errorMessage);
+          }
         }
       }
 

@@ -66,10 +66,12 @@ export class Markets {
   public isValidTrade = computed(() => {
     const side = this.tradeSide();
     const amount = this.orderAmount() || 0;
+    const price = this.currentPrice();
     const value = this.estimatedValue();
     const currentHoldings = this.tradeAPI.cryptoPortfolio()[this.selectedAsset()] || 0;
 
     if (!this.amountControl.valid || this.tradeAPI.isTrading()) return false;
+    if (amount <= 0 || price <= 0 || value <= 0) return false;
 
     if (side === 'BUY') return value <= this.tradeAPI.usdBalance();
     if (side === 'SELL') return amount <= currentHoldings;

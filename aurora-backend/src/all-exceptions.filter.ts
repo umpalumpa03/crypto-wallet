@@ -23,6 +23,14 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
+    const exceptionResponse = exception instanceof HttpException 
+      ? exception.getResponse() 
+      : null;
+
+    const message = exceptionResponse && typeof exceptionResponse === 'object' 
+      ? (exceptionResponse as any).message || (exception as any).message 
+      : (exception as any)?.message || 'Internal server error';
+
     
     this.logger.error(`[CRITICAL ERROR] Details: ${JSON.stringify(exception)}`);
     if (exception instanceof Error) {
@@ -34,7 +42,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       statusCode: httpStatus,
       timestamp: new Date().toISOString(),
       path: httpAdapter.getRequestUrl(ctx.getRequest()),
-      message: (exception as any)?.message || 'Internal server error',
+      message: message,
     };
 
     httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);

@@ -10,6 +10,7 @@ import { NotificationService } from '../services/notification.service';
 type FilterState = {
   searchQuery: string;
   assetFilter: string;
+  isPortfolioLoading: boolean;
 };
 
 const initialState: Omit<TradeState, 'tradeMessage'> & FilterState = {
@@ -18,6 +19,7 @@ const initialState: Omit<TradeState, 'tradeMessage'> & FilterState = {
   tradeHistory: [],
   depositConfigs: {},
   isTrading: false,
+  isPortfolioLoading: false,
   searchQuery: '',
   assetFilter: 'All Assets',
 };
@@ -72,9 +74,13 @@ export const TradeStore = signalStore(
             return;
           }
 
+          if (store.isPortfolioLoading()) return;
+
           const authService = injector.get(AuthService);
           const userId: string | undefined = authService.currentUser()?.id;
           if (!userId) return;
+
+          patchState(store, { isPortfolioLoading: true });
 
           try {
             const data: PortfolioResponse = await lastValueFrom(
@@ -86,6 +92,8 @@ export const TradeStore = signalStore(
             });
           } catch (error: unknown) {
             notificationService.error('Could not connect to database.');
+          } finally {
+            patchState(store, { isPortfolioLoading: false });
           }
         },
 
@@ -116,9 +124,20 @@ export const TradeStore = signalStore(
 
           const totalValue: number = amount * price;
 
-          if (amount <= 0) return false;
-          if (side === 'BUY' && totalValue > store.usdBalance()) return false;
-          if (side === 'SELL' && amount > (store.cryptoPortfolio()[asset] || 0)) return false;
+          if (amount <= 0 || price <= 0) {
+            notificationService.error('Invalid trade parameters. Price and amount must be positive.');
+            return false;
+          }
+
+          if (side === 'BUY' && totalValue > store.usdBalance()) {
+            notificationService.error('Insufficient USD balance');
+            return false;
+          }
+          
+          if (side === 'SELL' && amount > (store.cryptoPortfolio()[asset] || 0)) {
+            notificationService.error(`Insufficient ${asset} balance`);
+            return false;
+          }
 
           patchState(store, { isTrading: true });
 
@@ -146,7 +165,12 @@ export const TradeStore = signalStore(
 
             return true;
           } catch (error: any) {
-            const errorMsg: string = error?.error?.message || 'Transaction failed. Please try again.';
+            let errorMsg: string = 'Transaction failed. Please try again.';
+            if (error?.error?.message) {
+              errorMsg = Array.isArray(error.error.message) 
+                ? error.error.message[0] 
+                : error.error.message;
+            }
             notificationService.error(errorMsg);
             return false;
           } finally {
