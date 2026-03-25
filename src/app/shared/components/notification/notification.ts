@@ -5,7 +5,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-notification',
-  standalone: true,
+
   imports: [CommonModule],
   templateUrl: './notification.html',
   styleUrl: './notification.scss',

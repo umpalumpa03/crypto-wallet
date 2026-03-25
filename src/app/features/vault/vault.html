@@ -26,8 +26,11 @@
             <h3 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest px-2 mb-4">Active Balances
             </h3>
 
-            <div (click)="selectedDeposit.set('USD')"
-                [ngClass]="selectedDeposit() === 'USD' ? 'border-primary-fixed-dim/50 bg-surface-container' : 'border-transparent bg-surface-container-low hover:border-primary-fixed-dim/20'"
+            <div (click)="selectedDeposit.set('USD')" [class.border-primary-fixed-dim/50]="selectedDeposit() === 'USD'"
+                [class.bg-surface-container]="selectedDeposit() === 'USD'"
+                [class.border-transparent]="selectedDeposit() !== 'USD'"
+                [class.bg-surface-container-low]="selectedDeposit() !== 'USD'"
+                [class.hover:border-primary-fixed-dim/20]="selectedDeposit() !== 'USD'"
                 class="group cursor-pointer p-6 rounded-xl border-2 transition-all relative overflow-hidden">
                 <div class="flex flex-wrap justify-between items-start relative z-10">
                     <div>
@@ -37,26 +40,35 @@
                     </div>
                     <div class="bg-surface-container-highest p-2 rounded-lg">
                         <span class="material-symbols-outlined"
-                            [ngClass]="selectedDeposit() === 'USD' ? 'text-primary-fixed-dim' : 'text-on-surface-variant'">payments</span>
+                            [class.text-primary-fixed-dim]="selectedDeposit() === 'USD'"
+                            [class.text-on-surface-variant]="selectedDeposit() !== 'USD'">payments</span>
                     </div>
                 </div>
             </div>
 
-            <div (click)="selectedDeposit.set('BTC')"
-                [ngClass]="selectedDeposit() === 'BTC' ? 'border-primary-fixed-dim bg-surface-container shadow-xl shadow-primary-fixed-dim/5' : 'border-transparent bg-surface-container-low hover:border-primary-fixed-dim/20'"
+            <div (click)="selectedDeposit.set('BTC')" [class.border-primary-fixed-dim]="selectedDeposit() === 'BTC'"
+                [class.bg-surface-container]="selectedDeposit() === 'BTC'"
+                [class.shadow-xl]="selectedDeposit() === 'BTC'"
+                [class.shadow-primary-fixed-dim/5]="selectedDeposit() === 'BTC'"
+                [class.border-transparent]="selectedDeposit() !== 'BTC'"
+                [class.bg-surface-container-low]="selectedDeposit() !== 'BTC'"
+                [class.hover:border-primary-fixed-dim/20]="selectedDeposit() !== 'BTC'"
                 class="p-6 rounded-xl border-2 transition-all relative overflow-hidden cursor-pointer">
                 @if (selectedDeposit() === 'BTC') { <div class="aurora-glow absolute inset-0"></div> }
                 <div class="flex justify-between items-start relative z-10">
                     <div>
-                        <div class="text-sm font-bold mb-1"
-                            [ngClass]="selectedDeposit() === 'BTC' ? 'text-primary-fixed-dim' : 'text-on-surface-variant'">
+                        <div class="text-sm font-bold mb-1" [class.text-primary-fixed-dim]="selectedDeposit() === 'BTC'"
+                            [class.text-on-surface-variant]="selectedDeposit() !== 'BTC'">
                             Bitcoin</div>
                         <div class="text-3xl font-headline font-bold text-on-surface">{{ btcBalance() | number:'1.2-4'
                             }} BTC</div>
                         <div class="text-sm text-on-surface-variant mt-1">≈ {{ btcValue() | currency:'USD' }}</div>
                     </div>
                     <div class="p-2 rounded-lg transition-colors"
-                        [ngClass]="selectedDeposit() === 'BTC' ? 'bg-primary-fixed-dim text-on-primary' : 'bg-surface-container-highest text-on-surface-variant'">
+                        [class.bg-primary-fixed-dim]="selectedDeposit() === 'BTC'"
+                        [class.text-on-primary]="selectedDeposit() === 'BTC'"
+                        [class.bg-surface-container-highest]="selectedDeposit() !== 'BTC'"
+                        [class.text-on-surface-variant]="selectedDeposit() !== 'BTC'">
                         <span class="material-symbols-outlined">currency_bitcoin</span>
                     </div>
                 </div>
@@ -67,39 +79,51 @@
                 </div>
             </div>
 
-            <div (click)="selectedDeposit.set('SOL')"
-                [ngClass]="selectedDeposit() === 'SOL' ? 'border-[#9945FF]/50 bg-surface-container' : 'border-transparent bg-surface-container-low hover:border-[#9945FF]/20'"
+            <div (click)="selectedDeposit.set('SOL')" [class.border-[#9945FF]/50]="selectedDeposit() === 'SOL'"
+                [class.bg-surface-container]="selectedDeposit() === 'SOL'"
+                [class.border-transparent]="selectedDeposit() !== 'SOL'"
+                [class.bg-surface-container-low]="selectedDeposit() !== 'SOL'"
+                [class.hover:border-[#9945FF]/20]="selectedDeposit() !== 'SOL'"
                 class="group cursor-pointer p-6 rounded-xl border-2 transition-all">
                 <div class="flex justify-between items-start">
                     <div>
                         <div class="text-on-surface-variant text-sm font-medium mb-1"
-                            [ngClass]="selectedDeposit() === 'SOL' ? 'text-[#9945FF]' : 'text-on-surface-variant'">
+                            [class.text-[#9945FF]]="selectedDeposit() === 'SOL'"
+                            [class.text-on-surface-variant]="selectedDeposit() !== 'SOL'">
                             Solana</div>
                         <div class="text-3xl font-headline font-bold text-on-surface">{{ solBalance() | number:'1.2-2'
                             }} SOL</div>
                         <div class="text-sm text-on-surface-variant mt-1">≈ {{ solValue() | currency:'USD' }}</div>
                     </div>
-                    <div class="p-2 rounded-lg transition-colors"
-                        [ngClass]="selectedDeposit() === 'SOL' ? 'bg-[#9945FF]/20 text-[#9945FF]' : 'bg-surface-container-highest text-on-surface-variant'">
+                    <div class="p-2 rounded-lg transition-colors" [class.bg-[#9945FF]/20]="selectedDeposit() === 'SOL'"
+                        [class.text-[#9945FF]]="selectedDeposit() === 'SOL'"
+                        [class.bg-surface-container-highest]="selectedDeposit() !== 'SOL'"
+                        [class.text-on-surface-variant]="selectedDeposit() !== 'SOL'">
                         <span class="material-symbols-outlined">token</span>
                     </div>
                 </div>
             </div>
 
-            <div (click)="selectedDeposit.set('ETH')"
-                [ngClass]="selectedDeposit() === 'ETH' ? 'border-[#627eea]/50 bg-surface-container' : 'border-transparent bg-surface-container-low hover:border-[#627eea]/20'"
+            <div (click)="selectedDeposit.set('ETH')" [class.border-[#627eea]/50]="selectedDeposit() === 'ETH'"
+                [class.bg-surface-container]="selectedDeposit() === 'ETH'"
+                [class.border-transparent]="selectedDeposit() !== 'ETH'"
+                [class.bg-surface-container-low]="selectedDeposit() !== 'ETH'"
+                [class.hover:border-[#627eea]/20]="selectedDeposit() !== 'ETH'"
                 class="group cursor-pointer p-6 rounded-xl border-2 transition-all">
                 <div class="flex justify-between items-start">
                     <div>
                         <div class="text-on-surface-variant text-sm font-medium mb-1"
-                            [ngClass]="selectedDeposit() === 'ETH' ? 'text-[#627eea]' : 'text-on-surface-variant'">
+                            [class.text-[#627eea]]="selectedDeposit() === 'ETH'"
+                            [class.text-on-surface-variant]="selectedDeposit() !== 'ETH'">
                             Ethereum</div>
                         <div class="text-3xl font-headline font-bold text-on-surface">{{ ethBalance() | number:'1.2-4'
                             }} ETH</div>
                         <div class="text-sm text-on-surface-variant mt-1">≈ {{ ethValue() | currency:'USD' }}</div>
                     </div>
-                    <div class="p-2 rounded-lg transition-colors"
-                        [ngClass]="selectedDeposit() === 'ETH' ? 'bg-[#627eea]/20 text-[#627eea]' : 'bg-surface-container-highest text-on-surface-variant'">
+                    <div class="p-2 rounded-lg transition-colors" [class.bg-[#627eea]/20]="selectedDeposit() === 'ETH'"
+                        [class.text-[#627eea]]="selectedDeposit() === 'ETH'"
+                        [class.bg-surface-container-highest]="selectedDeposit() !== 'ETH'"
+                        [class.text-on-surface-variant]="selectedDeposit() !== 'ETH'">
                         <span class="material-symbols-outlined">diamond</span>
                     </div>
                 </div>
@@ -193,7 +217,10 @@
 
                 <div class="md:col-span-1 flex shrink-0">
                     <div class="w-10 h-10 rounded-full flex items-center justify-center"
-                        [ngClass]="tx.type === 'BUY' || tx.type === 'DEPOSIT' ? 'bg-primary-fixed-dim/10 text-primary-fixed-dim' : 'bg-error/10 text-error'">
+                        [class.bg-primary-fixed-dim/10]="tx.type === 'BUY' || tx.type === 'DEPOSIT'"
+                        [class.text-primary-fixed-dim]="tx.type === 'BUY' || tx.type === 'DEPOSIT'"
+                        [class.bg-error/10]="tx.type !== 'BUY' && tx.type !== 'DEPOSIT'"
+                        [class.text-error]="tx.type !== 'BUY' && tx.type !== 'DEPOSIT'">
                         <span class="material-symbols-outlined">
                             {{ tx.type === 'BUY' || tx.type === 'DEPOSIT' ? 'arrow_downward' : 'arrow_upward' }}
                         </span>

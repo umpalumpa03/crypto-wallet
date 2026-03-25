@@ -1,5 +1,6 @@
-import { signalStore, withState, withMethods, patchState, withHooks } from '@ngrx/signals';
+import { signalStore, withState, withMethods, patchState, withHooks, withComputed } from '@ngrx/signals';
 import { OrderBookData, OrderBookLevel } from '../models/portfolio.model';
+import { computed, effect } from '@angular/core';
 
 type MarketState = {
   liveBtcPrice: number;
@@ -11,6 +12,8 @@ type MarketState = {
   btcPriceHistory: number[];
   ethPriceHistory: number[];
   solPriceHistory: number[];
+  searchQuery: string;
+  selectedAsset: 'BTC' | 'ETH' | 'SOL';
 };
 
 const initialState: MarketState = {
@@ -23,11 +26,32 @@ const initialState: MarketState = {
   btcPriceHistory: [],
   ethPriceHistory: [],
   solPriceHistory: [],
+  searchQuery: '',
+  selectedAsset: 'BTC',
 };
 
 export const MarketStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
+  withComputed((store) => ({
+    allAssets: computed(() => [
+      { name: 'Bitcoin', symbol: 'BTC', price: store.liveBtcPrice(), history: store.btcPriceHistory() },
+      { name: 'Ethereum', symbol: 'ETH', price: store.liveEthPrice(), history: store.ethPriceHistory() },
+      { name: 'Solana', symbol: 'SOL', price: store.liveSolPrice(), history: store.solPriceHistory() },
+    ]),
+    filteredAssets: computed(() => {
+      const query = store.searchQuery().toLowerCase();
+      const assets = [
+        { name: 'Bitcoin', symbol: 'BTC', price: store.liveBtcPrice(), history: store.btcPriceHistory() },
+        { name: 'Ethereum', symbol: 'ETH', price: store.liveEthPrice(), history: store.ethPriceHistory() },
+        { name: 'Solana', symbol: 'SOL', price: store.liveSolPrice(), history: store.solPriceHistory() },
+      ];
+      return assets.filter(a => 
+        a.name.toLowerCase().includes(query) || 
+        a.symbol.toLowerCase().includes(query)
+      );
+    })
+  })),
   withMethods((store) => {
     let ws: WebSocket;
     let throttleInterval: any;
@@ -54,6 +78,14 @@ export const MarketStore = signalStore(
     };
 
     return {
+      setSearchQuery(query: string): void {
+        patchState(store, { searchQuery: query });
+      },
+
+      setSelectedAsset(asset: 'BTC' | 'ETH' | 'SOL'): void {
+        patchState(store, { selectedAsset: asset });
+      },
+
       async loadRealHistory() {
         try {
           const [btcRes, ethRes, solRes] = await Promise.all([
@@ -141,6 +173,25 @@ export const MarketStore = signalStore(
   }),
   withHooks({
     onInit(store) {
+      // 1. Load from localStorage
+      const saved = localStorage.getItem('aurora_market_state');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        patchState(store, { 
+          searchQuery: parsed.searchQuery || '',
+          selectedAsset: parsed.selectedAsset || 'BTC'
+        });
+      }
+
+      // 2. Persist to localStorage on change
+      effect(() => {
+        const stateToSave = {
+          searchQuery: store.searchQuery(),
+          selectedAsset: store.selectedAsset()
+        };
+        localStorage.setItem('aurora_market_state', JSON.stringify(stateToSave));
+      });
+
       store.loadRealHistory();
       store.connectToBinance();
       store.startThrottling();

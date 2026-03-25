@@ -83,10 +83,9 @@
 
         <!-- Logout Confirmation Modal -->
         @if (showLogoutConfirm()) {
-            <app-logout-modal 
+            <app-logout-modal
                 (confirm)="confirmLogout()"
                 (cancel)="cancelLogout()">
             </app-logout-modal>
         }
-        <app-notification />
         </div>

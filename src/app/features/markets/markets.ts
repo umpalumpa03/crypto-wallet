@@ -3,14 +3,13 @@ import {
   ChangeDetectionStrategy,
   computed,
   inject,
-  signal,
-  ViewChild,
   effect,
+  viewChild,
+  signal,
 } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { AssetSymbol } from './models/asset.model';
 import { ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
 import { TradeStore } from '../../core/store/trade.store';
 import { MarketStore } from '../../core/store/market.store';
@@ -18,6 +17,7 @@ import { NumberInput } from '../../shared/components/number-input/number-input';
 
 @Component({
   selector: 'app-markets',
+
   imports: [CommonModule, DecimalPipe, ReactiveFormsModule, NgApexchartsModule, NumberInput],
   templateUrl: './markets.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,14 +26,10 @@ export class Markets {
   public market = inject(MarketStore);
   public tradeAPI = inject(TradeStore);
 
-  public selectedAsset = signal<AssetSymbol>('BTC');
+  public readonly mainChart = viewChild<ChartComponent>('mainChart');
+
+  public selectedAsset = this.market.selectedAsset;
   public tradeSide = signal<'BUY' | 'SELL'>('BUY');
-
-  @ViewChild('mainChart') public mainChart!: ChartComponent;
-
-  // Static initialization to establish the DOM and Y-Axis widths immediately
-  public initialSeries = [{ name: 'BTC', data: this.market.btcPriceHistory() }];
-  private lastAsset = '';
 
   // ==========================================
   // 🔥 COMPUTED DATA STREAMS
@@ -60,7 +56,6 @@ export class Markets {
     Validators.min(0.00001),
   ]);
 
-  // Convert the RxJS stream to a Signal for seamless computed math
   public orderAmount = toSignal(this.amountControl.valueChanges, { initialValue: null });
 
   public estimatedValue = computed(() => {
@@ -74,27 +69,24 @@ export class Markets {
     const value = this.estimatedValue();
     const currentHoldings = this.tradeAPI.cryptoPortfolio()[this.selectedAsset()] || 0;
 
-    // Fail immediately if form is invalid or system is loading
     if (!this.amountControl.valid || this.tradeAPI.isTrading()) return false;
 
-    // Validate based on trade direction
     if (side === 'BUY') return value <= this.tradeAPI.usdBalance();
     if (side === 'SELL') return amount <= currentHoldings;
     return false;
   });
 
-  public setMaxAmount() {
+  public setMaxAmount(): void {
     let max = 0;
     if (this.tradeSide() === 'BUY') {
       max = this.tradeAPI.usdBalance() / this.currentPrice();
     } else {
       max = this.tradeAPI.cryptoPortfolio()[this.selectedAsset()] || 0;
     }
-    // Floor to 5 decimal places to prevent microscopic floating-point errors
     this.amountControl.setValue(Math.floor(max * 100000) / 100000);
   }
 
-  public async executeTrade() {
+  public async executeTrade(): Promise<void> {
     if (!this.isValidTrade()) return;
 
     const success = await this.tradeAPI.executeTrade(
@@ -104,23 +96,24 @@ export class Markets {
       this.currentPrice(),
     );
 
-    // Only clear the form if the trade actually went through
     if (success) this.amountControl.reset();
   }
 
-  public setTradeSide(side: 'BUY' | 'SELL') {
+  public setTradeSide(side: 'BUY' | 'SELL'): void {
     this.tradeSide.set(side);
     this.amountControl.reset();
   }
 
-  public setAsset(asset: AssetSymbol) {
-    this.selectedAsset.set(asset);
+  public setAsset(asset: any): void {
+    this.market.setSelectedAsset(asset);
     this.amountControl.reset();
   }
 
-  // ==========================================
-  // 🔥 CHART RENDER CYCLE (THE EFFECT)
-  // ==========================================
+  public onSearch(event: Event): void {
+    const query = (event.target as HTMLInputElement).value;
+    this.market.setSearchQuery(query);
+  }
+
   constructor() {
     this.tradeAPI.loadPortfolio();
     this.tradeAPI.loadHistory();
@@ -128,113 +121,80 @@ export class Markets {
     effect(() => {
       const history = this.currentHistory();
       const asset = this.selectedAsset();
+      const chart = this.mainChart();
 
-      // Ensure chart is initialized and we have data
-      if (!this.mainChart || !this.mainChart.chart || history.length < 2) return;
+      if (!chart || !chart.chart || history.length < 2) return;
 
-      // 1. SILENT DATA PUSH (Update only the data, don't re-render the whole chart)
-      // By passing true for `animate` and false for `overwriteInitialSeries`
-      // ApexCharts will just slide the new point in without breaking the hover state
-      this.mainChart.updateSeries([{ name: asset, data: history }], false);
+      chart.updateSeries([{ name: asset, data: history }], false);
 
-      // 2. THEME SWITCHER (Only run when the user actually changes the coin!)
-      if (this.lastAsset !== asset) {
-        this.lastAsset = asset;
-        const brandColor = asset === 'ETH' ? '#627eea' : asset === 'SOL' ? '#9945FF' : '#00e1ab';
-
-        // updateOptions forces a heavy re-render, so we strictly isolate it here
-        this.mainChart.updateOptions(
-          {
+      const brandColor = asset === 'ETH' ? '#627eea' : asset === 'SOL' ? '#9945FF' : '#00e1ab';
+      chart.updateOptions(
+        {
+          colors: [brandColor],
+          fill: {
+            type: 'gradient',
+            gradient: { shadeIntensity: 1, opacityFrom: 0.3, opacityTo: 0, stops: [0, 100] },
             colors: [brandColor],
-            fill: {
-              type: 'gradient',
-              gradient: { shadeIntensity: 1, opacityFrom: 0.3, opacityTo: 0, stops: [0, 100] },
-              colors: [brandColor],
-            },
-            markers: {
-              colors: ['transparent'],
-              strokeColors: 'transparent',
-              hover: { size: 6, sizeOffset: 3 },
-            },
           },
-          false,
-          true, // 🔥 Force true here so the options completely flush and apply
-        );
-      }
+        },
+        false,
+        true,
+      );
     });
   }
 
-  // ==========================================
-  // 🔥 CHART CONFIGURATION
-  // ==========================================
   public chartOptions: any = {
     chart: {
       id: 'aurora-live-chart',
       type: 'area',
       height: '100%',
       width: '100%',
-      animations: { enabled: false }, // Essential for live crypto data
+      animations: { enabled: true, easing: 'linear', dynamicAnimation: { speed: 1000 } },
       toolbar: { show: false },
       zoom: { enabled: false },
+      background: 'transparent',
     },
     dataLabels: { enabled: false },
-    stroke: { curve: 'straight', width: 2 },
-    markers: {
-      size: 4,
-      colors: ['transparent'], // Pre-mounts circles to fix the hover bug
-      strokeColors: 'transparent',
-      strokeWidth: 2,
-      hover: { size: 6, sizeOffset: 3 },
-    },
+    stroke: { curve: 'smooth', width: 2, lineCap: 'round' },
+    markers: { size: 0, hover: { size: 5 } },
     grid: {
-      borderColor: 'rgba(255, 255, 255, 0.05)',
-      strokeDashArray: 4,
+      borderColor: 'rgba(255, 255, 255, 0.03)',
+      strokeDashArray: 5,
       xaxis: { lines: { show: true } },
       yaxis: { lines: { show: true } },
-      padding: { left: 10 },
     },
     xaxis: {
+      type: 'numeric',
+      range: 60,
       labels: { show: false },
       axisBorder: { show: false },
       axisTicks: { show: false },
-      tooltip: { enabled: false },
-      crosshairs: {
-        show: true,
-        stroke: { color: 'rgba(255,255,255,0.2)', width: 1, dashArray: 4 },
-      },
     },
     yaxis: {
       show: true,
+      opposite: true,
       labels: {
-        minWidth: 75,
-        maxWidth: 100,
-        style: { colors: '#8b9592', fontFamily: 'monospace', fontSize: '11px', fontWeight: 'bold' },
+        minWidth: 60,
+        style: { colors: '#8b9592', fontFamily: 'JetBrains Mono', fontSize: '10px' },
         formatter: (val: number) =>
           val ? `$${val.toLocaleString(undefined, { maximumFractionDigits: 0 })}` : '',
       },
-      crosshairs: {
-        show: true,
-        stroke: { color: 'rgba(255,255,255,0.2)', width: 1, dashArray: 4 },
-      },
+    },
+    fill: {
+      type: 'gradient',
+      gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.05, stops: [0, 90, 100] },
     },
     tooltip: {
       theme: 'dark',
       shared: false,
-      intersect: false,
-      followCursor: true,
       x: { show: false },
-      marker: { show: false },
       y: {
-        title: { formatter: () => '' },
         formatter: (val: number) =>
-          val ? `$${val.toLocaleString(undefined, { minimumFractionDigits: 2 })}` : '',
+          `$${val.toLocaleString(undefined, { minimumFractionDigits: 2 })}`,
       },
     },
   };
 
-  // ==========================================
-  // 🔥 MOCK ORDER BOOK (BIDS / ASKS)
-  // ==========================================
   public asks = computed(() => {
     const asset = this.selectedAsset();
     if (asset === 'BTC') return this.market.btcOrderBook().asks;
@@ -251,20 +211,15 @@ export class Markets {
 
   public totalCryptoValue = computed(() => {
     const portfolio = this.tradeAPI.cryptoPortfolio();
-    const btcValue = (portfolio['BTC'] || 0) * this.market.liveBtcPrice();
-    const ethValue = (portfolio['ETH'] || 0) * this.market.liveEthPrice();
-    const solValue = (portfolio['SOL'] || 0) * this.market.liveSolPrice();
-
-    return btcValue + ethValue + solValue;
+    return (
+      (portfolio['BTC'] || 0) * this.market.liveBtcPrice() +
+      (portfolio['ETH'] || 0) * this.market.liveEthPrice() +
+      (portfolio['SOL'] || 0) * this.market.liveSolPrice()
+    );
   });
 
-  // Calculate the absolute Total Account Net Worth (Fiat + Crypto)
-  public accountNetWorth = computed(() => {
-    return this.tradeAPI.usdBalance() + this.totalCryptoValue();
-  });
-
-  // Helper to safely get the balance of the currently selected asset
-  public currentAssetBalance = computed(() => {
-    return this.tradeAPI.cryptoPortfolio()[this.selectedAsset()] || 0;
-  });
+  public accountNetWorth = computed(() => this.tradeAPI.usdBalance() + this.totalCryptoValue());
+  public currentAssetBalance = computed(
+    () => this.tradeAPI.cryptoPortfolio()[this.selectedAsset()] || 0,
+  );
 }

@@ -2,11 +2,11 @@ import {
   Component,
   OnInit,
   inject,
-  ViewChild,
   effect,
   computed,
   Signal,
   ChangeDetectionStrategy,
+  viewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PortfolioStore } from '../../core/store/portfolio.store';
@@ -16,6 +16,7 @@ import { InstitutionalProfile, Asset } from '../../core/models/portfolio.model';
 
 @Component({
   selector: 'app-dashboard',
+
   imports: [CommonModule, NgApexchartsModule],
   templateUrl: './dashboard.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,9 +25,9 @@ export class Dashboard implements OnInit {
   protected readonly store: any = inject(PortfolioStore);
   public market: any = inject(MarketStore);
 
-  @ViewChild('btcChart') private btcChart!: ChartComponent;
-  @ViewChild('ethChart') private ethChart!: ChartComponent;
-  @ViewChild('solChart') private solChart!: ChartComponent;
+  public readonly btcChart = viewChild<ChartComponent>('btcChart');
+  public readonly ethChart = viewChild<ChartComponent>('ethChart');
+  public readonly solChart = viewChild<ChartComponent>('solChart');
 
   public liveNetWorth: Signal<number> = computed((): number => {
     const profile: InstitutionalProfile | null = this.store.profile();
@@ -96,45 +97,98 @@ export class Dashboard implements OnInit {
   });
 
   public allocationChartOptions: any = {
-    chart: { type: 'donut', height: 280, animations: { speed: 400 } },
+    chart: {
+      type: 'donut',
+      height: 280,
+      animations: { enabled: true, speed: 400 },
+      dropShadow: {
+        enabled: true,
+        blur: 10,
+        left: 0,
+        top: 0,
+        opacity: 0.2,
+        color: '#00e1ab',
+      },
+    },
     labels: ['Bitcoin', 'Ethereum', 'Solana'],
     colors: ['#00e1ab', '#627eea', '#9945FF'],
-    stroke: { show: true, colors: ['#001a14'], width: 3 },
+    stroke: {
+      show: true,
+      colors: ['#1d2023'], // Matching surface-container color for a clean gap look
+      width: 4,
+    },
     dataLabels: { enabled: false },
     plotOptions: {
       pie: {
+        expandOnClick: true,
         donut: {
-          size: '75%',
+          size: '78%',
           labels: {
             show: true,
-            name: { color: '#8b9592', fontSize: '12px', fontFamily: 'monospace' },
+            name: {
+              show: true,
+              color: '#8b9592',
+              fontSize: '11px',
+              fontFamily: 'Plus Jakarta Sans',
+              fontWeight: 600,
+              offsetY: -10,
+            },
             value: {
+              show: true,
               color: '#ffffff',
-              fontSize: '24px',
+              fontSize: '28px',
+              fontFamily: 'JetBrains Mono',
               fontWeight: 800,
+              offsetY: 10,
               formatter: (val: string): string =>
-                `$${Number(val).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`,
+                `$${Number(val).toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
             },
             total: {
               show: true,
               color: '#00e1ab',
-              label: 'Total Crypto',
+              label: 'NET ASSETS',
+              fontFamily: 'Plus Jakarta Sans',
+              fontWeight: 700,
               formatter: (w: any): string => {
                 const total: number = w.globals.seriesTotals.reduce(
                   (a: number, b: number) => a + b,
                   0,
                 );
-                return `$${total.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+                return `$${total.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
               },
             },
           },
         },
       },
     },
+    fill: {
+      type: 'gradient',
+      gradient: {
+        shade: 'dark',
+        type: 'vertical',
+        shadeIntensity: 0.5,
+        gradientToColors: ['#00ffa2', '#7e95ff', '#bc80ff'],
+        inverseColors: true,
+        opacityFrom: 1,
+        opacityTo: 0.8,
+        stops: [0, 100],
+      },
+    },
     legend: { show: false },
     tooltip: {
       theme: 'dark',
-      y: { formatter: (val: number): string => `$${val.toLocaleString()}` },
+      custom: function ({ series, seriesIndex, dataPointIndex, w }: any) {
+        return (
+          '<div class="px-3 py-2 bg-[#0c0e12] border border-white/10 rounded-lg shadow-xl">' +
+          '<span class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">' +
+          w.globals.labels[seriesIndex] +
+          '</span>' +
+          '<div class="text-sm font-mono font-bold text-white">$' +
+          series[seriesIndex].toLocaleString() +
+          '</div>' +
+          '</div>'
+        );
+      },
     },
   };
 
@@ -147,20 +201,30 @@ export class Dashboard implements OnInit {
       animations: {
         enabled: true,
         easing: 'linear',
-        dynamicAnimation: { speed: 2000 },
-      },
-      events: {
-        mouseMove: undefined,
-        click: undefined,
+        dynamicAnimation: { speed: 800 },
       },
     },
-    stroke: { curve: 'smooth', width: 2 },
+    stroke: { curve: 'smooth', width: 2, lineCap: 'round' },
+    fill: {
+      type: 'gradient',
+      gradient: {
+        shadeIntensity: 1,
+        opacityFrom: 0.45,
+        opacityTo: 0.05,
+        stops: [0, 100],
+      },
+    },
     tooltip: {
-      enabled: false,
+      enabled: true,
+      theme: 'dark',
+      fixed: { enabled: false },
+      x: { show: false },
+      y: { title: { formatter: () => '' } },
+      marker: { show: false },
     },
     markers: {
       size: 0,
-      hover: { size: 0 },
+      hover: { size: 4, strokeColors: '#fff', strokeWidth: 2 },
     },
   };
 
@@ -175,9 +239,13 @@ export class Dashboard implements OnInit {
 
   constructor() {
     effect((): void => {
-      if (this.btcChart) this.btcChart.updateSeries([{ data: this.market.btcPriceHistory() }]);
-      if (this.ethChart) this.ethChart.updateSeries([{ data: this.market.ethPriceHistory() }]);
-      if (this.solChart) this.solChart.updateSeries([{ data: this.market.solPriceHistory() }]);
+      const btc = this.btcChart();
+      const eth = this.ethChart();
+      const sol = this.solChart();
+
+      if (btc) btc.updateSeries([{ data: this.market.btcPriceHistory() }]);
+      if (eth) eth.updateSeries([{ data: this.market.ethPriceHistory() }]);
+      if (sol) sol.updateSeries([{ data: this.market.solPriceHistory() }]);
     });
   }
 

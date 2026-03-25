@@ -53,7 +53,8 @@
             </div>
             <div class="text-right pb-2">
                 <div class="flex items-center gap-2 font-mono text-xl transition-colors duration-500"
-                    [ngClass]="totalPNL() >= 0 ? 'text-tertiary-fixed-dim' : 'text-error'">
+                    [class.text-tertiary-fixed-dim]="totalPNL() >= 0"
+                    [class.text-error]="totalPNL() < 0">
                     <span class="material-symbols-outlined">{{ totalPNL() >= 0 ? 'trending_up' : 'trending_down'
                         }}</span>
                     <span>{{ totalPNL() >= 0 ? '+' : '' }}{{ totalPNL() | currency:'USD' }}</span>
@@ -218,7 +219,8 @@
                         </div>
                         <div class="text-right">
                             <p class="text-xs font-mono font-bold"
-                                [ngClass]="tx.type === 'BUY' || tx.type === 'DEPOSIT' ? 'text-tertiary-fixed-dim' : 'text-error'">
+                                [class.text-tertiary-fixed-dim]="tx.type === 'BUY' || tx.type === 'DEPOSIT'"
+                                [class.text-error]="tx.type !== 'BUY' && tx.type !== 'DEPOSIT'">
                                 {{ tx.type === 'SELL' || tx.type === 'WITHDRAW' ? '-' : '+' }}{{ tx.amount }}
                             </p>
                         </div>
@@ -275,7 +277,8 @@
                         <td class="py-6 text-right font-mono text-on-surface-variant hidden md:table-cell">$1.26T</td>
                         <td class="py-6 text-right w-40">
                             <div class="ml-auto w-[140px]">
-                                <apx-chart #btcChart [series]="[{ name: 'BTC', data: market.btcPriceHistory() }]"
+                                <apx-chart #btcChart
+                                    [series]="[{ name: 'BTC', data: [] }]"
                                     [chart]="sparklineOptions.chart"
                                     [stroke]="{ curve: 'smooth', width: 2, colors: btcColors }" [fill]="areaFill"
                                     [colors]="btcColors" [tooltip]="sparklineOptions.tooltip">
@@ -304,7 +307,8 @@
                         <td class="py-6 text-right font-mono text-on-surface-variant hidden md:table-cell">$412.8B</td>
                         <td class="py-6 text-right w-40">
                             <div class="ml-auto w-[140px]">
-                                <apx-chart #ethChart [series]="[{ name: 'ETH', data: market.ethPriceHistory() }]"
+                                <apx-chart #ethChart
+                                    [series]="[{ name: 'ETH', data: [] }]"
                                     [chart]="sparklineOptions.chart"
                                     [stroke]="{ curve: 'smooth', width: 2, colors: ethColors }" [fill]="areaFill"
                                     [colors]="ethColors" [tooltip]="sparklineOptions.tooltip">
@@ -333,7 +337,8 @@
                         <td class="py-6 text-right font-mono text-on-surface-variant hidden md:table-cell">$64.2B</td>
                         <td class="py-6 text-right w-40">
                             <div class="ml-auto w-[140px]">
-                                <apx-chart #solChart [series]="[{ name: 'SOL', data: market.solPriceHistory() }]"
+                                <apx-chart #solChart
+                                    [series]="[{ name: 'SOL', data: [] }]"
                                     [chart]="sparklineOptions.chart"
                                     [stroke]="{ curve: 'smooth', width: 2, colors: solColors }" [fill]="areaFill"
                                     [colors]="solColors" [tooltip]="sparklineOptions.tooltip">

@@ -1,5 +1,5 @@
-import { inject } from '@angular/core';
-import { signalStore, withState, withMethods, patchState } from '@ngrx/signals';
+import { inject, computed, effect, Injector } from '@angular/core';
+import { signalStore, withState, withMethods, patchState, withComputed, withHooks } from '@ngrx/signals';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { API_URL } from '../../environments/environment';
@@ -7,32 +7,66 @@ import { TradeHistoryItem, PortfolioResponse, DepositConfig, TradeState } from '
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
 
-const initialState: Omit<TradeState, 'tradeMessage'> = {
+type FilterState = {
+  searchQuery: string;
+  assetFilter: string;
+};
+
+const initialState: Omit<TradeState, 'tradeMessage'> & FilterState = {
   usdBalance: 0,
   cryptoPortfolio: {},
   tradeHistory: [],
   depositConfigs: {},
   isTrading: false,
+  searchQuery: '',
+  assetFilter: 'All Assets',
 };
 
 export const TradeStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
+  withComputed((store) => ({
+    filteredHistory: computed(() => {
+      const history = store.tradeHistory();
+      const query = store.searchQuery().toLowerCase();
+      const asset = store.assetFilter();
+
+      return history.filter((tx) => {
+        const matchesQuery = 
+          tx.id.toLowerCase().includes(query) || 
+          tx.type.toLowerCase().includes(query) || 
+          tx.assetSymbol.toLowerCase().includes(query);
+        
+        const matchesAsset = asset === 'All Assets' || tx.assetSymbol === asset;
+
+        return matchesQuery && matchesAsset;
+      });
+    }),
+  })),
   withMethods(
     (
       store,
       http: HttpClient = inject(HttpClient),
-      authService: AuthService = inject(AuthService),
       notificationService: NotificationService = inject(NotificationService),
     ) => {
+      const injector = inject(Injector);
       const apiUrl: string = `${API_URL}/api/trade`;
 
       return {
+        setSearchQuery(query: string): void {
+          patchState(store, { searchQuery: query });
+        },
+
+        setAssetFilter(asset: string): void {
+          patchState(store, { assetFilter: asset });
+        },
+
         async loadPortfolio(force: boolean = false): Promise<void> {
           if (!force && (store.usdBalance() > 0 || Object.keys(store.cryptoPortfolio()).length > 0)) {
             return;
           }
 
+          const authService = injector.get(AuthService);
           const userId: string | undefined = authService.currentUser()?.id;
           if (!userId) return;
 
@@ -52,6 +86,7 @@ export const TradeStore = signalStore(
         async loadHistory(force: boolean = false): Promise<void> {
           if (!force && store.tradeHistory().length > 0) return;
 
+          const authService = injector.get(AuthService);
           const userId: string | undefined = authService.currentUser()?.id;
           if (!userId) return;
 
@@ -69,6 +104,7 @@ export const TradeStore = signalStore(
           amount: number,
           price: number,
         ): Promise<boolean> {
+          const authService = injector.get(AuthService);
           const userId: string | undefined = authService.currentUser()?.id;
           if (!userId) return false;
 
@@ -122,7 +158,31 @@ export const TradeStore = signalStore(
             patchState(store, { depositConfigs: data });
           } catch (error: unknown) {}
         },
+
+        clear(): void {
+          patchState(store, initialState);
+        },
       };
     },
   ),
+  withHooks({
+    onInit(store) {
+      const saved = localStorage.getItem('aurora_trade_state');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        patchState(store, { 
+          searchQuery: parsed.searchQuery || '',
+          assetFilter: parsed.assetFilter || 'All Assets'
+        });
+      }
+
+      effect(() => {
+        const stateToSave = {
+          searchQuery: store.searchQuery(),
+          assetFilter: store.assetFilter()
+        };
+        localStorage.setItem('aurora_trade_state', JSON.stringify(stateToSave));
+      });
+    }
+  })
 );

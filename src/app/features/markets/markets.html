@@ -2,16 +2,16 @@
 
     <div class="h-14 bg-surface-container-low flex items-center px-8 gap-10 border-b border-outline-variant/5 shrink-0">
         <div class="flex items-center gap-4">
+
             <div class="flex bg-surface-container-highest rounded p-1 gap-1">
-                <button (click)="setAsset('BTC')"
-                    [ngClass]="selectedAsset() === 'BTC' ? 'bg-primary-fixed-dim text-[#003828]' : 'text-on-surface-variant hover:text-white'"
-                    class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded transition-colors cursor-pointer">BTC</button>
-                <button (click)="setAsset('ETH')"
-                    [ngClass]="selectedAsset() === 'ETH' ? 'bg-primary-fixed-dim text-[#003828]' : 'text-on-surface-variant hover:text-white'"
-                    class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded transition-colors cursor-pointer">ETH</button>
-                <button (click)="setAsset('SOL')"
-                    [ngClass]="selectedAsset() === 'SOL' ? 'bg-primary-fixed-dim text-[#003828]' : 'text-on-surface-variant hover:text-white'"
-                    class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded transition-colors cursor-pointer">SOL</button>
+                @for (asset of market.filteredAssets(); track asset.symbol) {
+                <button (click)="setAsset(asset.symbol)" [class.bg-primary-fixed-dim]="selectedAsset() === asset.symbol"
+                    [class.text-[#003828]]="selectedAsset() === asset.symbol"
+                    [class.text-on-surface-variant]="selectedAsset() !== asset.symbol"
+                    [class.hover:text-white]="selectedAsset() !== asset.symbol"
+                    class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded transition-colors cursor-pointer">{{
+                    asset.symbol }}</button>
+                }
             </div>
 
             <span class="text-sm font-bold text-tertiary-fixed-dim transition-colors duration-300">
@@ -63,9 +63,10 @@
                 <div class="absolute inset-0 pt-8 pb-4 z-10 w-full h-full">
                     <div class="absolute inset-0 pt-8 pb-4 z-10 w-full h-full">
                         <apx-chart #mainChart class="block w-full h-full" width="100%" height="100%"
-                            [series]="initialSeries" [chart]="chartOptions.chart" [dataLabels]="chartOptions.dataLabels"
-                            [stroke]="chartOptions.stroke" [markers]="chartOptions.markers" [grid]="chartOptions.grid"
-                            [xaxis]="chartOptions.xaxis" [yaxis]="chartOptions.yaxis" [tooltip]="chartOptions.tooltip">
+                            [series]="[{ name: 'Loading', data: [] }]" [chart]="chartOptions.chart"
+                            [dataLabels]="chartOptions.dataLabels" [stroke]="chartOptions.stroke"
+                            [markers]="chartOptions.markers" [grid]="chartOptions.grid" [xaxis]="chartOptions.xaxis"
+                            [yaxis]="chartOptions.yaxis" [tooltip]="chartOptions.tooltip">
                         </apx-chart>
                     </div>
                 </div>
@@ -144,7 +145,10 @@
                                 class="grid grid-cols-4 items-center hover:bg-surface-container-highest/50 py-1.5 px-1 rounded transition-colors group cursor-default">
                                 <div>
                                     <span class="px-1.5 py-0.5 rounded font-bold text-[9px]"
-                                        [ngClass]="tx.type === 'BUY' || tx.type === 'DEPOSIT' ? 'bg-primary-fixed-dim/10 text-primary-fixed-dim' : 'bg-error/10 text-error'">
+                                        [class.bg-primary-fixed-dim/10]="tx.type === 'BUY' || tx.type === 'DEPOSIT'"
+                                        [class.text-primary-fixed-dim]="tx.type === 'BUY' || tx.type === 'DEPOSIT'"
+                                        [class.bg-error/10]="tx.type !== 'BUY' && tx.type !== 'DEPOSIT'"
+                                        [class.text-error]="tx.type !== 'BUY' && tx.type !== 'DEPOSIT'">
                                         {{ tx.type }}
                                     </span>
                                 </div>
@@ -181,11 +185,15 @@
             <div class="p-6 border-b border-outline-variant/5">
 
                 <div class="flex bg-surface-container-lowest rounded-lg p-1 mb-6">
-                    <button (click)="setTradeSide('BUY')"
-                        [ngClass]="tradeSide() === 'BUY' ? 'bg-primary-fixed-dim text-[#003828]' : 'text-on-surface-variant hover:text-white'"
+                    <button (click)="setTradeSide('BUY')" [class.bg-primary-fixed-dim]="tradeSide() === 'BUY'"
+                        [class.text-[#003828]]="tradeSide() === 'BUY'"
+                        [class.text-on-surface-variant]="tradeSide() !== 'BUY'"
+                        [class.hover:text-white]="tradeSide() !== 'BUY'"
                         class="flex-1 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded cursor-pointer transition-colors">Buy</button>
-                    <button (click)="setTradeSide('SELL')"
-                        [ngClass]="tradeSide() === 'SELL' ? 'bg-error text-error-container' : 'text-on-surface-variant hover:text-white'"
+                    <button (click)="setTradeSide('SELL')" [class.bg-error]="tradeSide() === 'SELL'"
+                        [class.text-error-container]="tradeSide() === 'SELL'"
+                        [class.text-on-surface-variant]="tradeSide() !== 'SELL'"
+                        [class.hover:text-white]="tradeSide() !== 'SELL'"
                         class="flex-1 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded cursor-pointer transition-colors">Sell</button>
                 </div>
 
@@ -230,14 +238,20 @@
                             {{ tradeSide() === 'BUY' ? 'Total Cost' : 'Est. Return' }}
                         </span>
                         <span class="text-xs font-mono font-bold transition-colors"
-                            [ngClass]="(tradeSide() === 'BUY' && estimatedValue() > tradeAPI.usdBalance()) || (tradeSide() === 'SELL' && amountControl.value! > (tradeAPI.cryptoPortfolio()[selectedAsset()] || 0)) ? 'text-error' : 'text-on-surface'">
+                            [class.text-error]="(tradeSide() === 'BUY' && estimatedValue() > tradeAPI.usdBalance()) || (tradeSide() === 'SELL' && amountControl.value! > (tradeAPI.cryptoPortfolio()[selectedAsset()] || 0))"
+                            [class.text-on-surface]="!((tradeSide() === 'BUY' && estimatedValue() > tradeAPI.usdBalance()) || (tradeSide() === 'SELL' && amountControl.value! > (tradeAPI.cryptoPortfolio()[selectedAsset()] || 0)))">
                             ~{{ estimatedValue() | currency:'USD' }}
                         </span>
                     </div>
 
                     <div class="pt-4 space-y-3 relative">
                         <button (click)="executeTrade()" [disabled]="!isValidTrade()"
-                            [ngClass]="tradeSide() === 'BUY' ? 'bg-primary-fixed-dim text-[#003828] hover:shadow-[0_0_30px_rgba(0,225,171,0.4)]' : 'bg-error text-error-container hover:shadow-[0_0_30px_rgba(255,84,73,0.4)]'"
+                            [class.bg-primary-fixed-dim]="tradeSide() === 'BUY'"
+                            [class.text-[#003828]]="tradeSide() === 'BUY'"
+                            [class.hover:shadow-[0_0_30px_rgba(0,225,171,0.4)]]="tradeSide() === 'BUY'"
+                            [class.bg-error]="tradeSide() === 'SELL'"
+                            [class.text-error-container]="tradeSide() === 'SELL'"
+                            [class.hover:shadow-[0_0_30px_rgba(255,84,73,0.4)]]="tradeSide() === 'SELL'"
                             class="w-full py-4 rounded-xl font-black text-xs uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 disabled:opacity-20 disabled:cursor-not-allowed disabled:bg-surface-container-highest disabled:text-on-surface-variant disabled:shadow-none cursor-pointer">
 
                             @if (tradeAPI.isTrading()) {

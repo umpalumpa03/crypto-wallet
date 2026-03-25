@@ -84,7 +84,7 @@
                 <p class="text-on-surface-variant">Enter your credentials to continue to the ledger.</p>
             </div>
 
-            <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="space-y-6 animate-fade-in">
+            <form [formGroup]="loginForm" (submit)="onLogin()" class="space-y-6 animate-fade-in">
                 <div class="space-y-2">
                     <label
                         class="block font-label text-xs font-semibold tracking-wider text-on-surface-variant uppercase">Email
@@ -95,8 +95,14 @@
                                 class="material-symbols-outlined text-on-surface-variant group-focus-within:text-primary-fixed-dim transition-colors text-xl">alternate_email</span>
                         </div>
                         <input type="email" formControlName="email" placeholder="trader@aurora.io"
-                            class="w-full bg-surface-container-lowest border border-transparent rounded-xl py-4 pl-12 pr-4 text-on-surface placeholder:text-outline-variant focus:border-primary-fixed-dim/50 focus:ring-1 focus:ring-primary-fixed-dim transition-all outline-none" />
+                            class="w-full bg-surface-container-lowest border border-transparent rounded-xl py-4 pl-12 pr-4 text-on-surface placeholder:text-outline-variant focus:border-primary-fixed-dim/50 focus:ring-1 focus:ring-primary-fixed-dim transition-all outline-none"
+                            [class.border-error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" />
                     </div>
+                    @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+                    <p class="text-[10px] text-error font-bold uppercase tracking-widest pl-1 animate-fade-in">
+                        {{ loginForm.get('email')?.errors?.['required'] ? 'Email is required' : 'Enter a valid institutional email' }}
+                    </p>
+                    }
                 </div>
 
                 <div class="space-y-2">
@@ -111,13 +117,21 @@
                             <span
                                 class="material-symbols-outlined text-on-surface-variant group-focus-within:text-primary-fixed-dim transition-colors text-xl">lock</span>
                         </div>
-                        <input [type]="showPassword() ? 'text' : 'password'" formControlName="password" placeholder="••••••••••••"
-                            class="w-full bg-surface-container-lowest border border-transparent rounded-xl py-4 pl-12 pr-12 text-on-surface placeholder:text-outline-variant focus:border-primary-fixed-dim/50 focus:ring-1 focus:ring-primary-fixed-dim transition-all outline-none" />
+                        <input [type]="showPassword() ? 'text' : 'password'" formControlName="password"
+                            placeholder="••••••••••••"
+                            class="w-full bg-surface-container-lowest border border-transparent rounded-xl py-4 pl-12 pr-12 text-on-surface placeholder:text-outline-variant focus:border-primary-fixed-dim/50 focus:ring-1 focus:ring-primary-fixed-dim transition-all outline-none"
+                            [class.border-error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" />
                         <button (click)="togglePassword()" type="button"
                             class="absolute inset-y-0 right-0 pr-4 flex items-center text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer">
-                            <span class="material-symbols-outlined text-xl">{{ showPassword() ? 'visibility_off' : 'visibility' }}</span>
+                            <span class="material-symbols-outlined text-xl">{{ showPassword() ? 'visibility_off' :
+                                'visibility' }}</span>
                         </button>
                     </div>
+                    @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+                    <p class="text-[10px] text-error font-bold uppercase tracking-widest pl-1 animate-fade-in">
+                        {{ loginForm.get('password')?.errors?.['required'] ? 'Password is required' : 'Minimum 6 characters' }}
+                    </p>
+                    }
                 </div>
 
                 <div class="pt-4 space-y-4">
@@ -205,7 +219,8 @@
                             Entropy Required</span>
                     </div>
                     <div class="relative group">
-                        <input [type]="showPassword() ? 'text' : 'password'" formControlName="password" placeholder="••••••••••••"
+                        <input [type]="showPassword() ? 'text' : 'password'" formControlName="password"
+                            placeholder="••••••••••••"
                             class="w-full bg-surface-container-lowest border border-transparent rounded-xl px-4 py-4 pl-12 text-on-surface placeholder:text-outline-variant focus:border-primary-fixed-dim/50 focus:ring-1 focus:ring-primary-fixed-dim transition-all outline-none" />
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <span
@@ -213,31 +228,32 @@
                         </div>
                         <button (click)="togglePassword()" type="button"
                             class="absolute inset-y-0 right-0 pr-4 flex items-center text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer">
-                            <span class="material-symbols-outlined text-xl">{{ showPassword() ? 'visibility_off' : 'visibility' }}</span>
+                            <span class="material-symbols-outlined text-xl">{{ showPassword() ? 'visibility_off' :
+                                'visibility' }}</span>
                         </button>
                     </div>
 
                     <div class="pt-2">
                         <div class="flex gap-1.5 h-1.5 w-full mb-2">
-                            <div [class.bg-primary-fixed-dim]="passwordStrength() >= 1" 
-                                 [class.bg-surface-container-highest]="passwordStrength() < 1"
-                                 [class.shadow-[0_0_8px_rgba(0,225,171,0.4)]]="passwordStrength() >= 1"
-                                 class="h-full w-1/4 rounded-full transition-all duration-500">
+                            <div [class.bg-primary-fixed-dim]="passwordStrength() >= 1"
+                                [class.bg-surface-container-highest]="passwordStrength() < 1"
+                                [class.shadow-[0_0_8px_rgba(0,225,171,0.4)]]="passwordStrength() >= 1"
+                                class="h-full w-1/4 rounded-full transition-all duration-500">
                             </div>
-                            <div [class.bg-primary-fixed-dim]="passwordStrength() >= 2" 
-                                 [class.bg-surface-container-highest]="passwordStrength() < 2"
-                                 [class.shadow-[0_0_8px_rgba(0,225,171,0.4)]]="passwordStrength() >= 2"
-                                 class="h-full w-1/4 rounded-full transition-all duration-500">
+                            <div [class.bg-primary-fixed-dim]="passwordStrength() >= 2"
+                                [class.bg-surface-container-highest]="passwordStrength() < 2"
+                                [class.shadow-[0_0_8px_rgba(0,225,171,0.4)]]="passwordStrength() >= 2"
+                                class="h-full w-1/4 rounded-full transition-all duration-500">
                             </div>
-                            <div [class.bg-primary-fixed-dim]="passwordStrength() >= 3" 
-                                 [class.bg-surface-container-highest]="passwordStrength() < 3"
-                                 [class.shadow-[0_0_8px_rgba(0,225,171,0.4)]]="passwordStrength() >= 3"
-                                 class="h-full w-1/4 rounded-full transition-all duration-500">
+                            <div [class.bg-primary-fixed-dim]="passwordStrength() >= 3"
+                                [class.bg-surface-container-highest]="passwordStrength() < 3"
+                                [class.shadow-[0_0_8px_rgba(0,225,171,0.4)]]="passwordStrength() >= 3"
+                                class="h-full w-1/4 rounded-full transition-all duration-500">
                             </div>
-                            <div [class.bg-primary-fixed-dim]="passwordStrength() >= 4" 
-                                 [class.bg-surface-container-highest]="passwordStrength() < 4"
-                                 [class.shadow-[0_0_8px_rgba(0,225,171,0.4)]]="passwordStrength() >= 4"
-                                 class="h-full w-1/4 rounded-full transition-all duration-500"></div>
+                            <div [class.bg-primary-fixed-dim]="passwordStrength() >= 4"
+                                [class.bg-surface-container-highest]="passwordStrength() < 4"
+                                [class.shadow-[0_0_8px_rgba(0,225,171,0.4)]]="passwordStrength() >= 4"
+                                class="h-full w-1/4 rounded-full transition-all duration-500"></div>
                         </div>
                         <div class="flex justify-between items-center text-[10px] uppercase tracking-widest font-bold">
                             <span class="text-primary-fixed-dim">Strength: {{ strengthText() }}</span>

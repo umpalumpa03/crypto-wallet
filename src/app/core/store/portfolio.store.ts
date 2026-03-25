@@ -38,5 +38,9 @@ export const PortfolioStore = signalStore(
         });
       }
     },
+
+    clear(): void {
+      patchState(store, initialState);
+    },
   })),
 );

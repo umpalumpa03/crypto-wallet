@@ -5,6 +5,7 @@ import { MarketStore } from '../../core/store/market.store';
 
 @Component({
   selector: 'app-ledger',
+
   imports: [CommonModule],
   templateUrl: './ledger.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,6 +22,15 @@ export class Ledger {
   // ==========================================
   // 🔥 DYNAMIC MATH
   // ==========================================
+
+  public onSearch(event: Event): void {
+    const query = (event.target as HTMLInputElement).value;
+    this.tradeAPI.setSearchQuery(query);
+  }
+
+  public onFilterAsset(asset: string): void {
+    this.tradeAPI.setAssetFilter(asset);
+  }
 
   // Calculate Live Account Equity (Same as Vault Net Worth)
   public accountEquity = computed(() => {

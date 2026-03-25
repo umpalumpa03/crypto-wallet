@@ -1,25 +1,31 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, ChildrenOutletContexts } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { PortfolioStore } from '../../core/store/portfolio.store';
 import { LogoutModal } from '../../shared/components/logout-modal/logout-modal';
-import { NotificationComponent } from '../../shared/components/notification/notification';
+import { routeAnimations } from '../../shared/animations/route-animations';
 
 @Component({
   selector: 'app-main-layout',
-  standalone: true,
-  imports: [RouterModule, CommonModule, LogoutModal, NotificationComponent],
+
+  imports: [RouterModule, CommonModule, LogoutModal],
   templateUrl: './main-layout.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [routeAnimations],
 })
-export class MainLayout {
+export class MainLayout implements OnInit {
   protected authService = inject(AuthService);
   protected portfolioStore = inject(PortfolioStore);
+  private contexts = inject(ChildrenOutletContexts);
 
   public showLogoutConfirm = signal<boolean>(false);
 
-  public ngOnInit() {
+  public getRouteAnimationData() {
+    return this.contexts.getContext('primary')?.route?.snapshot?.data?.['animation'];
+  }
+
+  ngOnInit() {
     this.portfolioStore.loadPortfolio();
   }
 

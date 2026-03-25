@@ -1,8 +1,9 @@
-import { Component, ElementRef, forwardRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, forwardRef, input, viewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-number-input',
+
   templateUrl: './number-input.html',
   providers: [
     {
@@ -14,22 +15,23 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   styleUrl: './number-input.scss',
 })
 export class NumberInput implements ControlValueAccessor {
-  @ViewChild('inputElement', { static: true }) public inputElement!: ElementRef<HTMLInputElement>;
+  public readonly inputElement = viewChild.required<ElementRef<HTMLInputElement>>('inputElement');
 
-  @Input() public placeholder: string = '0.00';
-  @Input() public customClass: string = '';
+  public readonly placeholder = input<string>('0.00');
+  public readonly customClass = input<string>('');
 
   public onChange: any = () => {};
   public onTouched: any = () => {};
 
-  public onKeyDown(event: KeyboardEvent) {
+  public onKeyDown(event: KeyboardEvent): void {
     if (['e', 'E', '-', '+'].includes(event.key)) {
       event.preventDefault();
     }
   }
 
-  public onInput(event: Event) {
-    let cleanValue = this.inputElement.nativeElement.value.replace(/[^0-9.]/g, '');
+  public onInput(event: Event): void {
+    const el = this.inputElement().nativeElement;
+    let cleanValue = el.value.replace(/[^0-9.]/g, '');
 
     const parts = cleanValue.split('.');
     if (parts.length > 2) {
@@ -37,7 +39,7 @@ export class NumberInput implements ControlValueAccessor {
     }
 
     // Force clean value back to the screen
-    this.inputElement.nativeElement.value = cleanValue;
+    el.value = cleanValue;
 
     const numericValue = parseFloat(cleanValue);
     this.onChange(isNaN(numericValue) ? null : numericValue);
@@ -47,9 +49,9 @@ export class NumberInput implements ControlValueAccessor {
   // 🔥 3. THE FIX: Write directly to the DOM!
   // =========================================
   public writeValue(value: number | null): void {
-    if (this.inputElement) {
-      this.inputElement.nativeElement.value =
-        value === null || value === undefined ? '' : value.toString();
+    const el = this.inputElement();
+    if (el) {
+      el.nativeElement.value = value === null || value === undefined ? '' : value.toString();
     }
   }
 
@@ -62,8 +64,9 @@ export class NumberInput implements ControlValueAccessor {
   }
 
   public setDisabledState(isDisabled: boolean): void {
-    if (this.inputElement) {
-      this.inputElement.nativeElement.disabled = isDisabled;
+    const el = this.inputElement();
+    if (el) {
+      el.nativeElement.disabled = isDisabled;
     }
   }
 }
