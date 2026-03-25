@@ -150,7 +150,7 @@ export const TradeStore = signalStore(
             });
 
             const history: TradeHistoryItem[] = await lastValueFrom(
-              http.get<TradeHistoryItem[]>(`${apiUrl}/history/${userId}`),
+              http.get<TradeHistoryItem[]>(`${apiUrl}/history`),
             );
             patchState(store, {
               tradeHistory: history,
