@@ -21,7 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       throw new UnauthorizedException();
     }
 
-    // Remove password hash safely using destructuring
+    
     const { passwordHash, ...result } = user;
     return result;
   }

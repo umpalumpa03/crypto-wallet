@@ -21,7 +21,7 @@ export class PortfolioService {
       throw new NotFoundException('Institutional profile not found');
     }
 
-    // Return sensitive info separately if needed, but here we return the full user object (minus hash handled by guard/logic)
+    
     return user;
   }
 }
