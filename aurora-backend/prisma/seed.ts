@@ -1,9 +1,9 @@
-import 'dotenv/config'; // Ensure environment variables are loaded
+import 'dotenv/config'; 
 import { PrismaClient, TxType, TxStatus } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
 
-// Prisma 7 explicitly requires a driver adapter
+
 const connectionString = process.env.DATABASE_URL;
 const pool = new Pool({ 
   connectionString,
@@ -23,7 +23,7 @@ async function main() {
 
   console.log('Seeding Institutional Profile...');
 
-  // Create our test user with nested assets and transactions!
+  
   const user = await prisma.user.create({
     data: {
       email: 'trader@aurora.io',
@@ -31,16 +31,16 @@ async function main() {
       passwordHash: 'hashed_password_placeholder',
       usdBalance: 1420552.0,
 
-      // 1. Injecting Crypto Wallets (Assets)
+      
       assets: {
         create: [
-          { symbol: 'BTC', amount: 12.4402, totalCost: 650000.0 }, // Cost basis around $52k
-          { symbol: 'ETH', amount: 24.812, totalCost: 60000.0 },   // Cost basis around $2.4k
-          { symbol: 'SOL', amount: 1240.5, totalCost: 150000.0 },  // Cost basis around $120
+          { symbol: 'BTC', amount: 12.4402, totalCost: 650000.0 }, 
+          { symbol: 'ETH', amount: 24.812, totalCost: 60000.0 },   
+          { symbol: 'SOL', amount: 1240.5, totalCost: 150000.0 },  
         ],
       },
 
-      // 2. Injecting Ledger History (Transactions)
+      
       transactions: {
         create: [
           {
@@ -73,7 +73,7 @@ async function main() {
   });
 
   console.log(`✅ Successfully seeded database for user: ${user.email}`);
-  console.log(`🔥 IMPORTANT! Copy this User ID for Angular: ${user.id}`); // <-- ADD THIS
+  console.log(`🔥 IMPORTANT! Copy this User ID for Angular: ${user.id}`); 
 }
 
 main()
