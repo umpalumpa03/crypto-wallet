@@ -57,6 +57,8 @@ export const MarketStore = signalStore(
   })),
     })
   })),
+    })
+  })),
   withMethods((store) => {
     let ws: WebSocket;
     let throttleInterval: any;
