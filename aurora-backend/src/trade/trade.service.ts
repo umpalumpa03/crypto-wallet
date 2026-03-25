@@ -6,7 +6,7 @@ import { TxType, TxStatus } from '@prisma/client';
 export class TradeService {
   constructor(private prisma: PrismaService) {}
 
-  async getPortfolio(userId: string) {
+  public async getPortfolio(userId: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include: { assets: true },
@@ -27,7 +27,7 @@ export class TradeService {
     };
   }
 
-  async executeTrade(
+  public async executeTrade(
     userId: string,
     side: TxType,
     symbol: string,
@@ -103,7 +103,7 @@ export class TradeService {
     return this.getPortfolio(userId);
   }
 
-  async getTransactionHistory(userId: string) {
+  public async getTransactionHistory(userId: string) {
     return this.prisma.transaction.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
@@ -111,7 +111,7 @@ export class TradeService {
     });
   }
 
-  async getDepositConfigs() {
+  public async getDepositConfigs() {
     return {
       BTC: {
         name: 'Bitcoin',

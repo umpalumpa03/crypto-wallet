@@ -7,12 +7,12 @@ import { Server } from 'socket.io';
 
 @WebSocketGateway({ cors: { origin: true } }) // Allows Angular to connect
 export class OrderBookGateway implements OnGatewayInit {
-  @WebSocketServer() server: Server;
+  @WebSocketServer() public server: Server;
 
   // Base prices to anchor the order book around
   private currentPrices = { BTC: 64281.04, ETH: 3412.55, SOL: 145.22 };
 
-  afterInit() {
+  public afterInit() {
     console.log('📈 Order Book WebSocket Gateway Initialized');
     // Push new order book depth every 800ms
     setInterval(() => this.streamLiveDepth(), 800);

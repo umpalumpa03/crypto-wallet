@@ -9,7 +9,7 @@ export class PortfolioController {
 
   @UseGuards(JwtAuthGuard)
   @Get('dashboard')
-  getDashboard(@Req() req: Request) {
+  public getDashboard(@Req() req: Request) {
     const user = req.user as any;
     return this.portfolioService.getDashboardData(user.id);
   }

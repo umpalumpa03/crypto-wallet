@@ -5,7 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 export class PortfolioService {
   constructor(private prisma: PrismaService) {}
 
-  async getDashboardData(userId: string) {
+  public async getDashboardData(userId: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include: {

@@ -10,20 +10,20 @@ import { TxType } from '@prisma/client';
 export class ExecuteTradeDto {
   @IsString()
   @IsNotEmpty()
-  userId: string;
+  public userId: string;
 
   @IsEnum(TxType)
-  side: TxType;
+  public side: TxType;
 
   @IsString()
   @IsNotEmpty()
-  asset: string;
+  public asset: string;
 
   @IsNumber()
   @IsPositive()
-  amount: number;
+  public amount: number;
 
   @IsNumber()
   @IsPositive()
-  executionPrice: number;
+  public executionPrice: number;
 }

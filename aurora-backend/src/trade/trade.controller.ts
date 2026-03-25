@@ -7,12 +7,12 @@ export class TradeController {
   constructor(private readonly tradeService: TradeService) {}
 
   @Get('portfolio/:userId')
-  async getPortfolio(@Param('userId') userId: string) {
+  public async getPortfolio(@Param('userId') userId: string) {
     return this.tradeService.getPortfolio(userId);
   }
 
   @Post('execute')
-  async executeTrade(@Body() dto: ExecuteTradeDto) {
+  public async executeTrade(@Body() dto: ExecuteTradeDto) {
     return this.tradeService.executeTrade(
       dto.userId,
       dto.side,
@@ -23,12 +23,12 @@ export class TradeController {
   }
 
   @Get('history/:userId')
-  async getHistory(@Param('userId') userId: string) {
+  public async getHistory(@Param('userId') userId: string) {
     return this.tradeService.getTransactionHistory(userId);
   }
 
   @Get('deposit-info')
-  async getDepositConfigs() {
+  public async getDepositConfigs() {
     return this.tradeService.getDepositConfigs();
   }
 }

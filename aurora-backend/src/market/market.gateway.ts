@@ -5,7 +5,7 @@ import WebSocket from 'ws';
 @WebSocketGateway({ cors: { origin: '*' } }) 
 export class MarketGateway implements OnGatewayInit {
   @WebSocketServer() 
-  server: Server;
+  public server: Server;
 
   // We keep a local cache of the prices so we can emit them all together
   private livePrices = {
@@ -14,7 +14,7 @@ export class MarketGateway implements OnGatewayInit {
     SOL: 0
   };
 
-  afterInit() {
+  public afterInit() {
     console.log('🟢 Connecting to Real Binance Live Stream...');
 
     // We connect to Binance's raw "ticker" stream for our three specific assets
