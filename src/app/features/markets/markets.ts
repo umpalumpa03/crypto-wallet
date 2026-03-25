@@ -23,16 +23,13 @@ import { NumberInput } from '../../shared/components/number-input/number-input';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Markets {
-  // ==========================================
-  // 🔥 INJECTIONS & STATE
-  // ==========================================
   public market = inject(MarketStore);
   public tradeAPI = inject(TradeStore);
 
   public selectedAsset = signal<AssetSymbol>('BTC');
   public tradeSide = signal<'BUY' | 'SELL'>('BUY');
 
-  @ViewChild('mainChart') mainChart!: ChartComponent;
+  @ViewChild('mainChart') public mainChart!: ChartComponent;
 
   // Static initialization to establish the DOM and Y-Axis widths immediately
   public initialSeries = [{ name: 'BTC', data: this.market.btcPriceHistory() }];

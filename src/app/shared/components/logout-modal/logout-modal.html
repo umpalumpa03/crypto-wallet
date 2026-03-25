@@ -1,0 +1,45 @@
+<div class="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-fade-in">
+    <div class="absolute inset-0 bg-surface/80 backdrop-blur-md" (click)="onCancel()"></div>
+
+    <div
+        class="relative w-full max-w-md bg-surface-container-lowest border border-outline-variant/10 rounded-2xl shadow-2xl overflow-hidden animate-scale-up">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 bg-error/10 blur-[60px] pointer-events-none">
+        </div>
+
+        <div class="p-8 relative z-10">
+            <div
+                class="w-16 h-16 bg-error/10 rounded-2xl flex items-center justify-center mb-6 mx-auto border border-error/20">
+                <span class="material-symbols-outlined text-error text-3xl"
+                    style="font-variation-settings: 'FILL' 1;">power_settings_new</span>
+            </div>
+
+            <div class="text-center mb-8">
+                <h2 class="font-headline text-2xl font-bold text-on-surface mb-2">
+                    Terminate Session?
+                </h2>
+                <p class="text-on-surface-variant text-sm leading-relaxed">
+                    You are about to disconnect from the secure ledger. All real-time market streams will
+                    be terminated.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <button (click)="onCancel()"
+                    class="py-3.5 px-6 rounded-xl border border-outline-variant/20 text-on-surface font-label text-sm font-bold hover:bg-surface-container-high transition-all active:scale-[0.98]">
+                    Cancel
+                </button>
+                <button (click)="onConfirm()"
+                    class="py-3.5 px-6 rounded-xl bg-error text-on-error font-label text-sm font-bold shadow-lg shadow-error/20 hover:brightness-110 transition-all active:scale-[0.98]">
+                    Logout
+                </button>
+            </div>
+        </div>
+
+        <div
+            class="bg-surface-container-low px-8 py-3 flex items-center justify-center gap-2 border-t border-outline-variant/5">
+            <span class="material-symbols-outlined text-[14px] text-outline-variant">shield_lock</span>
+            <span class="text-[10px] font-bold uppercase tracking-widest text-outline-variant">Secure Session
+                Management</span>
+        </div>
+    </div>
+</div>

@@ -21,3 +21,17 @@ export interface DepositConfig {
   address: string;
   warning: string;
 }
+
+export interface TradeMessage {
+  type: 'success' | 'error';
+  text: string;
+}
+
+export interface TradeState {
+  usdBalance: number;
+  cryptoPortfolio: Record<string, number>;
+  tradeHistory: TradeHistoryItem[];
+  depositConfigs: Record<string, DepositConfig>;
+  isTrading: boolean;
+  tradeMessage: TradeMessage | null;
+}

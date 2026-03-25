@@ -14,10 +14,10 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   styleUrl: './number-input.scss',
 })
 export class NumberInput implements ControlValueAccessor {
-  @ViewChild('inputElement', { static: true }) inputElement!: ElementRef<HTMLInputElement>;
+  @ViewChild('inputElement', { static: true }) public inputElement!: ElementRef<HTMLInputElement>;
 
-  @Input() placeholder: string = '0.00';
-  @Input() customClass: string = '';
+  @Input() public placeholder: string = '0.00';
+  @Input() public customClass: string = '';
 
   public onChange: any = () => {};
   public onTouched: any = () => {};
@@ -46,22 +46,22 @@ export class NumberInput implements ControlValueAccessor {
   // =========================================
   // 🔥 3. THE FIX: Write directly to the DOM!
   // =========================================
-  writeValue(value: number | null): void {
+  public writeValue(value: number | null): void {
     if (this.inputElement) {
       this.inputElement.nativeElement.value =
         value === null || value === undefined ? '' : value.toString();
     }
   }
 
-  registerOnChange(fn: any): void {
+  public registerOnChange(fn: any): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any): void {
+  public registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
 
-  setDisabledState(isDisabled: boolean): void {
+  public setDisabledState(isDisabled: boolean): void {
     if (this.inputElement) {
       this.inputElement.nativeElement.disabled = isDisabled;
     }

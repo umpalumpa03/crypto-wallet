@@ -56,3 +56,9 @@ export interface InstitutionalProfile {
   transactions: Transaction[];
   updatedAt: string;
 }
+
+export interface PortfolioState {
+  profile: InstitutionalProfile | null;
+  isLoading: boolean;
+  error: string | null;
+}

@@ -7,7 +7,6 @@ import { LogoutModal } from '../../shared/components/logout-modal/logout-modal';
 
 @Component({
   selector: 'app-main-layout',
-  standalone: true,
   imports: [RouterModule, CommonModule, LogoutModal],
   templateUrl: './main-layout.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,7 +17,7 @@ export class MainLayout implements OnInit {
 
   public showLogoutConfirm = signal<boolean>(false);
 
-  ngOnInit() {
+  public ngOnInit() {
     this.portfolioStore.loadPortfolio();
   }
 

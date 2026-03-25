@@ -3,14 +3,8 @@ import { signalStore, withState, withMethods, patchState, withComputed } from '@
 import { computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
-import { InstitutionalProfile } from '../models/portfolio.model';
+import { InstitutionalProfile, PortfolioState, Transaction } from '../models/portfolio.model';
 import { API_URL } from '../../environments/environment';
-
-type PortfolioState = {
-  profile: InstitutionalProfile | null;
-  isLoading: boolean;
-  error: string | null;
-};
 
 const initialState: PortfolioState = {
   profile: null,
@@ -23,23 +17,21 @@ export const PortfolioStore = signalStore(
   withState(initialState),
 
   withComputed(({ profile }) => ({
-    totalAssetsCount: computed(() => profile()?.assets.length || 0),
-    recentActivity: computed(() => profile()?.transactions.slice(0, 3) || []),
+    totalAssetsCount: computed((): number => profile()?.assets.length || 0),
+    recentActivity: computed((): Transaction[] => profile()?.transactions.slice(0, 3) || []),
   })),
 
-  withMethods((store, http = inject(HttpClient)) => ({
-    async loadPortfolio(force = false) {
-      // Cache check: If we already have data and aren't forcing a refresh, skip the API call
+  withMethods((store, http: HttpClient = inject(HttpClient)) => ({
+    async loadPortfolio(force: boolean = false): Promise<void> {
       if (store.profile() && !force) return;
 
       patchState(store, { isLoading: true, error: null });
 
       try {
-        const apiUrl = `${API_URL}/portfolio/dashboard`;
-        const profile = await lastValueFrom(http.get<InstitutionalProfile>(apiUrl));
+        const apiUrl: string = `${API_URL}/portfolio/dashboard`;
+        const profile: InstitutionalProfile = await lastValueFrom(http.get<InstitutionalProfile>(apiUrl));
         patchState(store, { profile, isLoading: false });
-      } catch (err) {
-        console.error('Failed to load portfolio', err);
+      } catch (err: unknown) {
         patchState(store, {
           error: 'Failed to establish secure connection to the ledger.',
           isLoading: false,
