@@ -42,29 +42,30 @@
     </div>
 
     <div
-        class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-0.5 bg-outline-variant/10 overflow-y-auto lg:overflow-hidden h-auto lg:h-[calc(100vh-8rem)]">
+        class="flex-1 flex flex-col overflow-y-auto h-auto lg:h-[calc(100vh-8rem)] bg-outline-variant/10 no-scrollbar scroll-smooth">
 
-        <div class="lg:col-span-9 bg-surface-container-lowest flex flex-col aurora-glow h-full min-h-[600px]">
-
-            <div class="h-12 flex items-center px-6 justify-between border-b border-outline-variant/5 shrink-0">
-                <div class="flex items-center gap-1">
-                    <button
-                        class="px-3 py-1 rounded text-[10px] font-bold bg-surface-container-highest text-primary-fixed-dim uppercase tracking-widest cursor-pointer">LIVE</button>
-                </div>
-                <div class="flex items-center gap-4">
-                    <span
-                        class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary-fixed-dim">fullscreen</span>
-                </div>
-            </div>
-
-            <div class="flex-1 relative p-6 overflow-hidden min-h-[300px]">
-                <div class="absolute inset-0 grid grid-cols-8 grid-rows-6 opacity-5 pointer-events-none">
-                    @for (i of [].constructor(48); track $index) {
-                    <div class="border-r border-b border-on-surface"></div>
-                    }
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-0.5 flex-none min-h-0">
+            
+            <div class="lg:col-span-9 bg-surface-container-lowest flex flex-col aurora-glow h-auto border-b border-outline-variant/10">
+                
+                <div class="h-12 flex items-center px-6 justify-between border-b border-outline-variant/5 shrink-0">
+                    <div class="flex items-center gap-1">
+                        <button
+                            class="px-3 py-1 rounded text-[10px] font-bold bg-surface-container-highest text-primary-fixed-dim uppercase tracking-widest cursor-pointer">LIVE</button>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span
+                            class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary-fixed-dim">fullscreen</span>
+                    </div>
                 </div>
 
-                <div class="absolute inset-0 pt-8 pb-4 z-10 w-full h-full">
+                <div class="relative p-6 overflow-hidden min-h-[400px] lg:h-[500px]">
+                    <div class="absolute inset-0 grid grid-cols-8 grid-rows-6 opacity-5 pointer-events-none">
+                        @for (i of [].constructor(48); track $index) {
+                        <div class="border-r border-b border-on-surface"></div>
+                        }
+                    </div>
+
                     <div class="absolute inset-0 pt-8 pb-4 z-10 w-full h-full">
                         <apx-chart #mainChart class="block w-full h-full" width="100%" height="100%"
                             [series]="[{ name: 'Loading', data: [] }]" [chart]="chartOptions.chart"
@@ -73,233 +74,226 @@
                             [yaxis]="chartOptions.yaxis" [tooltip]="chartOptions.tooltip">
                         </apx-chart>
                     </div>
+
+                    <div
+                        class="absolute top-1/2 left-1/3 border-l border-dashed border-primary-fixed-dim/40 h-full -translate-y-1/2 pointer-events-none z-20">
+                        <div
+                            class="absolute top-0 -translate-x-1/2 bg-primary-fixed-dim text-[#003828] text-[10px] font-bold px-2 py-0.5 rounded shadow-lg transition-all duration-300">
+                            {{ currentPrice() | currency:'USD':'symbol':'1.2-2' }}
+                        </div>
+                    </div>
                 </div>
 
-                <div
-                    class="absolute top-1/2 left-1/3 border-l border-dashed border-primary-fixed-dim/40 h-full -translate-y-1/2 pointer-events-none z-20">
-                    <div
-                        class="absolute top-0 -translate-x-1/2 bg-primary-fixed-dim text-[#003828] text-[10px] font-bold px-2 py-0.5 rounded shadow-lg transition-all duration-300">
-                        {{ currentPrice() | currency:'USD':'symbol':'1.2-2' }}
+                <div class="border-t border-outline-variant/10 p-6 flex flex-col bg-surface-container-low/30">
+                    <div class="flex justify-between items-center mb-6 shrink-0">
+                        <span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Real-time Order Book</span>
+                    </div>
+                    <div class="overflow-x-auto no-scrollbar">
+                        <div
+                            class="grid grid-cols-3 text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-4 border-b border-outline-variant/5 pb-2 min-w-[300px]">
+                            <span>Price (USD)</span><span class="text-right">Size ({{ selectedAsset() }})</span><span class="text-right">Total Sum</span>
+                        </div>
+                        <div class="space-y-1 text-xs font-mono min-w-[300px]">
+
+                            @for (ask of asks(); track ask.p) {
+                            <div class="grid grid-cols-3 text-error relative py-0.5">
+                                <div class="absolute inset-0 bg-error/5 right-0 transition-all duration-300"
+                                    [style.width]="ask.width"></div>
+                                <span class="relative z-10">{{ ask.p | number:'1.2-2' }}</span>
+                                <span class="text-right text-on-surface relative z-10">{{ ask.size | number:'1.3-3' }}</span>
+                                <span class="text-right text-on-surface relative z-10">{{ ask.sum | number:'1.2-2' }}</span>
+                            </div>
+                            }
+
+                            <div
+                                class="py-4 text-center text-2xl font-black text-on-surface flex items-center justify-center gap-3 border-y border-outline-variant/5 my-2">
+                                {{ currentPrice() | number:'1.2-2' }}
+                                <span
+                                    class="material-symbols-outlined text-lg text-tertiary-fixed-dim animate-bounce">trending_up</span>
+                            </div>
+
+                            @for (bid of bids(); track bid.p) {
+                            <div class="grid grid-cols-3 text-primary-fixed-dim relative py-0.5">
+                                <div class="absolute inset-0 bg-primary-fixed-dim/5 right-0 transition-all duration-300"
+                                    [style.width]="bid.width"></div>
+                                <span class="relative z-10">{{ bid.p | number:'1.2-2' }}</span>
+                                <span class="text-right text-on-surface relative z-10">{{ bid.size | number:'1.3-3' }}</span>
+                                <span class="text-right text-on-surface relative z-10">{{ bid.sum | number:'1.2-2' }}</span>
+                            </div>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="h-auto border-t border-outline-variant/10 grid grid-cols-1 md:grid-cols-2 shrink-0">
-
-                <div
-                    class="border-b md:border-b-0 md:border-r border-outline-variant/10 p-4 flex flex-col min-h-[300px] h-auto lg:h-[350px]">
-                    <div class="flex justify-between items-center mb-4 shrink-0">
-                        <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Order
-                            Book</span>
-                    </div>
-                    <div class="flex-1 overflow-y-auto no-scrollbar">
-                        <div
-                            class="grid grid-cols-3 text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-2 border-b border-outline-variant/5 pb-2">
-                            <span>Price</span><span class="text-right">Size</span><span class="text-right">Sum</span>
-                        </div>
-                        <div class="space-y-1 text-[10px] font-mono">
-
-                            @for (ask of asks(); track ask.p) {
-                            <div class="grid grid-cols-3 text-error relative">
-                                <div class="absolute inset-0 bg-error/5 right-0 transition-all duration-300"
-                                    [style.width]="ask.width"></div>
-                                <span>{{ ask.p | number:'1.2-2' }}</span>
-                                <span class="text-right text-on-surface">{{ ask.size | number:'1.3-3' }}</span>
-                                <span class="text-right text-on-surface">{{ ask.sum | number:'1.2-2' }}</span>
-                            </div>
-                            }
-
-                            <div
-                                class="py-2 text-center text-lg font-bold text-on-surface flex items-center justify-center gap-2">
-                                {{ currentPrice() | number:'1.2-2' }}
-                                <span
-                                    class="material-symbols-outlined text-sm text-tertiary-fixed-dim">trending_up</span>
-                            </div>
-
-                            @for (bid of bids(); track bid.p) {
-                            <div class="grid grid-cols-3 text-primary-fixed-dim relative">
-                                <div class="absolute inset-0 bg-primary-fixed-dim/5 right-0 transition-all duration-300"
-                                    [style.width]="bid.width"></div>
-                                <span>{{ bid.p | number:'1.2-2' }}</span>
-                                <span class="text-right text-on-surface">{{ bid.size | number:'1.3-3' }}</span>
-                                <span class="text-right text-on-surface">{{ bid.sum | number:'1.2-2' }}</span>
-                            </div>
-                            }
-                        </div>
-                    </div>
-                </div>
-
-                <div
-                    class="border-l border-outline-variant/10 p-4 flex flex-col overflow-hidden min-h-[300px] h-auto lg:h-[350px]">
-                    <div class="flex justify-between items-center mb-4 shrink-0">
-                        <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Recent
-                            Transactions</span>
+            <div class="lg:col-span-3 bg-surface-container flex flex-col h-auto border-l border-outline-variant/10">
+                <div class="p-6 sticky top-0">
+                    <div class="flex bg-surface-container-lowest rounded-lg p-1 mb-6">
+                        <button (click)="setTradeSide('BUY')" [class.bg-primary-fixed-dim]="tradeSide() === 'BUY'"
+                            [class.text-[#003828]]="tradeSide() === 'BUY'"
+                            [class.text-on-surface-variant]="tradeSide() !== 'BUY'"
+                            [class.hover:text-white]="tradeSide() !== 'BUY'"
+                            class="flex-1 py-2 text-[10px] font-bold uppercase tracking-wider rounded cursor-pointer transition-colors">Buy</button>
+                        <button (click)="setTradeSide('SELL')" [class.bg-error]="tradeSide() === 'SELL'"
+                            [class.text-error-container]="tradeSide() === 'SELL'"
+                            [class.text-on-surface-variant]="tradeSide() !== 'SELL'"
+                            [class.hover:text-white]="tradeSide() !== 'SELL'"
+                            class="flex-1 py-2 text-[10px] font-bold uppercase tracking-wider rounded cursor-pointer transition-colors">Sell</button>
                     </div>
 
-                    <div class="flex-1 overflow-y-auto  pr-2">
-                        <div
-                            class="grid grid-cols-4 text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-3 border-b border-outline-variant/5 pb-2">
-                            <span>Type</span>
-                            <span class="text-right">Asset</span>
-                            <span class="text-right">Price</span>
-                            <span class="text-right">Total Size</span>
+                    <div class="space-y-6">
+                        <div class="flex justify-between items-center pb-3 border-b border-outline-variant/5">
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
+                                Avail. {{ tradeSide() === 'BUY' ? 'USD' : selectedAsset() }}
+                            </span>
+                            <span class="text-sm font-bold text-primary-fixed-dim font-mono">
+                                {{ tradeSide() === 'BUY' ? (tradeAPI.usdBalance() | currency:'USD') :
+                                (tradeAPI.cryptoPortfolio()[selectedAsset()] | number:'1.2-5') }}
+                            </span>
                         </div>
 
-                        <div class="space-y-1 text-[10px] font-mono">
-                            @for (tx of tradeAPI.tradeHistory(); track tx.id) {
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Execution
+                                Price</label>
                             <div
-                                class="grid grid-cols-4 items-center hover:bg-surface-container-highest/50 py-1.5 px-1 rounded transition-colors group cursor-default">
-                                <div>
-                                    <span class="px-1.5 py-0.5 rounded font-bold text-[9px]"
-                                        [class.bg-primary-fixed-dim/10]="tx.type === 'BUY' || tx.type === 'DEPOSIT'"
-                                        [class.text-primary-fixed-dim]="tx.type === 'BUY' || tx.type === 'DEPOSIT'"
-                                        [class.bg-error/10]="tx.type !== 'BUY' && tx.type !== 'DEPOSIT'"
-                                        [class.text-error]="tx.type !== 'BUY' && tx.type !== 'DEPOSIT'">
-                                        {{ tx.type }}
-                                    </span>
-                                </div>
+                                class="bg-surface-container-lowest rounded-xl px-4 py-4 border border-outline-variant/10 flex justify-between items-center group shadow-inner">
+                                <span class="text-sm font-mono font-bold">{{ currentPrice() | number:'1.2-2' }}</span>
+                                <span class="text-[10px] font-bold text-on-surface-variant">USD</span>
+                            </div>
+                        </div>
 
-                                <div class="text-right flex flex-col">
-                                    <span class="text-white font-bold">{{ tx.amount | number:'1.2-5' }}</span>
-                                    <span class="text-[9px] text-on-surface-variant">{{ tx.assetSymbol }}</span>
-                                </div>
-
-                                <div class="text-right text-on-surface-variant">
-                                    {{ tx.priceAtTime | currency:'USD' }}
-                                </div>
-
-                                <div class="text-right font-bold text-white">
-                                    {{ (tx.amount * tx.priceAtTime) | currency:'USD' }}
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Amount to
+                                {{ tradeSide() }}</label>
+                            <div
+                                class="bg-surface-container-lowest rounded-xl px-4 py-4 border border-outline-variant/10 flex justify-between items-center focus-within:ring-2 focus-within:ring-primary-fixed-dim/30 shadow-inner">
+                                <app-number-input [formControl]="amountControl" placeholder="0.00"
+                                    customClass="bg-transparent border-none outline-none text-sm font-mono font-bold w-full text-white appearance-none"></app-number-input>
+                                <div class="flex items-center gap-2">
+                                    <button type="button" (click)="setMaxAmount()"
+                                        class="text-[9px] font-black bg-surface-container-highest px-2 py-1 rounded text-primary-fixed-dim hover:bg-primary-fixed-dim hover:text-[#003828] cursor-pointer transition-colors">MAX</button>
+                                    <span class="text-[10px] font-bold text-on-surface-variant">{{ selectedAsset() }}</span>
                                 </div>
                             </div>
-                            } @empty {
-                            <div
-                                class="text-center text-on-surface-variant pt-8 font-mono text-xs opacity-50 flex flex-col items-center gap-2">
-                                <span class="material-symbols-outlined text-2xl">receipt_long</span>
-                                No recent transactions
+                        </div>
+
+                        <div class="flex justify-between items-center px-1 pt-2">
+                            <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                                {{ tradeSide() === 'BUY' ? 'Total Cost' : 'Est. Return' }}
+                            </span>
+                            <span class="text-sm font-mono font-bold transition-colors"
+                                [class.text-error]="(tradeSide() === 'BUY' && estimatedValue() > tradeAPI.usdBalance()) || (tradeSide() === 'SELL' && amountControl.value! > (tradeAPI.cryptoPortfolio()[selectedAsset()] || 0))"
+                                [class.text-on-surface]="!((tradeSide() === 'BUY' && estimatedValue() > tradeAPI.usdBalance()) || (tradeSide() === 'SELL' && amountControl.value! > (tradeAPI.cryptoPortfolio()[selectedAsset()] || 0)))">
+                                ≈ {{ estimatedValue() | currency:'USD' }}
+                            </span>
+                        </div>
+
+                        <div class="pt-6">
+                            <button (click)="executeTrade()" [disabled]="!isValidTrade()"
+                                [class.bg-primary-fixed-dim]="tradeSide() === 'BUY'"
+                                [class.text-[#003828]]="tradeSide() === 'BUY'"
+                                [class.hover:shadow-[0_0_30px_rgba(0,225,171,0.4)]]="tradeSide() === 'BUY'"
+                                [class.bg-error]="tradeSide() === 'SELL'"
+                                [class.text-error-container]="tradeSide() === 'SELL'"
+                                [class.hover:shadow-[0_0_30px_rgba(255,84,73,0.4)]]="tradeSide() === 'SELL'"
+                                class="w-full py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3 disabled:opacity-20 disabled:cursor-not-allowed disabled:bg-surface-container-highest disabled:text-on-surface-variant disabled:shadow-none cursor-pointer">
+
+                                @if (tradeAPI.isTrading()) {
+                                <span class="material-symbols-outlined animate-spin text-sm">progress_activity</span>
+                                Processing...
+                                } @else {
+                                {{ tradeSide() }} {{ selectedAsset() }}
+                                }
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 bg-surface-container-lowest/50 border border-outline-variant/5 rounded-2xl p-5 space-y-4">
+                        <div class="flex justify-between items-start">
+                            <div class="flex flex-col">
+                                <span class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant mb-1">Portfolio Value</span>
+                                <span class="text-xl font-black text-white font-mono tracking-tight">
+                                    {{ accountNetWorth() | currency:'USD':'symbol':'1.2-2' }}
+                                </span>
                             </div>
-                            }
+                            <div class="bg-primary-fixed-dim/10 text-primary-fixed-dim px-2 py-1 rounded text-[9px] font-bold">
+                                LIVE
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 gap-3 pt-3 border-t border-outline-variant/5">
+                            <div class="flex justify-between items-center">
+                                <span class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant">USD Balance</span>
+                                <span class="text-xs font-bold text-white font-mono">{{ tradeAPI.usdBalance() | currency:'USD' }}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant">Crypto Holding</span>
+                                <span class="text-xs font-bold text-white font-mono">{{ totalCryptoValue() | currency:'USD' }}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div
-            class="col-span-12 lg:col-span-3 bg-surface-container flex flex-col h-auto lg:h-full lg:overflow-hidden relative">
-
-
-            <div class="p-6 border-b border-outline-variant/5">
-
-                <div class="flex bg-surface-container-lowest rounded-lg p-1 mb-6">
-                    <button (click)="setTradeSide('BUY')" [class.bg-primary-fixed-dim]="tradeSide() === 'BUY'"
-                        [class.text-[#003828]]="tradeSide() === 'BUY'"
-                        [class.text-on-surface-variant]="tradeSide() !== 'BUY'"
-                        [class.hover:text-white]="tradeSide() !== 'BUY'"
-                        class="flex-1 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded cursor-pointer transition-colors">Buy</button>
-                    <button (click)="setTradeSide('SELL')" [class.bg-error]="tradeSide() === 'SELL'"
-                        [class.text-error-container]="tradeSide() === 'SELL'"
-                        [class.text-on-surface-variant]="tradeSide() !== 'SELL'"
-                        [class.hover:text-white]="tradeSide() !== 'SELL'"
-                        class="flex-1 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded cursor-pointer transition-colors">Sell</button>
-                </div>
-
-                <div class="space-y-4">
-                    <div class="flex justify-between items-center pb-2 border-b border-outline-variant/5">
-                        <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
-                            Avail. {{ tradeSide() === 'BUY' ? 'USD' : selectedAsset() }}
-                        </span>
-                        <span class="text-sm font-bold text-primary-fixed-dim">
-                            {{ tradeSide() === 'BUY' ? (tradeAPI.usdBalance() | currency:'USD') :
-                            (tradeAPI.cryptoPortfolio()[selectedAsset()] | number:'1.2-5') }}
-                        </span>
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Execution
-                            Price</label>
-                        <div
-                            class="bg-surface-container-lowest rounded-lg px-4 py-3 border border-outline-variant/10 flex justify-between items-center group">
-                            <span class="text-sm font-mono font-bold">{{ currentPrice() | number:'1.2-2' }}</span>
-                            <span class="text-[10px] font-bold text-on-surface-variant">USD</span>
-                        </div>
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Amount to
-                            {{ tradeSide() }}</label>
-                        <div
-                            class="bg-surface-container-lowest rounded-lg px-4 py-3 border border-outline-variant/10 flex justify-between items-center focus-within:ring-1 focus-within:ring-primary-fixed-dim">
-                            <app-number-input [formControl]="amountControl" placeholder="0.00"
-                                customClass="bg-transparent border-none outline-none text-sm font-mono font-bold w-full text-white appearance-none"></app-number-input>
-                            <div class="flex items-center gap-2">
-                                <button type="button" (click)="setMaxAmount()"
-                                    class="text-[9px] font-black bg-surface-container-highest px-1.5 py-0.5 rounded text-primary-fixed-dim hover:bg-primary-fixed-dim hover:text-[#003828] cursor-pointer transition-colors">MAX</button>
-                                <span class="text-[10px] font-bold text-on-surface-variant">{{ selectedAsset() }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex justify-between items-center px-1 pt-2">
-                        <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
-                            {{ tradeSide() === 'BUY' ? 'Total Cost' : 'Est. Return' }}
-                        </span>
-                        <span class="text-xs font-mono font-bold transition-colors"
-                            [class.text-error]="(tradeSide() === 'BUY' && estimatedValue() > tradeAPI.usdBalance()) || (tradeSide() === 'SELL' && amountControl.value! > (tradeAPI.cryptoPortfolio()[selectedAsset()] || 0))"
-                            [class.text-on-surface]="!((tradeSide() === 'BUY' && estimatedValue() > tradeAPI.usdBalance()) || (tradeSide() === 'SELL' && amountControl.value! > (tradeAPI.cryptoPortfolio()[selectedAsset()] || 0)))">
-                            ~{{ estimatedValue() | currency:'USD' }}
-                        </span>
-                    </div>
-
-                    <div class="pt-4 space-y-3 relative">
-                        <button (click)="executeTrade()" [disabled]="!isValidTrade()"
-                            [class.bg-primary-fixed-dim]="tradeSide() === 'BUY'"
-                            [class.text-[#003828]]="tradeSide() === 'BUY'"
-                            [class.hover:shadow-[0_0_30px_rgba(0,225,171,0.4)]]="tradeSide() === 'BUY'"
-                            [class.bg-error]="tradeSide() === 'SELL'"
-                            [class.text-error-container]="tradeSide() === 'SELL'"
-                            [class.hover:shadow-[0_0_30px_rgba(255,84,73,0.4)]]="tradeSide() === 'SELL'"
-                            class="w-full py-4 rounded-xl font-black text-xs uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 disabled:opacity-20 disabled:cursor-not-allowed disabled:bg-surface-container-highest disabled:text-on-surface-variant disabled:shadow-none cursor-pointer">
-
-                            @if (tradeAPI.isTrading()) {
-                            <span class="material-symbols-outlined animate-spin text-sm">progress_activity</span>
-                            Processing...
-                            } @else {
-                            {{ tradeSide() }} {{ selectedAsset() }}
-                            }
-                        </button>
-                    </div>
-
-                </div>
+        <div class="bg-surface-container-lowest p-8 border-t border-outline-variant/10 flex-none">
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="text-xl font-headline font-bold text-on-surface tracking-tight flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary-fixed-dim">history</span>
+                    Recent Terminal Activity
+                </h3>
+                <a routerLink="/ledger" class="text-xs font-bold text-primary-fixed-dim uppercase tracking-widest hover:underline">Full Ledger</a>
             </div>
 
-            <div class="bg-surface-container border border-outline-variant/10 rounded-xl p-4 mb-4 flex flex-col gap-3">
-                <div class="flex justify-between items-start">
-                    <div class="flex flex-col">
-                        <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1">Total
-                            Net Worth</span>
-                        <span class="text-xl font-black text-white font-mono tracking-tight">
-                            {{ accountNetWorth() | currency:'USD':'symbol':'1.2-2' }}
-                        </span>
-                    </div>
-                    <div class="bg-primary-fixed-dim/10 text-primary-fixed-dim px-2 py-1 rounded text-[10px] font-bold">
-                        LIVE
-                    </div>
+            <div class="overflow-x-auto no-scrollbar">
+                <div
+                    class="grid grid-cols-5 text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-6 border-b border-outline-variant/5 pb-4 min-w-[600px]">
+                    <span>Transaction Type</span>
+                    <span class="text-right">Execution Price</span>
+                    <span class="text-right">Asset Amount</span>
+                    <span class="text-right">Total Trade Value</span>
+                    <span class="text-right">Date Time</span>
                 </div>
 
-                <div class="grid grid-cols-2 gap-2 border-t border-outline-variant/5 pt-3 mt-1">
-                    <div class="flex flex-col">
-                        <span class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant">Available
-                            USD</span>
-                        <span class="text-xs font-bold text-white font-mono">{{ tradeAPI.usdBalance() | currency:'USD'
-                            }}</span>
+                <div class="space-y-2 min-w-[600px]">
+                    @for (tx of tradeAPI.tradeHistory(); track tx.id) {
+                    <div
+                        class="grid grid-cols-5 items-center hover:bg-surface-container-high/40 py-4 px-4 rounded-xl transition-all group border border-transparent hover:border-outline-variant/10">
+                        <div>
+                            <span class="px-3 py-1 rounded-lg font-bold text-[10px] border"
+                                [class.bg-primary-fixed-dim/10]="tx.type === 'BUY' || tx.type === 'DEPOSIT'"
+                                [class.text-primary-fixed-dim]="tx.type === 'BUY' || tx.type === 'DEPOSIT'"
+                                [class.border-primary-fixed-dim/20]="tx.type === 'BUY' || tx.type === 'DEPOSIT'"
+                                [class.bg-error/10]="tx.type !== 'BUY' && tx.type !== 'DEPOSIT'"
+                                [class.text-error]="tx.type !== 'BUY' && tx.type !== 'DEPOSIT'"
+                                [class.border-error/20]="tx.type !== 'BUY' && tx.type !== 'DEPOSIT'">
+                                {{ tx.type }}
+                            </span>
+                        </div>
+
+                        <div class="text-right text-sm font-mono text-on-surface-variant">
+                            {{ tx.priceAtTime | currency:'USD' }}
+                        </div>
+
+                        <div class="text-right flex flex-col">
+                            <span class="text-on-surface font-bold font-mono">{{ tx.amount | number:'1.2-5' }}</span>
+                            <span class="text-[9px] text-on-surface-variant font-bold uppercase">{{ tx.assetSymbol }}</span>
+                        </div>
+
+                        <div class="text-right font-black text-white font-mono">
+                            {{ (tx.amount * tx.priceAtTime) | currency:'USD' }}
+                        </div>
+
+                        <div class="text-right text-[10px] text-on-surface-variant font-mono">
+                            {{ tx.createdAt | date:'MMM dd, HH:mm:ss' }}
+                        </div>
                     </div>
-                    <div class="flex flex-col text-right">
-                        <span class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant">Crypto
-                            Value</span>
-                        <span class="text-xs font-bold text-white font-mono">{{ totalCryptoValue() | currency:'USD'
-                            }}</span>
+                    } @empty {
+                    <div
+                        class="text-center text-on-surface-variant py-16 font-mono text-sm opacity-50 flex flex-col items-center gap-4 border border-dashed border-outline-variant/10 rounded-2xl">
+                        <span class="material-symbols-outlined text-4xl">analytics</span>
+                        No institutional activity detected in this session
                     </div>
+                    }
                 </div>
             </div>
         </div>
