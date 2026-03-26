@@ -45,9 +45,10 @@
         class="flex-1 flex flex-col overflow-y-auto h-auto lg:h-[calc(100vh-8rem)] bg-outline-variant/10 no-scrollbar scroll-smooth">
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-0.5 flex-none min-h-0">
-            
-            <div class="lg:col-span-9 bg-surface-container-lowest flex flex-col aurora-glow h-auto border-b border-outline-variant/10">
-                
+
+            <div
+                class="lg:col-span-9 bg-surface-container-lowest flex flex-col aurora-glow h-auto border-b border-outline-variant/10">
+
                 <div class="h-12 flex items-center px-6 justify-between border-b border-outline-variant/5 shrink-0">
                     <div class="flex items-center gap-1">
                         <button
@@ -86,12 +87,14 @@
 
                 <div class="border-t border-outline-variant/10 p-6 flex flex-col bg-surface-container-low/30">
                     <div class="flex justify-between items-center mb-6 shrink-0">
-                        <span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Real-time Order Book</span>
+                        <span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Real-time
+                            Order Book</span>
                     </div>
                     <div class="overflow-x-auto no-scrollbar">
                         <div
                             class="grid grid-cols-3 text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-4 border-b border-outline-variant/5 pb-2 min-w-[300px]">
-                            <span>Price (USD)</span><span class="text-right">Size ({{ selectedAsset() }})</span><span class="text-right">Total Sum</span>
+                            <span>Price (USD)</span><span class="text-right">Size ({{ selectedAsset() }})</span><span
+                                class="text-right">Total Sum</span>
                         </div>
                         <div class="space-y-1 text-xs font-mono min-w-[300px]">
 
@@ -100,8 +103,10 @@
                                 <div class="absolute inset-0 bg-error/5 right-0 transition-all duration-300"
                                     [style.width]="ask.width"></div>
                                 <span class="relative z-10">{{ ask.p | number:'1.2-2' }}</span>
-                                <span class="text-right text-on-surface relative z-10">{{ ask.size | number:'1.3-3' }}</span>
-                                <span class="text-right text-on-surface relative z-10">{{ ask.sum | number:'1.2-2' }}</span>
+                                <span class="text-right text-on-surface relative z-10">{{ ask.size | number:'1.3-3'
+                                    }}</span>
+                                <span class="text-right text-on-surface relative z-10">{{ ask.sum | number:'1.2-2'
+                                    }}</span>
                             </div>
                             }
 
@@ -117,8 +122,10 @@
                                 <div class="absolute inset-0 bg-primary-fixed-dim/5 right-0 transition-all duration-300"
                                     [style.width]="bid.width"></div>
                                 <span class="relative z-10">{{ bid.p | number:'1.2-2' }}</span>
-                                <span class="text-right text-on-surface relative z-10">{{ bid.size | number:'1.3-3' }}</span>
-                                <span class="text-right text-on-surface relative z-10">{{ bid.sum | number:'1.2-2' }}</span>
+                                <span class="text-right text-on-surface relative z-10">{{ bid.size | number:'1.3-3'
+                                    }}</span>
+                                <span class="text-right text-on-surface relative z-10">{{ bid.sum | number:'1.2-2'
+                                    }}</span>
                             </div>
                             }
                         </div>
@@ -153,7 +160,8 @@
                         </div>
 
                         <div class="space-y-2">
-                            <label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Execution
+                            <label
+                                class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Execution
                                 Price</label>
                             <div
                                 class="bg-surface-container-lowest rounded-xl px-4 py-4 border border-outline-variant/10 flex justify-between items-center group shadow-inner">
@@ -166,16 +174,17 @@
                             <label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Amount to
                                 {{ tradeSide() }}</label>
                             <div
-                                class="bg-surface-container-lowest rounded-xl px-4 py-4 border border-outline-variant/10 flex justify-between items-center focus-within:ring-2 focus-within:ring-primary-fixed-dim/30 shadow-inner">
+                                class="bg-surface-container-lowest rounded-xl px-3 py-4 border border-outline-variant/10 flex justify-between items-center focus-within:ring-2 focus-within:ring-primary-fixed-dim/30 shadow-inner overflow-hidden">
                                 <app-number-input [formControl]="amountControl" placeholder="0.00"
-                                    customClass="bg-transparent border-none outline-none text-sm font-mono font-bold w-full text-white appearance-none"></app-number-input>
-                                <div class="flex items-center gap-2">
+                                    customClass="bg-transparent border-none outline-none text-base lg:text-sm font-mono font-bold w-full text-white appearance-none min-w-0"></app-number-input>
+                                <div class="flex items-center gap-1 lg:gap-2 shrink-0 ml-2">
                                     <button type="button" (click)="setMaxAmount()"
-                                        class="text-[9px] font-black bg-surface-container-highest px-2 py-1 rounded text-primary-fixed-dim hover:bg-primary-fixed-dim hover:text-[#003828] cursor-pointer transition-colors">MAX</button>
+                                        class="text-[9px] font-black bg-surface-container-highest px-1.5 py-1 rounded text-primary-fixed-dim hover:bg-primary-fixed-dim hover:text-[#003828] cursor-pointer transition-colors">MAX</button>
                                     <span class="text-[10px] font-bold text-on-surface-variant">{{ selectedAsset() }}</span>
                                 </div>
                             </div>
                         </div>
+
 
                         <div class="flex justify-between items-center px-1 pt-2">
                             <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
@@ -208,26 +217,36 @@
                         </div>
                     </div>
 
-                    <div class="mt-8 bg-surface-container-lowest/50 border border-outline-variant/5 rounded-2xl p-5 space-y-4">
-                        <div class="flex justify-between items-start">
+                    <div
+                        class="mt-8 bg-surface-container-lowest/50 border border-outline-variant/5 rounded-2xl p-4 lg:p-5 space-y-4">
+                        <div class="flex justify-between items-start flex-wrap gap-4">
                             <div class="flex flex-col">
-                                <span class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant mb-1">Portfolio Value</span>
-                                <span class="text-xl font-black text-white font-mono tracking-tight">
+                                <span
+                                    class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant mb-1">Portfolio
+                                    Value</span>
+                                <span
+                                    class="text-xl font-black text-white font-mono tracking-tight whitespace-break-spaces break-words">
                                     {{ accountNetWorth() | currency:'USD':'symbol':'1.2-2' }}
                                 </span>
                             </div>
-                            <div class="bg-primary-fixed-dim/10 text-primary-fixed-dim px-2 py-1 rounded text-[9px] font-bold">
+                            <div
+                                class="bg-primary-fixed-dim/10 text-primary-fixed-dim px-2 py-1 rounded text-[9px] font-bold">
                                 LIVE
                             </div>
                         </div>
                         <div class="grid grid-cols-1 gap-3 pt-3 border-t border-outline-variant/5">
-                            <div class="flex justify-between items-center">
-                                <span class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant">USD Balance</span>
-                                <span class="text-xs font-bold text-white font-mono">{{ tradeAPI.usdBalance() | currency:'USD' }}</span>
+                            <div class="flex justify-between items-center flex-wrap gap-2">
+                                <span class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant">USD
+                                    Balance</span>
+                                <span class="text-xs font-bold text-white font-mono">{{ tradeAPI.usdBalance() |
+                                    currency:'USD' }}</span>
                             </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant">Crypto Holding</span>
-                                <span class="text-xs font-bold text-white font-mono">{{ totalCryptoValue() | currency:'USD' }}</span>
+                            <div class="flex justify-between items-center flex-wrap gap-2">
+                                <span
+                                    class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant">Crypto
+                                    Holding</span>
+                                <span class="text-xs font-bold text-white font-mono">{{ totalCryptoValue() |
+                                    currency:'USD' }}</span>
                             </div>
                         </div>
                     </div>
@@ -235,63 +254,58 @@
             </div>
         </div>
 
-        <div class="bg-surface-container-lowest p-8 border-t border-outline-variant/10 flex-none">
-            <div class="flex justify-between items-center mb-8">
-                <h3 class="text-xl font-headline font-bold text-on-surface tracking-tight flex items-center gap-3">
+        <div class="bg-surface-container-lowest p-4 lg:p-8 border-t border-outline-variant/10 flex-none">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                <h3
+                    class="text-lg lg:text-xl font-headline font-bold text-on-surface tracking-tight flex items-center gap-2">
                     <span class="material-symbols-outlined text-primary-fixed-dim">history</span>
-                    Recent Terminal Activity
+                    Recent Activity
                 </h3>
-                <a routerLink="/ledger" class="text-xs font-bold text-primary-fixed-dim uppercase tracking-widest hover:underline">Full Ledger</a>
+                <a routerLink="/ledger"
+                    class="text-[10px] lg:text-xs font-bold text-primary-fixed-dim uppercase tracking-widest hover:underline">Full
+                    Ledger</a>
             </div>
 
-            <div class="overflow-x-auto no-scrollbar">
-                <div
-                    class="grid grid-cols-5 text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mb-6 border-b border-outline-variant/5 pb-4 min-w-[600px]">
-                    <span>Transaction Type</span>
-                    <span class="text-right">Execution Price</span>
-                    <span class="text-right">Asset Amount</span>
-                    <span class="text-right">Total Trade Value</span>
-                    <span class="text-right">Date Time</span>
-                </div>
-
-                <div class="space-y-2 min-w-[600px]">
+            <div class="overflow-hidden">
+                <div class="space-y-2 max-w-2xl mx-auto">
                     @for (tx of tradeAPI.tradeHistory().slice(0, 5); track tx.id) {
                     <div
-                        class="grid grid-cols-5 items-center hover:bg-surface-container-high/40 py-4 px-4 rounded-xl transition-all group border border-transparent hover:border-outline-variant/10">
-                        <div>
-                            <span class="px-3 py-1 rounded-lg font-bold text-[10px] border"
+                        class="flex items-center justify-between bg-surface-container-high/20 py-3 px-3 lg:px-6 rounded-xl lg:rounded-2xl border border-outline-variant/5 hover:border-primary-fixed-dim/20 transition-all group">
+                        <div class="flex items-center gap-2 lg:gap-4 overflow-hidden">
+                            <div class="w-8 h-8 lg:w-10 lg:h-10 shrink-0 rounded-full flex items-center justify-center font-black text-[9px] lg:text-[10px] tracking-tighter shadow-inner"
                                 [class.bg-primary-fixed-dim/10]="tx.type === 'BUY' || tx.type === 'DEPOSIT'"
                                 [class.text-primary-fixed-dim]="tx.type === 'BUY' || tx.type === 'DEPOSIT'"
-                                [class.border-primary-fixed-dim/20]="tx.type === 'BUY' || tx.type === 'DEPOSIT'"
                                 [class.bg-error/10]="tx.type !== 'BUY' && tx.type !== 'DEPOSIT'"
-                                [class.text-error]="tx.type !== 'BUY' && tx.type !== 'DEPOSIT'"
-                                [class.border-error/20]="tx.type !== 'BUY' && tx.type !== 'DEPOSIT'">
-                                {{ tx.type }}
+                                [class.text-error]="tx.type !== 'BUY' && tx.type !== 'DEPOSIT'">
+                                {{ tx.type === 'BUY' || tx.type === 'DEPOSIT' ? 'IN' : 'OUT' }}
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span
+                                    class="text-[10px] lg:text-xs font-black text-on-surface uppercase tracking-widest truncate">{{
+                                    tx.type }} {{ tx.assetSymbol }}</span>
+                                <span class="text-[9px] lg:text-[10px] text-on-surface-variant font-mono">{{
+                                    tx.createdAt | date:'MMM dd, HH:mm' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col items-end shrink-0 ml-2">
+                            <span class="text-xs lg:text-sm font-black font-mono tracking-tight"
+                                [class.text-primary-fixed-dim]="tx.type === 'BUY' || tx.type === 'DEPOSIT'"
+                                [class.text-error]="tx.type !== 'BUY' && tx.type !== 'DEPOSIT'">
+                                {{ tx.type === 'BUY' || tx.type === 'DEPOSIT' ? '+' : '-' }}{{ tx.amount |
+                                number:'1.1-4' }}
                             </span>
-                        </div>
-
-                        <div class="text-right text-sm font-mono text-on-surface-variant">
-                            {{ tx.priceAtTime | currency:'USD' }}
-                        </div>
-
-                        <div class="text-right flex flex-col">
-                            <span class="text-on-surface font-bold font-mono">{{ tx.amount | number:'1.2-5' }}</span>
-                            <span class="text-[9px] text-on-surface-variant font-bold uppercase">{{ tx.assetSymbol }}</span>
-                        </div>
-
-                        <div class="text-right font-black text-white font-mono">
-                            {{ (tx.amount * tx.priceAtTime) | currency:'USD' }}
-                        </div>
-
-                        <div class="text-right text-[10px] text-on-surface-variant font-mono">
-                            {{ tx.createdAt | date:'MMM dd, HH:mm:ss' }}
+                            <span
+                                class="text-[9px] lg:text-[10px] text-on-surface-variant font-bold uppercase tracking-tighter">
+                                {{ (tx.amount * tx.priceAtTime) | currency:'USD':'symbol':'1.0-0' }}
+                            </span>
                         </div>
                     </div>
                     } @empty {
                     <div
                         class="text-center text-on-surface-variant py-16 font-mono text-sm opacity-50 flex flex-col items-center gap-4 border border-dashed border-outline-variant/10 rounded-2xl">
                         <span class="material-symbols-outlined text-4xl">analytics</span>
-                        No institutional activity detected in this session
+                        No institutional activity detected
                     </div>
                     }
                 </div>
