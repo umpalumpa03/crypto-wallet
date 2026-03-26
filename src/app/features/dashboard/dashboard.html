@@ -1,6 +1,6 @@
 @if (store.isLoading()) {
 <div class="p-8 lg:p-12 w-full space-y-12 relative animate-pulse">
-    
+
     <section class="space-y-4">
         <div class="flex items-end justify-between">
             <div class="space-y-2">
@@ -15,25 +15,25 @@
         <div class="h-48 w-full skeleton rounded-2xl"></div>
     </section>
 
-    
+
     <div class="flex flex-wrap gap-4 py-2">
         @for (i of [1,2,3,4]; track i) {
-            <div class="flex-1 min-w-[140px] h-12 skeleton rounded-xl"></div>
+        <div class="flex-1 min-w-[140px] h-12 skeleton rounded-xl"></div>
         }
     </div>
 
-    
+
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div class="lg:col-span-8 h-[400px] skeleton rounded-2xl"></div>
         <div class="lg:col-span-4 h-[400px] skeleton rounded-2xl"></div>
     </div>
 
-    
+
     <section class="space-y-8 mt-12">
         <div class="h-10 w-64 skeleton"></div>
         <div class="space-y-4">
             @for (i of [1,2,3]; track i) {
-                <div class="h-20 w-full skeleton rounded-xl"></div>
+            <div class="h-20 w-full skeleton rounded-xl"></div>
             }
         </div>
     </section>
@@ -42,7 +42,7 @@
 <div class="p-8 lg:p-12 w-full space-y-12 relative">
 
     <section class="space-y-4">
-        <div class="flex items-end justify-between">
+        <div class="flex items-end justify-between flex-wrap gap-4">
             <div>
                 <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest mb-2">{{ profile.fullName
                     }} | Net Worth</p>
@@ -53,8 +53,7 @@
             </div>
             <div class="text-right pb-2">
                 <div class="flex items-center gap-2 font-mono text-xl transition-colors duration-500"
-                    [class.text-tertiary-fixed-dim]="totalPNL() >= 0"
-                    [class.text-error]="totalPNL() < 0">
+                    [class.text-tertiary-fixed-dim]="totalPNL() >= 0" [class.text-error]="totalPNL() < 0">
                     <span class="material-symbols-outlined">{{ totalPNL() >= 0 ? 'trending_up' : 'trending_down'
                         }}</span>
                     <span>{{ totalPNL() >= 0 ? '+' : '' }}{{ totalPNL() | currency:'USD' }}</span>
@@ -274,11 +273,11 @@
                             {{ market.liveBtcPrice() | currency:'USD':'symbol':'1.2-2' }}
                         </td>
                         <td class="py-6 text-right font-mono text-tertiary-fixed-dim px-4">+3.24%</td>
-                        <td class="py-6 text-right font-mono text-on-surface-variant hidden md:table-cell px-4">$1.26T</td>
+                        <td class="py-6 text-right font-mono text-on-surface-variant hidden md:table-cell px-4">$1.26T
+                        </td>
                         <td class="py-6 text-right w-40 px-4">
                             <div class="ml-auto w-[140px]">
-                                <apx-chart #btcChart
-                                    [series]="[{ name: 'BTC', data: [] }]"
+                                <apx-chart #btcChart [series]="[{ name: 'BTC', data: [] }]"
                                     [chart]="sparklineOptions.chart"
                                     [stroke]="{ curve: 'smooth', width: 2, colors: btcColors }" [fill]="areaFill"
                                     [colors]="btcColors" [tooltip]="sparklineOptions.tooltip">
@@ -304,11 +303,11 @@
                             {{ market.liveEthPrice() | currency:'USD':'symbol':'1.2-2' }}
                         </td>
                         <td class="py-6 text-right font-mono text-tertiary-fixed-dim px-4">+1.82%</td>
-                        <td class="py-6 text-right font-mono text-on-surface-variant hidden md:table-cell px-4">$412.8B</td>
+                        <td class="py-6 text-right font-mono text-on-surface-variant hidden md:table-cell px-4">$412.8B
+                        </td>
                         <td class="py-6 text-right w-40 px-4">
                             <div class="ml-auto w-[140px]">
-                                <apx-chart #ethChart
-                                    [series]="[{ name: 'ETH', data: [] }]"
+                                <apx-chart #ethChart [series]="[{ name: 'ETH', data: [] }]"
                                     [chart]="sparklineOptions.chart"
                                     [stroke]="{ curve: 'smooth', width: 2, colors: ethColors }" [fill]="areaFill"
                                     [colors]="ethColors" [tooltip]="sparklineOptions.tooltip">
@@ -334,11 +333,11 @@
                             {{ market.liveSolPrice() | currency:'USD':'symbol':'1.2-2' }}
                         </td>
                         <td class="py-6 text-right font-mono text-error px-4">-2.11%</td>
-                        <td class="py-6 text-right font-mono text-on-surface-variant hidden md:table-cell px-4">$64.2B</td>
+                        <td class="py-6 text-right font-mono text-on-surface-variant hidden md:table-cell px-4">$64.2B
+                        </td>
                         <td class="py-6 text-right w-40 px-4">
                             <div class="ml-auto w-[140px]">
-                                <apx-chart #solChart
-                                    [series]="[{ name: 'SOL', data: [] }]"
+                                <apx-chart #solChart [series]="[{ name: 'SOL', data: [] }]"
                                     [chart]="sparklineOptions.chart"
                                     [stroke]="{ curve: 'smooth', width: 2, colors: solColors }" [fill]="areaFill"
                                     [colors]="solColors" [tooltip]="sparklineOptions.tooltip">

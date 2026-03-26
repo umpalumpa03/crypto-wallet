@@ -1,7 +1,8 @@
 <div class="p-0 lg:p-8 flex-1 flex flex-col h-full overflow-hidden">
 
-    <div class="h-auto py-2 lg:h-14 bg-surface-container-low flex flex-wrap items-center px-4 lg:px-8 gap-4 lg:gap-10 border-b border-outline-variant/5 shrink-0">
-        <div class="flex items-center gap-4 flex-1 lg:flex-none">
+    <div
+        class="h-auto py-2 lg:h-14 bg-surface-container-low flex flex-wrap items-center px-4 lg:px-8 gap-4 lg:gap-10 border-b border-outline-variant/5 shrink-0">
+        <div class="flex items-center gap-4 flex-1 lg:flex-none flex-wrap">
 
             <div class="flex bg-surface-container-highest rounded p-1 gap-1">
                 @for (asset of market.filteredAssets(); track asset.symbol) {
@@ -34,11 +35,14 @@
 
         <div class="ml-auto flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim animate-pulse"></span>
-            <span class="text-[10px] font-bold text-on-surface-variant tracking-widest uppercase hidden sm:inline">Network Live</span>
+            <span
+                class="text-[10px] font-bold text-on-surface-variant tracking-widest uppercase hidden sm:inline">Network
+                Live</span>
         </div>
     </div>
 
-    <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-0.5 bg-outline-variant/10 overflow-y-auto lg:overflow-hidden h-auto lg:h-[calc(100vh-8rem)]">
+    <div
+        class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-0.5 bg-outline-variant/10 overflow-y-auto lg:overflow-hidden h-auto lg:h-[calc(100vh-8rem)]">
 
         <div class="lg:col-span-9 bg-surface-container-lowest flex flex-col aurora-glow h-full min-h-[400px]">
 
@@ -80,9 +84,11 @@
                 </div>
             </div>
 
-            <div class="h-auto lg:h-[350px] border-t border-outline-variant/10 grid grid-cols-1 md:grid-cols-2 shrink-0">
+            <div
+                class="h-auto border-t border-outline-variant/10 grid grid-cols-1 md:grid-cols-2 shrink-0">
 
-                <div class="border-b md:border-b-0 md:border-r border-outline-variant/10 p-4 overflow-hidden flex flex-col h-80 md:h-full">
+                <div
+                    class="border-b md:border-b-0 md:border-r border-outline-variant/10 p-4 flex flex-col min-h-[300px] h-auto lg:h-[350px]">
                     <div class="flex justify-between items-center mb-4 shrink-0">
                         <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Order
                             Book</span>
@@ -124,7 +130,7 @@
                     </div>
                 </div>
 
-                <div class="border-l border-outline-variant/10 p-4 flex flex-col overflow-hidden h-80 md:h-full">
+                <div class="border-l border-outline-variant/10 p-4 flex flex-col overflow-hidden min-h-[300px] h-auto lg:h-[350px]">
                     <div class="flex justify-between items-center mb-4 shrink-0">
                         <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Recent
                             Transactions</span>
@@ -179,7 +185,7 @@
             </div>
         </div>
 
-        <div class="col-span-12 lg:col-span-3 bg-surface-container flex flex-col h-full lg:overflow-hidden relative">
+        <div class="col-span-12 lg:col-span-3 bg-surface-container flex flex-col h-auto lg:h-full lg:overflow-hidden relative">
 
 
             <div class="p-6 border-b border-outline-variant/5">
