@@ -10,6 +10,7 @@ import {
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 import { ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
 import { TradeStore } from '../../core/store/trade.store';
 import { MarketStore } from '../../core/store/market.store';
@@ -18,7 +19,7 @@ import { NumberInput } from '../../shared/components/number-input/number-input';
 @Component({
   selector: 'app-markets',
 
-  imports: [CommonModule, DecimalPipe, ReactiveFormsModule, NgApexchartsModule, NumberInput],
+  imports: [CommonModule, DecimalPipe, ReactiveFormsModule, NgApexchartsModule, NumberInput, RouterLink],
   templateUrl: './markets.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

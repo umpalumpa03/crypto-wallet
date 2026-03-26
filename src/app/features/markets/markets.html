@@ -77,9 +77,9 @@
                     </div>
 
                     <div
-                        class="absolute top-1/2 left-1/3 border-l border-dashed border-primary-fixed-dim/40 h-full -translate-y-1/2 pointer-events-none z-20">
+                        class="absolute top-1/2 left-1/3 border-l border-dashed border-primary-fixed-dim/40 h-1/2 -translate-y-1/2 pointer-events-none z-20">
                         <div
-                            class="absolute top-0 -translate-x-1/2 bg-primary-fixed-dim text-[#003828] text-[10px] font-bold px-2 py-0.5 rounded shadow-lg transition-all duration-300">
+                            class="absolute -top-2 -translate-x-1/2 bg-primary-fixed-dim text-[#003828] text-[10px] font-bold px-2 py-0.5 rounded shadow-lg transition-all duration-300 whitespace-nowrap">
                             {{ currentPrice() | currency:'USD':'symbol':'1.2-2' }}
                         </div>
                     </div>
@@ -134,7 +134,7 @@
             </div>
 
             <div class="lg:col-span-3 bg-surface-container flex flex-col h-auto border-l border-outline-variant/10">
-                <div class="p-6 sticky top-0">
+                <div class="p-3 sticky top-0">
                     <div class="flex bg-surface-container-lowest rounded-lg p-1 mb-6">
                         <button (click)="setTradeSide('BUY')" [class.bg-primary-fixed-dim]="tradeSide() === 'BUY'"
                             [class.text-[#003828]]="tradeSide() === 'BUY'"
@@ -171,16 +171,20 @@
                         </div>
 
                         <div class="space-y-2">
-                            <label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Amount to
+                            <label
+                                class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Amount
+                                to
                                 {{ tradeSide() }}</label>
                             <div
                                 class="bg-surface-container-lowest rounded-xl px-3 py-4 border border-outline-variant/10 flex justify-between items-center focus-within:ring-2 focus-within:ring-primary-fixed-dim/30 shadow-inner overflow-hidden">
                                 <app-number-input [formControl]="amountControl" placeholder="0.00"
+                                    class="flex-1 min-w-0"
                                     customClass="bg-transparent border-none outline-none text-base lg:text-sm font-mono font-bold w-full text-white appearance-none min-w-0"></app-number-input>
                                 <div class="flex items-center gap-1 lg:gap-2 shrink-0 ml-2">
                                     <button type="button" (click)="setMaxAmount()"
                                         class="text-[9px] font-black bg-surface-container-highest px-1.5 py-1 rounded text-primary-fixed-dim hover:bg-primary-fixed-dim hover:text-[#003828] cursor-pointer transition-colors">MAX</button>
-                                    <span class="text-[10px] font-bold text-on-surface-variant">{{ selectedAsset() }}</span>
+                                    <span class="text-[10px] font-bold text-on-surface-variant">{{ selectedAsset()
+                                        }}</span>
                                 </div>
                             </div>
                         </div>
@@ -224,8 +228,7 @@
                                 <span
                                     class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant mb-1">Portfolio
                                     Value</span>
-                                <span
-                                    class="text-xl font-black text-white font-mono tracking-tight whitespace-break-spaces break-words">
+                                <span class="text-xl font-black text-white font-mono tracking-tight break-all">
                                     {{ accountNetWorth() | currency:'USD':'symbol':'1.2-2' }}
                                 </span>
                             </div>
