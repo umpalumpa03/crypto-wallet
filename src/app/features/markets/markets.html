@@ -1,7 +1,7 @@
-<div class="p-8 flex-1 flex flex-col h-full overflow-hidden">
+<div class="p-0 lg:p-8 flex-1 flex flex-col h-full overflow-hidden">
 
-    <div class="h-14 bg-surface-container-low flex items-center px-8 gap-10 border-b border-outline-variant/5 shrink-0">
-        <div class="flex items-center gap-4">
+    <div class="h-auto py-2 lg:h-14 bg-surface-container-low flex flex-wrap items-center px-4 lg:px-8 gap-4 lg:gap-10 border-b border-outline-variant/5 shrink-0">
+        <div class="flex items-center gap-4 flex-1 lg:flex-none">
 
             <div class="flex bg-surface-container-highest rounded p-1 gap-1">
                 @for (asset of market.filteredAssets(); track asset.symbol) {
@@ -34,13 +34,13 @@
 
         <div class="ml-auto flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim animate-pulse"></span>
-            <span class="text-[10px] font-bold text-on-surface-variant tracking-widest uppercase">Network Live</span>
+            <span class="text-[10px] font-bold text-on-surface-variant tracking-widest uppercase hidden sm:inline">Network Live</span>
         </div>
     </div>
 
-    <div class="flex-1 grid grid-cols-12 gap-0.5 bg-outline-variant/10 overflow-hidden h-[calc(100vh-8rem)]">
+    <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-0.5 bg-outline-variant/10 overflow-y-auto lg:overflow-hidden h-auto lg:h-[calc(100vh-8rem)]">
 
-        <div class="col-span-12 lg:col-span-9 bg-surface-container-lowest flex flex-col aurora-glow h-full">
+        <div class="lg:col-span-9 bg-surface-container-lowest flex flex-col aurora-glow h-full min-h-[400px]">
 
             <div class="h-12 flex items-center px-6 justify-between border-b border-outline-variant/5 shrink-0">
                 <div class="flex items-center gap-1">
@@ -53,7 +53,7 @@
                 </div>
             </div>
 
-            <div class="flex-1 relative p-6 overflow-hidden">
+            <div class="flex-1 relative p-6 overflow-hidden min-h-[300px]">
                 <div class="absolute inset-0 grid grid-cols-8 grid-rows-6 opacity-5 pointer-events-none">
                     @for (i of [].constructor(48); track $index) {
                     <div class="border-r border-b border-on-surface"></div>
@@ -80,9 +80,9 @@
                 </div>
             </div>
 
-            <div class="h-64 border-t border-outline-variant/10 grid grid-cols-2 shrink-0">
+            <div class="h-auto lg:h-64 border-t border-outline-variant/10 grid grid-cols-1 md:grid-cols-2 shrink-0">
 
-                <div class="border-r border-outline-variant/10 p-4 overflow-hidden flex flex-col">
+                <div class="border-b md:border-b-0 md:border-r border-outline-variant/10 p-4 overflow-hidden flex flex-col h-64 md:h-full">
                     <div class="flex justify-between items-center mb-4 shrink-0">
                         <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Order
                             Book</span>

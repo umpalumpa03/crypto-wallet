@@ -20,9 +20,18 @@ export class MainLayout implements OnInit {
   private contexts = inject(ChildrenOutletContexts);
 
   public showLogoutConfirm = signal<boolean>(false);
+  public isSidebarOpen = signal<boolean>(false);
 
   public getRouteAnimationData() {
     return this.contexts.getContext('primary')?.route?.snapshot?.data?.['animation'];
+  }
+
+  public toggleSidebar(): void {
+    this.isSidebarOpen.update((v) => !v);
+  }
+
+  public closeSidebar(): void {
+    this.isSidebarOpen.set(false);
   }
 
   ngOnInit() {

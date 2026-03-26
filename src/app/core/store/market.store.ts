@@ -14,6 +14,7 @@ type MarketState = {
   solPriceHistory: [number, number][];
   searchQuery: string;
   selectedAsset: 'BTC' | 'ETH' | 'SOL';
+  lastMarketUpdate: number | null;
 };
 
 const initialState: MarketState = {
@@ -28,6 +29,7 @@ const initialState: MarketState = {
   solPriceHistory: [],
   searchQuery: '',
   selectedAsset: 'BTC',
+  lastMarketUpdate: null,
 };
 
 export const MarketStore = signalStore(
@@ -87,7 +89,14 @@ export const MarketStore = signalStore(
         patchState(store, { selectedAsset: asset });
       },
 
-      async loadRealHistory() {
+      async loadRealHistory(force: boolean = false) {
+        const now = Date.now();
+        const cacheExpiry = 10000; // 10 seconds for price history
+        const hasData = store.btcPriceHistory().length > 0;
+        const isFresh = store.lastMarketUpdate() && (now - store.lastMarketUpdate()! < cacheExpiry);
+
+        if (!force && hasData && isFresh) return;
+
         try {
           const [btcRes, ethRes, solRes] = await Promise.all([
             fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1s&limit=60'),
@@ -111,6 +120,7 @@ export const MarketStore = signalStore(
             liveBtcPrice: btcPrices[btcPrices.length - 1][1],
             liveEthPrice: ethPrices[ethPrices.length - 1][1],
             liveSolPrice: solPrices[solPrices.length - 1][1],
+            lastMarketUpdate: Date.now(),
           });
         } catch (error) {
           console.error('Failed to load Binance history.', error);
@@ -182,7 +192,8 @@ export const MarketStore = signalStore(
           selectedAsset: parsed.selectedAsset || 'BTC',
           btcPriceHistory: parsed.btcPriceHistory || [],
           ethPriceHistory: parsed.ethPriceHistory || [],
-          solPriceHistory: parsed.solPriceHistory || []
+          solPriceHistory: parsed.solPriceHistory || [],
+          lastMarketUpdate: parsed.lastMarketUpdate || null,
         });
       }
 
@@ -192,7 +203,8 @@ export const MarketStore = signalStore(
           selectedAsset: store.selectedAsset(),
           btcPriceHistory: store.btcPriceHistory(),
           ethPriceHistory: store.ethPriceHistory(),
-          solPriceHistory: store.solPriceHistory()
+          solPriceHistory: store.solPriceHistory(),
+          lastMarketUpdate: store.lastMarketUpdate(),
         };
         localStorage.setItem('aurora_market_state', JSON.stringify(stateToSave));
       });

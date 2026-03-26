@@ -11,6 +11,8 @@ type FilterState = {
   searchQuery: string;
   assetFilter: string;
   isPortfolioLoading: boolean;
+  lastHistoryUpdate: number | null;
+  lastPortfolioUpdate: number | null;
 };
 
 const initialState: Omit<TradeState, 'tradeMessage'> & FilterState = {
@@ -22,6 +24,8 @@ const initialState: Omit<TradeState, 'tradeMessage'> & FilterState = {
   isPortfolioLoading: false,
   searchQuery: '',
   assetFilter: 'All Assets',
+  lastHistoryUpdate: null,
+  lastPortfolioUpdate: null,
 };
 
 export const TradeStore = signalStore(
@@ -70,9 +74,12 @@ export const TradeStore = signalStore(
         },
 
         async loadPortfolio(force: boolean = false): Promise<void> {
-          if (!force && (store.usdBalance() > 0 || Object.keys(store.cryptoPortfolio()).length > 0)) {
-            return;
-          }
+          const now = Date.now();
+          const cacheExpiry = 60000; // 1 minute
+          const hasData = store.usdBalance() > 0 || Object.keys(store.cryptoPortfolio()).length > 0;
+          const isFresh = store.lastPortfolioUpdate() && (now - store.lastPortfolioUpdate()! < cacheExpiry);
+
+          if (!force && hasData && isFresh) return;
 
           if (store.isPortfolioLoading()) return;
 
@@ -88,6 +95,7 @@ export const TradeStore = signalStore(
             patchState(store, {
               usdBalance: data.usdBalance,
               cryptoPortfolio: data.cryptoPortfolio,
+              lastPortfolioUpdate: Date.now(),
             });
           } catch (error: unknown) {
             notificationService.error('Could not connect to database.');
@@ -97,7 +105,12 @@ export const TradeStore = signalStore(
         },
 
         async loadHistory(force: boolean = false): Promise<void> {
-          if (!force && store.tradeHistory().length > 0) return;
+          const now = Date.now();
+          const cacheExpiry = 300000; // 5 minutes
+          const hasData = store.tradeHistory().length > 0;
+          const isFresh = store.lastHistoryUpdate() && (now - store.lastHistoryUpdate()! < cacheExpiry);
+
+          if (!force && hasData && isFresh) return;
 
           const authService = injector.get(AuthService);
           if (!authService.isAuthenticated()) return;
@@ -106,7 +119,10 @@ export const TradeStore = signalStore(
             const history: TradeHistoryItem[] = await lastValueFrom(
               http.get<TradeHistoryItem[]>(`${apiUrl}/history`),
             );
-            patchState(store, { tradeHistory: history });
+            patchState(store, { 
+              tradeHistory: history,
+              lastHistoryUpdate: Date.now(),
+            });
           } catch (error: unknown) {}
         },
 
@@ -147,6 +163,7 @@ export const TradeStore = signalStore(
             patchState(store, {
               usdBalance: updatedPortfolio.usdBalance,
               cryptoPortfolio: updatedPortfolio.cryptoPortfolio,
+              lastPortfolioUpdate: Date.now(),
             });
 
             const history: TradeHistoryItem[] = await lastValueFrom(
@@ -154,6 +171,7 @@ export const TradeStore = signalStore(
             );
             patchState(store, {
               tradeHistory: history,
+              lastHistoryUpdate: Date.now(),
             });
 
             notificationService.success(
@@ -203,7 +221,9 @@ export const TradeStore = signalStore(
           assetFilter: parsed.assetFilter || 'All Assets',
           usdBalance: parsed.usdBalance || 0,
           cryptoPortfolio: parsed.cryptoPortfolio || {},
-          tradeHistory: parsed.tradeHistory || []
+          tradeHistory: parsed.tradeHistory || [],
+          lastHistoryUpdate: parsed.lastHistoryUpdate || null,
+          lastPortfolioUpdate: parsed.lastPortfolioUpdate || null,
         });
       }
 
@@ -213,14 +233,16 @@ export const TradeStore = signalStore(
           assetFilter: store.assetFilter(),
           usdBalance: store.usdBalance(),
           cryptoPortfolio: store.cryptoPortfolio(),
-          tradeHistory: store.tradeHistory()
+          tradeHistory: store.tradeHistory(),
+          lastHistoryUpdate: store.lastHistoryUpdate(),
+          lastPortfolioUpdate: store.lastPortfolioUpdate(),
         };
         localStorage.setItem('aurora_trade_state', JSON.stringify(stateToSave));
       });
 
       if (authService.isAuthenticated()) {
-        store.loadPortfolio(true);
-        store.loadHistory(true);
+        store.loadPortfolio();
+        store.loadHistory();
       }
     }
   })
