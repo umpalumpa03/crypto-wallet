@@ -248,17 +248,17 @@
             <table class="w-full border-collapse">
                 <thead>
                     <tr class="text-on-surface-variant text-[10px] uppercase tracking-[0.2em] text-left">
-                        <th class="pb-6 font-medium">Asset</th>
-                        <th class="pb-6 font-medium text-right">Price</th>
-                        <th class="pb-6 font-medium text-right">24h Change</th>
-                        <th class="pb-6 font-medium text-right hidden md:table-cell">Market Cap</th>
-                        <th class="pb-6 font-medium text-right">Trend (7d)</th>
+                        <th class="pb-6 font-medium px-4">Asset</th>
+                        <th class="pb-6 font-medium text-right px-4">Price</th>
+                        <th class="pb-6 font-medium text-right px-4">24h Change</th>
+                        <th class="pb-6 font-medium text-right hidden md:table-cell px-4">Market Cap</th>
+                        <th class="pb-6 font-medium text-right px-4">Trend (7d)</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-outline-variant/5">
 
                     <tr class="group hover:bg-surface-container-low/40 transition-colors">
-                        <td class="py-6">
+                        <td class="py-6 px-4">
                             <div class="flex items-center gap-4">
                                 <div class="w-10 h-10 rounded-full bg-[#f7931a]/10 flex items-center justify-center">
                                     <span class="material-symbols-outlined text-[#f7931a]">currency_bitcoin</span>
@@ -270,12 +270,12 @@
                             </div>
                         </td>
                         <td
-                            class="py-6 text-right font-mono text-lg font-medium text-on-surface transition-colors duration-300">
+                            class="py-6 text-right font-mono text-lg font-medium text-on-surface transition-colors duration-300 px-4">
                             {{ market.liveBtcPrice() | currency:'USD':'symbol':'1.2-2' }}
                         </td>
-                        <td class="py-6 text-right font-mono text-tertiary-fixed-dim">+3.24%</td>
-                        <td class="py-6 text-right font-mono text-on-surface-variant hidden md:table-cell">$1.26T</td>
-                        <td class="py-6 text-right w-40">
+                        <td class="py-6 text-right font-mono text-tertiary-fixed-dim px-4">+3.24%</td>
+                        <td class="py-6 text-right font-mono text-on-surface-variant hidden md:table-cell px-4">$1.26T</td>
+                        <td class="py-6 text-right w-40 px-4">
                             <div class="ml-auto w-[140px]">
                                 <apx-chart #btcChart
                                     [series]="[{ name: 'BTC', data: [] }]"
@@ -288,7 +288,7 @@
                     </tr>
 
                     <tr class="group hover:bg-surface-container-low/40 transition-colors">
-                        <td class="py-6">
+                        <td class="py-6 px-4">
                             <div class="flex items-center gap-4">
                                 <div class="w-10 h-10 rounded-full bg-[#627eea]/10 flex items-center justify-center">
                                     <span class="material-symbols-outlined text-[#627eea]">diamond</span>
@@ -300,12 +300,12 @@
                             </div>
                         </td>
                         <td
-                            class="py-6 text-right font-mono text-lg font-medium text-on-surface transition-colors duration-300">
+                            class="py-6 text-right font-mono text-lg font-medium text-on-surface transition-colors duration-300 px-4">
                             {{ market.liveEthPrice() | currency:'USD':'symbol':'1.2-2' }}
                         </td>
-                        <td class="py-6 text-right font-mono text-tertiary-fixed-dim">+1.82%</td>
-                        <td class="py-6 text-right font-mono text-on-surface-variant hidden md:table-cell">$412.8B</td>
-                        <td class="py-6 text-right w-40">
+                        <td class="py-6 text-right font-mono text-tertiary-fixed-dim px-4">+1.82%</td>
+                        <td class="py-6 text-right font-mono text-on-surface-variant hidden md:table-cell px-4">$412.8B</td>
+                        <td class="py-6 text-right w-40 px-4">
                             <div class="ml-auto w-[140px]">
                                 <apx-chart #ethChart
                                     [series]="[{ name: 'ETH', data: [] }]"
@@ -318,7 +318,7 @@
                     </tr>
 
                     <tr class="group hover:bg-surface-container-low/40 transition-colors">
-                        <td class="py-6">
+                        <td class="py-6 px-4">
                             <div class="flex items-center gap-4">
                                 <div class="w-10 h-10 rounded-full bg-[#9945FF]/10 flex items-center justify-center">
                                     <span class="material-symbols-outlined text-[#9945FF]">bolt</span>
@@ -330,12 +330,12 @@
                             </div>
                         </td>
                         <td
-                            class="py-6 text-right font-mono text-lg font-medium text-on-surface transition-colors duration-300">
+                            class="py-6 text-right font-mono text-lg font-medium text-on-surface transition-colors duration-300 px-4">
                             {{ market.liveSolPrice() | currency:'USD':'symbol':'1.2-2' }}
                         </td>
-                        <td class="py-6 text-right font-mono text-error">-2.11%</td>
-                        <td class="py-6 text-right font-mono text-on-surface-variant hidden md:table-cell">$64.2B</td>
-                        <td class="py-6 text-right w-40">
+                        <td class="py-6 text-right font-mono text-error px-4">-2.11%</td>
+                        <td class="py-6 text-right font-mono text-on-surface-variant hidden md:table-cell px-4">$64.2B</td>
+                        <td class="py-6 text-right w-40 px-4">
                             <div class="ml-auto w-[140px]">
                                 <apx-chart #solChart
                                     [series]="[{ name: 'SOL', data: [] }]"
