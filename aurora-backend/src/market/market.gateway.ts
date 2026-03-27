@@ -15,8 +15,6 @@ export class MarketGateway implements OnGatewayInit {
   };
 
   public afterInit() {
-    console.log('🟢 Connecting to Real Binance Live Stream...');
-
     
     const streams = 'btcusdt@ticker/ethusdt@ticker/solusdt@ticker';
     const binanceUrl = `wss://stream.binance.com:9443/ws/${streams}`;
@@ -47,7 +45,7 @@ export class MarketGateway implements OnGatewayInit {
     });
 
     ws.on('error', (error) => {
-      console.error('Binance Connection Error:', error);
+      
     });
   }
 }

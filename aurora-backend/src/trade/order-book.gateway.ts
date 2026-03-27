@@ -13,8 +13,6 @@ export class OrderBookGateway implements OnGatewayInit {
   private currentPrices = { BTC: 64281.04, ETH: 3412.55, SOL: 145.22 };
 
   public afterInit() {
-    console.log('📈 Order Book WebSocket Gateway Initialized');
-    
     setInterval(() => this.streamLiveDepth(), 800);
   }
 

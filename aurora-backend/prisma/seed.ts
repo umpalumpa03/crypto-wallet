@@ -11,17 +11,14 @@ const pool = new Pool({
     rejectUnauthorized: false,
   },
 });
-console.log('Pool created with SSL rejectUnauthorized: false');
+
 const adapter = new PrismaPg(pool as any);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  console.log('Clearing old data...');
   await prisma.transaction.deleteMany();
   await prisma.asset.deleteMany();
   await prisma.user.deleteMany();
-
-  console.log('Seeding Institutional Profile...');
 
   
   const user = await prisma.user.create({
@@ -71,14 +68,10 @@ async function main() {
       },
     },
   });
-
-  console.log(`✅ Successfully seeded database for user: ${user.email}`);
-  console.log(`🔥 IMPORTANT! Copy this User ID for Angular: ${user.id}`); 
 }
 
 main()
   .catch((e) => {
-    console.error(e);
     process.exit(1);
   })
   .finally(async () => {

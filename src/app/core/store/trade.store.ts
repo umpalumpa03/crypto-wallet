@@ -1,9 +1,21 @@
 import { inject, computed, effect, Injector } from '@angular/core';
-import { signalStore, withState, withMethods, patchState, withComputed, withHooks } from '@ngrx/signals';
+import {
+  signalStore,
+  withState,
+  withMethods,
+  patchState,
+  withComputed,
+  withHooks,
+} from '@ngrx/signals';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { API_URL } from '../../environments/environment';
-import { TradeHistoryItem, PortfolioResponse, DepositConfig, TradeState } from '../models/trade.model';
+import {
+  TradeHistoryItem,
+  PortfolioResponse,
+  DepositConfig,
+  TradeState,
+} from '../models/trade.model';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
 
@@ -79,7 +91,8 @@ export const TradeStore = signalStore(
           const now = Date.now();
           const cacheExpiry = 60000; // 1 minute
           const hasData = store.usdBalance() > 0 || Object.keys(store.cryptoPortfolio()).length > 0;
-          const isFresh = store.lastPortfolioUpdate() && (now - store.lastPortfolioUpdate()! < cacheExpiry);
+          const isFresh =
+            store.lastPortfolioUpdate() && now - store.lastPortfolioUpdate()! < cacheExpiry;
 
           if (!force && hasData && isFresh) return;
           if (store.isPortfolioLoading()) return;
@@ -109,7 +122,8 @@ export const TradeStore = signalStore(
           const now = Date.now();
           const cacheExpiry = 300000; // 5 minutes
           const hasData = store.tradeHistory().length > 0;
-          const isFresh = store.lastHistoryUpdate() && (now - store.lastHistoryUpdate()! < cacheExpiry);
+          const isFresh =
+            store.lastHistoryUpdate() && now - store.lastHistoryUpdate()! < cacheExpiry;
 
           if (!force && hasData && isFresh) return;
           if (store.isHistoryLoading()) return;
@@ -123,11 +137,12 @@ export const TradeStore = signalStore(
             const history: TradeHistoryItem[] = await lastValueFrom(
               http.get<TradeHistoryItem[]>(`${apiUrl}/history`),
             );
-            patchState(store, { 
+            patchState(store, {
               tradeHistory: history,
               lastHistoryUpdate: Date.now(),
             });
           } catch (error: unknown) {
+            notificationService.error('Failed to load trade history.');
           } finally {
             patchState(store, { isHistoryLoading: false });
           }
@@ -145,7 +160,9 @@ export const TradeStore = signalStore(
           const totalValue: number = amount * price;
 
           if (amount <= 0 || price <= 0) {
-            notificationService.error('Invalid trade parameters. Price and amount must be positive.');
+            notificationService.error(
+              'Invalid trade parameters. Price and amount must be positive.',
+            );
             return false;
           }
 
@@ -153,7 +170,7 @@ export const TradeStore = signalStore(
             notificationService.error('Insufficient USD balance');
             return false;
           }
-          
+
           if (side === 'SELL' && amount > (store.cryptoPortfolio()[asset] || 0)) {
             notificationService.error(`Insufficient ${asset} balance`);
             return false;
@@ -189,8 +206,8 @@ export const TradeStore = signalStore(
           } catch (error: any) {
             let errorMsg: string = 'Transaction failed. Please try again.';
             if (error?.error?.message) {
-              errorMsg = Array.isArray(error.error.message) 
-                ? error.error.message[0] 
+              errorMsg = Array.isArray(error.error.message)
+                ? error.error.message[0]
                 : error.error.message;
             }
             notificationService.error(errorMsg);
@@ -223,7 +240,7 @@ export const TradeStore = signalStore(
       const saved = localStorage.getItem('aurora_trade_state');
       if (saved) {
         const parsed = JSON.parse(saved);
-        patchState(store, { 
+        patchState(store, {
           searchQuery: parsed.searchQuery || '',
           assetFilter: parsed.assetFilter || 'All Assets',
           usdBalance: parsed.usdBalance || 0,
@@ -249,17 +266,19 @@ export const TradeStore = signalStore(
 
       if (authService.isAuthenticated()) {
         const hasHistory = store.tradeHistory().length > 0;
-        const historyIsFresh = store.lastHistoryUpdate() && (Date.now() - store.lastHistoryUpdate()! < 300000);
+        const historyIsFresh =
+          store.lastHistoryUpdate() && Date.now() - store.lastHistoryUpdate()! < 300000;
         if (!hasHistory || !historyIsFresh) {
           store.loadHistory();
         }
 
         const hasPortfolio = Object.keys(store.cryptoPortfolio()).length > 0;
-        const portfolioIsFresh = store.lastPortfolioUpdate() && (Date.now() - store.lastPortfolioUpdate()! < 60000);
+        const portfolioIsFresh =
+          store.lastPortfolioUpdate() && Date.now() - store.lastPortfolioUpdate()! < 60000;
         if (!hasPortfolio || !portfolioIsFresh) {
           store.loadPortfolio();
         }
       }
-    }
-  })
+    },
+  }),
 );

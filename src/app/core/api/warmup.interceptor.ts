@@ -15,7 +15,7 @@ export const warmupInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, 
 
     if (!isWarmingUp && (!lastWarmup || now - parseInt(lastWarmup) > WARMUP_EXPIRY)) {
       isWarmingUp = true;
-      console.log('Backend may be sleeping, initiating warmup...');
+      
       
       
       

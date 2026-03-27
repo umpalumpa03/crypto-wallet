@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TradeStore } from '../../core/store/trade.store';
 import { MarketStore } from '../../core/store/market.store';
+import { NotificationService } from '../../core/services/notification.service';
 import { VaultAsset } from './models/vault.model';
 
 @Component({
@@ -51,7 +52,7 @@ export class Vault {
 
       setTimeout(() => this.copySuccess.set(false), 2000);
     } catch (err) {
-      console.error('Failed to copy to clipboard', err);
+      inject(NotificationService).error('Failed to access system clipboard.');
     }
   }
 

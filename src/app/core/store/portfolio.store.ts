@@ -13,6 +13,7 @@ import { lastValueFrom } from 'rxjs';
 import { InstitutionalProfile, Transaction } from '../models/portfolio.model';
 import { API_URL } from '../../environments/environment';
 import { AuthService } from '../services/auth.service';
+import { NotificationService } from '../services/notification.service';
 
 type PortfolioState = {
   profile: InstitutionalProfile | null;
@@ -55,6 +56,7 @@ export const PortfolioStore = signalStore(
         const errorMessage =
           'System failure: connection to the decentralized ledger could not be established.';
         patchState(store, { error: errorMessage });
+        inject(NotificationService).error(errorMessage);
       } finally {
         patchState(store, { isLoading: false, isInflight: false });
       }

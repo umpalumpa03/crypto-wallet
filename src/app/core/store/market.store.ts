@@ -1,6 +1,7 @@
 import { signalStore, withState, withMethods, patchState, withHooks, withComputed } from '@ngrx/signals';
 import { OrderBookData, OrderBookLevel } from '../models/portfolio.model';
-import { computed, effect } from '@angular/core';
+import { computed, effect, inject } from '@angular/core';
+import { NotificationService } from '../services/notification.service';
 
 type MarketState = {
   liveBtcPrice: number;
@@ -123,7 +124,7 @@ export const MarketStore = signalStore(
             lastMarketUpdate: Date.now(),
           });
         } catch (error) {
-          console.error('Failed to load Binance history.', error);
+          inject(NotificationService).error('Terminal failed to synchronize with global market price oracle.');
         }
       },
 
