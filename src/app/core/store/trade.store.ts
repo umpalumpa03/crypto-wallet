@@ -11,6 +11,7 @@ type FilterState = {
   searchQuery: string;
   assetFilter: string;
   isPortfolioLoading: boolean;
+  isHistoryLoading: boolean;
   lastHistoryUpdate: number | null;
   lastPortfolioUpdate: number | null;
 };
@@ -22,6 +23,7 @@ const initialState: Omit<TradeState, 'tradeMessage'> & FilterState = {
   depositConfigs: {},
   isTrading: false,
   isPortfolioLoading: false,
+  isHistoryLoading: false,
   searchQuery: '',
   assetFilter: 'All Assets',
   lastHistoryUpdate: null,
@@ -80,7 +82,6 @@ export const TradeStore = signalStore(
           const isFresh = store.lastPortfolioUpdate() && (now - store.lastPortfolioUpdate()! < cacheExpiry);
 
           if (!force && hasData && isFresh) return;
-
           if (store.isPortfolioLoading()) return;
 
           const authService = injector.get(AuthService);
@@ -111,9 +112,12 @@ export const TradeStore = signalStore(
           const isFresh = store.lastHistoryUpdate() && (now - store.lastHistoryUpdate()! < cacheExpiry);
 
           if (!force && hasData && isFresh) return;
+          if (store.isHistoryLoading()) return;
 
           const authService = injector.get(AuthService);
           if (!authService.isAuthenticated()) return;
+
+          patchState(store, { isHistoryLoading: true });
 
           try {
             const history: TradeHistoryItem[] = await lastValueFrom(
@@ -123,7 +127,10 @@ export const TradeStore = signalStore(
               tradeHistory: history,
               lastHistoryUpdate: Date.now(),
             });
-          } catch (error: unknown) {}
+          } catch (error: unknown) {
+          } finally {
+            patchState(store, { isHistoryLoading: false });
+          }
         },
 
         async executeTrade(

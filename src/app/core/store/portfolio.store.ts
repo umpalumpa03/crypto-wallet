@@ -19,6 +19,7 @@ type PortfolioState = {
   isLoading: boolean;
   error: string | null;
   lastUpdate: number | null;
+  isInflight: boolean;
 };
 
 const initialState: PortfolioState = {
@@ -26,6 +27,7 @@ const initialState: PortfolioState = {
   isLoading: false,
   error: null,
   lastUpdate: null,
+  isInflight: false,
 };
 
 export const PortfolioStore = signalStore(
@@ -41,20 +43,20 @@ export const PortfolioStore = signalStore(
     async loadPortfolio(force: boolean = false): Promise<void> {
       const isFresh = store.lastUpdate() && Date.now() - store.lastUpdate()! < 30000;
       if (store.profile() && isFresh && !force) return;
+      if (store.isInflight()) return;
 
-      patchState(store, { isLoading: true, error: null });
+      patchState(store, { isLoading: true, error: null, isInflight: true });
 
       try {
         const endpoint = `${API_URL}/portfolio/dashboard`;
         const profile = await lastValueFrom(http.get<InstitutionalProfile>(endpoint));
-        patchState(store, { profile, isLoading: false, lastUpdate: Date.now() });
+        patchState(store, { profile, lastUpdate: Date.now() });
       } catch (err: unknown) {
         const errorMessage =
           'System failure: connection to the decentralized ledger could not be established.';
-        patchState(store, {
-          error: errorMessage,
-          isLoading: false,
-        });
+        patchState(store, { error: errorMessage });
+      } finally {
+        patchState(store, { isLoading: false, isInflight: false });
       }
     },
 
