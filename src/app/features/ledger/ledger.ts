@@ -18,10 +18,7 @@ export class Ledger {
   public market = inject(MarketStore);
   public isExportMenuOpen = signal(false);
 
-  constructor() {
-    this.tradeAPI.loadPortfolio();
-    this.tradeAPI.loadHistory();
-  }
+  constructor() {}
 
   public toggleExportMenu(): void {
     this.isExportMenuOpen.set(!this.isExportMenuOpen());

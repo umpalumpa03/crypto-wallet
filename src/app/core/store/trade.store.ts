@@ -241,8 +241,17 @@ export const TradeStore = signalStore(
       });
 
       if (authService.isAuthenticated()) {
-        store.loadPortfolio();
-        store.loadHistory();
+        const hasHistory = store.tradeHistory().length > 0;
+        const historyIsFresh = store.lastHistoryUpdate() && (Date.now() - store.lastHistoryUpdate()! < 300000);
+        if (!hasHistory || !historyIsFresh) {
+          store.loadHistory();
+        }
+
+        const hasPortfolio = Object.keys(store.cryptoPortfolio()).length > 0;
+        const portfolioIsFresh = store.lastPortfolioUpdate() && (Date.now() - store.lastPortfolioUpdate()! < 60000);
+        if (!hasPortfolio || !portfolioIsFresh) {
+          store.loadPortfolio();
+        }
       }
     }
   })

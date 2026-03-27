@@ -1,16 +1,31 @@
 import { inject, effect } from '@angular/core';
-import { signalStore, withState, withMethods, patchState, withComputed, withHooks } from '@ngrx/signals';
+import {
+  signalStore,
+  withState,
+  withMethods,
+  patchState,
+  withComputed,
+  withHooks,
+} from '@ngrx/signals';
 import { computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
-import { InstitutionalProfile, PortfolioState, Transaction } from '../models/portfolio.model';
+import { InstitutionalProfile, Transaction } from '../models/portfolio.model';
 import { API_URL } from '../../environments/environment';
 import { AuthService } from '../services/auth.service';
+
+type PortfolioState = {
+  profile: InstitutionalProfile | null;
+  isLoading: boolean;
+  error: string | null;
+  lastUpdate: number | null;
+};
 
 const initialState: PortfolioState = {
   profile: null,
   isLoading: false,
   error: null,
+  lastUpdate: null,
 };
 
 export const PortfolioStore = signalStore(
@@ -24,17 +39,18 @@ export const PortfolioStore = signalStore(
 
   withMethods((store, http: HttpClient = inject(HttpClient)) => ({
     async loadPortfolio(force: boolean = false): Promise<void> {
-      const isProfileLoaded = !!store.profile();
-      if (isProfileLoaded && !force) return;
+      const isFresh = store.lastUpdate() && Date.now() - store.lastUpdate()! < 30000;
+      if (store.profile() && isFresh && !force) return;
 
       patchState(store, { isLoading: true, error: null });
 
       try {
         const endpoint = `${API_URL}/portfolio/dashboard`;
         const profile = await lastValueFrom(http.get<InstitutionalProfile>(endpoint));
-        patchState(store, { profile, isLoading: false });
+        patchState(store, { profile, isLoading: false, lastUpdate: Date.now() });
       } catch (err: unknown) {
-        const errorMessage = 'System failure: connection to the decentralized ledger could not be established.';
+        const errorMessage =
+          'System failure: connection to the decentralized ledger could not be established.';
         patchState(store, {
           error: errorMessage,
           isLoading: false,
@@ -53,20 +69,26 @@ export const PortfolioStore = signalStore(
       const saved = localStorage.getItem('aurora_portfolio_state');
       if (saved) {
         const parsed = JSON.parse(saved);
-        patchState(store, { profile: parsed.profile || null });
+        patchState(store, {
+          profile: parsed.profile || null,
+          lastUpdate: parsed.lastUpdate || null,
+        });
       }
 
       effect(() => {
-        const stateToSave = { profile: store.profile() };
+        const stateToSave = {
+          profile: store.profile(),
+          lastUpdate: store.lastUpdate(),
+        };
         localStorage.setItem('aurora_portfolio_state', JSON.stringify(stateToSave));
       });
 
       if (authService.isAuthenticated()) {
-        const isProfileLoaded = !!store.profile();
-        if (!isProfileLoaded) {
-          store.loadPortfolio(true);
+        const isFresh = store.lastUpdate() && Date.now() - store.lastUpdate()! < 30000;
+        if (!store.profile() || !isFresh) {
+          store.loadPortfolio();
         }
       }
-    }
-  })
+    },
+  }),
 );
