@@ -1,4 +1,12 @@
-import { Component, ChangeDetectionStrategy, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  computed,
+  inject,
+  signal,
+  HostListener,
+  ElementRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TradeStore } from '../../core/store/trade.store';
 import { MarketStore } from '../../core/store/market.store';
@@ -17,11 +25,40 @@ export class Ledger {
   public tradeAPI = inject(TradeStore);
   public market = inject(MarketStore);
   public isExportMenuOpen = signal(false);
+  public isAssetFilterOpen = signal(false);
+  private elementRef = inject(ElementRef);
 
   constructor() {}
 
-  public toggleExportMenu(): void {
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+
+    if (
+      this.isExportMenuOpen() &&
+      !this.elementRef.nativeElement.querySelector('.export-dropdown')?.contains(target)
+    ) {
+      this.isExportMenuOpen.set(false);
+    }
+
+    if (
+      this.isAssetFilterOpen() &&
+      !this.elementRef.nativeElement.querySelector('.asset-filter-container')?.contains(target)
+    ) {
+      this.isAssetFilterOpen.set(false);
+    }
+  }
+
+  public toggleExportMenu(event: Event): void {
+    event.stopPropagation();
     this.isExportMenuOpen.set(!this.isExportMenuOpen());
+    this.isAssetFilterOpen.set(false);
+  }
+
+  public toggleAssetFilter(event: Event): void {
+    event.stopPropagation();
+    this.isAssetFilterOpen.set(!this.isAssetFilterOpen());
+    this.isExportMenuOpen.set(false);
   }
 
   public onSearch(event: Event): void {
@@ -31,11 +68,20 @@ export class Ledger {
 
   public onFilterAsset(asset: string): void {
     this.tradeAPI.setAssetFilter(asset);
+    this.isAssetFilterOpen.set(false);
   }
 
   private getExportData() {
     const data = this.tradeAPI.filteredHistory();
-    const headers = ['Timestamp', 'Transaction ID', 'Type', 'Asset', 'Amount', 'Price (USD)', 'Total Value (USD)'];
+    const headers = [
+      'Timestamp',
+      'Transaction ID',
+      'Type',
+      'Asset',
+      'Amount',
+      'Price (USD)',
+      'Total Value (USD)',
+    ];
     const rows = data.map((tx) => [
       new Date(tx.createdAt).toLocaleString(),
       `TXN-${tx.id.split('-')[0].toUpperCase()}`,
@@ -60,7 +106,7 @@ export class Ledger {
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
-    
+
     link.setAttribute('href', url);
     link.setAttribute('download', `aurora_ledger_${new Date().toISOString().split('T')[0]}.csv`);
     link.style.visibility = 'hidden';
@@ -75,15 +121,13 @@ export class Ledger {
     if (!rows.length) return;
 
     const doc = new jsPDF();
-    
-    // Add title
+
     doc.setFontSize(18);
     doc.text('Aurora Ledger History', 14, 22);
     doc.setFontSize(11);
     doc.setTextColor(100);
     doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 30);
 
-    // Add table
     autoTable(doc, {
       head: [headers],
       body: rows,

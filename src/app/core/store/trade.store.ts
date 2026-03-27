@@ -89,7 +89,7 @@ export const TradeStore = signalStore(
 
         async loadPortfolio(force: boolean = false): Promise<void> {
           const now = Date.now();
-          const cacheExpiry = 60000; // 1 minute
+          const cacheExpiry = 60000;
           const hasData = store.usdBalance() > 0 || Object.keys(store.cryptoPortfolio()).length > 0;
           const isFresh =
             store.lastPortfolioUpdate() && now - store.lastPortfolioUpdate()! < cacheExpiry;
@@ -120,7 +120,7 @@ export const TradeStore = signalStore(
 
         async loadHistory(force: boolean = false): Promise<void> {
           const now = Date.now();
-          const cacheExpiry = 300000; // 5 minutes
+          const cacheExpiry = 300000;
           const hasData = store.tradeHistory().length > 0;
           const isFresh =
             store.lastHistoryUpdate() && now - store.lastHistoryUpdate()! < cacheExpiry;

@@ -1,4 +1,11 @@
-import { signalStore, withState, withMethods, patchState, withHooks, withComputed } from '@ngrx/signals';
+import {
+  signalStore,
+  withState,
+  withMethods,
+  patchState,
+  withHooks,
+  withComputed,
+} from '@ngrx/signals';
 import { OrderBookData, OrderBookLevel } from '../models/portfolio.model';
 import { computed, effect, inject } from '@angular/core';
 import { NotificationService } from '../services/notification.service';
@@ -38,9 +45,24 @@ export const MarketStore = signalStore(
   withState(initialState),
   withComputed((store) => ({
     allAssets: computed(() => [
-      { name: 'Bitcoin', symbol: 'BTC', price: store.liveBtcPrice(), history: store.btcPriceHistory() },
-      { name: 'Ethereum', symbol: 'ETH', price: store.liveEthPrice(), history: store.ethPriceHistory() },
-      { name: 'Solana', symbol: 'SOL', price: store.liveSolPrice(), history: store.solPriceHistory() },
+      {
+        name: 'Bitcoin',
+        symbol: 'BTC',
+        price: store.liveBtcPrice(),
+        history: store.btcPriceHistory(),
+      },
+      {
+        name: 'Ethereum',
+        symbol: 'ETH',
+        price: store.liveEthPrice(),
+        history: store.ethPriceHistory(),
+      },
+      {
+        name: 'Solana',
+        symbol: 'SOL',
+        price: store.liveSolPrice(),
+        history: store.solPriceHistory(),
+      },
     ]),
   })),
   withComputed((store) => ({
@@ -50,11 +72,10 @@ export const MarketStore = signalStore(
 
       if (!query) return assets;
 
-      return assets.filter(a => 
-        a.name.toLowerCase().includes(query) || 
-        a.symbol.toLowerCase().includes(query)
+      return assets.filter(
+        (a) => a.name.toLowerCase().includes(query) || a.symbol.toLowerCase().includes(query),
       );
-    })
+    }),
   })),
   withMethods((store) => {
     let ws: WebSocket;
@@ -92,9 +113,9 @@ export const MarketStore = signalStore(
 
       async loadRealHistory(force: boolean = false) {
         const now = Date.now();
-        const cacheExpiry = 10000; // 10 seconds for price history
+        const cacheExpiry = 10000;
         const hasData = store.btcPriceHistory().length > 0;
-        const isFresh = store.lastMarketUpdate() && (now - store.lastMarketUpdate()! < cacheExpiry);
+        const isFresh = store.lastMarketUpdate() && now - store.lastMarketUpdate()! < cacheExpiry;
 
         if (!force && hasData && isFresh) return;
 
@@ -124,7 +145,9 @@ export const MarketStore = signalStore(
             lastMarketUpdate: Date.now(),
           });
         } catch (error) {
-          inject(NotificationService).error('Terminal failed to synchronize with global market price oracle.');
+          inject(NotificationService).error(
+            'Terminal failed to synchronize with global market price oracle.',
+          );
         }
       },
 
@@ -188,7 +211,7 @@ export const MarketStore = signalStore(
       const saved = localStorage.getItem('aurora_market_state');
       if (saved) {
         const parsed = JSON.parse(saved);
-        patchState(store, { 
+        patchState(store, {
           searchQuery: parsed.searchQuery || '',
           selectedAsset: parsed.selectedAsset || 'BTC',
           btcPriceHistory: parsed.btcPriceHistory || [],
