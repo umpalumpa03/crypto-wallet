@@ -62,7 +62,10 @@ export const PortfolioStore = signalStore(
       });
 
       if (authService.isAuthenticated()) {
-        store.loadPortfolio(true);
+        const isProfileLoaded = !!store.profile();
+        if (!isProfileLoaded) {
+          store.loadPortfolio(true);
+        }
       }
     }
   })

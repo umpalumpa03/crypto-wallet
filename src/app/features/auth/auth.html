@@ -78,6 +78,18 @@
 
         <div class="w-full max-w-md mt-12 lg:mt-0">
 
+            @if (isWarmingUp()) {
+            <div class="mb-8 p-4 rounded-xl bg-primary-fixed-dim/10 border border-primary-fixed-dim/20 flex items-center gap-4 animate-fade-in">
+                <div class="relative flex-shrink-0">
+                    <span class="material-symbols-outlined text-primary-fixed-dim animate-spin duration-[3000ms]">sync</span>
+                </div>
+                <div>
+                    <h3 class="text-xs font-bold text-primary-fixed-dim uppercase tracking-widest">Warming Up Node 042</h3>
+                    <p class="text-[10px] text-on-surface-variant font-medium mt-0.5">The backend is awakening from cold sleep (Render free tier). Authentication might take a moment.</p>
+                </div>
+            </div>
+            }
+
             @if (isLoginMode()) {
             <div class="mb-12 animate-fade-in">
                 <h2 class="font-headline text-3xl font-bold text-on-surface mb-2">Access Terminal</h2>

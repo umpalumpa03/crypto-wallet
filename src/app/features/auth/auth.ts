@@ -6,6 +6,7 @@ import {
   computed,
   WritableSignal,
   Signal,
+  OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
@@ -20,7 +21,7 @@ import { NotificationService } from '../../core/services/notification.service';
   templateUrl: './auth.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Auth {
+export class Auth implements OnInit {
   private fb: FormBuilder = inject(FormBuilder);
   private authService: AuthService = inject(AuthService);
   private notificationService: NotificationService = inject(NotificationService);
@@ -28,6 +29,18 @@ export class Auth {
   protected isLoginMode: WritableSignal<boolean> = signal<boolean>(true);
   protected isLoading: WritableSignal<boolean> = signal<boolean>(false);
   protected showPassword: WritableSignal<boolean> = signal<boolean>(false);
+  protected isWarmingUp: WritableSignal<boolean> = signal<boolean>(false);
+
+  ngOnInit(): void {
+    
+    const lastWarmup = localStorage.getItem('aurora_backend_warmed_up');
+    const now = Date.now();
+    if (!lastWarmup || now - parseInt(lastWarmup) > 30000) {
+      this.isWarmingUp.set(true);
+      
+      setTimeout(() => this.isWarmingUp.set(false), 8000);
+    }
+  }
 
   protected loginForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
